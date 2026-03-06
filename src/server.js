@@ -18,11 +18,11 @@ app.use('/uploads', express.static(uploadsPath));
 // Static serve the frontend id.html from root folder
 // For any GET request that doesn't match an API route or file, serve id.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'id.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'id.html'));
 });
 
-// Basic structure for API routes (To be implemented in Phase 4)
-// app.use('/api', require('./routes/api'));
+// Mount API router
+app.use('/api', require('./routes/api'));
 
 // Health check endpoint (matches FastAPI /health)
 app.get('/health', (req, res) => {
