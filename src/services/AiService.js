@@ -101,7 +101,7 @@ class AiService {
         const humanBlob = fs.readFileSync(humanImagePath);
         const garmBlob = fs.readFileSync(garmentPath);
 
-        const prompt = "ultra realistic, 4k resolution, professional fashion photography lighting, sharp details, natural shadows, neutral studio background. Maintain original body proportions, exact facial features, natural skin tone, and confident expression. Perfect garment fitting, preserve fabric texture, color, and design patterns.";
+        const prompt = "Task: Virtual clothing try-on. Use the uploaded base photo as the main person. Replace the current clothing with the selected dress image. Instructions: Keep the face, hair, and body shape of the base person unchanged. Remove the original clothing from the base photo. Extract only the dress from the selected dress image. Fit the dress naturally on the body with correct proportions. Match lighting, shadows, and perspective. Do not create a second person. Do not overlay the dress image as a separate photo. Output a single realistic image of the person wearing the selected dress. Style: realistic fashion photography, high quality, detailed fabric, natural pose. Task: virtual try-on. Preserve Face: true. Remove Old Clothing: true. Output: single realistic person wearing the selected dress.";
 
         const result = await hfClient.predict("/tryon", [
             { background: new Blob([humanBlob]), layers: [], composite: null }, // dict
