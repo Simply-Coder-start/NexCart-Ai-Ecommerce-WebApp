@@ -101,13 +101,15 @@ class AiService {
         const humanBlob = fs.readFileSync(humanImagePath);
         const garmBlob = fs.readFileSync(garmentPath);
 
+        const prompt = "ultra realistic, 4k resolution, professional fashion photography lighting, sharp details, natural shadows, neutral studio background. Maintain original body proportions, exact facial features, natural skin tone, and confident expression. Perfect garment fitting, preserve fabric texture, color, and design patterns.";
+
         const result = await hfClient.predict("/tryon", [
             { background: new Blob([humanBlob]), layers: [], composite: null }, // dict
             new Blob([garmBlob]), // file
-            "", // garment description
+            prompt, // garment description
             true, // is_checked
-            true, // is_checked_crop
-            30, // denoise steps
+            false, // is_checked_crop: false to maintain original proportions
+            40, // denoise steps
             42, // seed
         ]);
 
