@@ -164,5 +164,11 @@ NexCart/
 Contributions, issues, and feature requests are welcome! 
 Feel free to check the [issues page](https://github.com/Simply-Coder-start/NexCart-Ai-Ecommerce-WebApp/issues) for any open tasks or bugs.
 
+### Core Contributors
+A special thanks to the following developers for bringing this project to life:
+- [@Simply-Coder-start](https://github.com/Simply-Coder-start)
+- [@Immortalcoder0](https://github.com/Immortalcoder0)
+- [@rishavsingh181](https://github.com/rishavsingh181)
+
 ## 📜 License
 This project is licensed under the [MIT License](LICENSE).
