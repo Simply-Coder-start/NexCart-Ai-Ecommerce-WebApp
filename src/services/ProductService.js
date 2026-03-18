@@ -1,5 +1,15 @@
 // src/services/ProductService.js
-const Product = require('../models/Product');
+const { getDb } = require('../db');
+
+const parseProduct = (row) => {
+    if (!row) return null;
+    return {
+        ...row,
+        tryOnEligible: Boolean(row.tryOnEligible),
+        isNew: Boolean(row.isNew),
+        colors: JSON.parse(row.colors || '[]')
+    };
+};
 
 // Fallback logic from backend/services/product_store.py
 const UNSPLASH_IMAGES = {
@@ -125,14 +135,20 @@ class ProductService {
         if (global.useInMemory) {
             return ALL_PRODUCTS;
         }
-        return await Product.find({});
+        const db = getDb();
+        if (!db) return ALL_PRODUCTS;
+        const rows = await db.all('SELECT * FROM products');
+        return rows.map(parseProduct);
     }
 
     static async getProductById(id) {
         if (global.useInMemory) {
             return ALL_PRODUCTS.find(p => p.id === parseInt(id));
         }
-        return await Product.findOne({ id: parseInt(id) });
+        const db = getDb();
+        if (!db) return null;
+        const row = await db.get('SELECT * FROM products WHERE id = ?', [parseInt(id)]);
+        return parseProduct(row);
     }
 
     static async searchProducts(query, category = null) {
@@ -146,18 +162,26 @@ class ProductService {
             });
         }
 
-        const filter = {
-            $or: [
-                { name: new RegExp(query, 'i') },
-                { subcategory: new RegExp(query, 'i') },
-                { category: new RegExp(query, 'i') }
-            ]
-        };
+        const db = getDb();
+        if (!db) return [];
+        const searchPattern = `%${query}%`;
+
+        let rows = [];
         if (category && category !== "all") {
-            filter.category = category;
+            rows = await db.all(`
+                SELECT * FROM products 
+                WHERE (name LIKE ? OR subcategory LIKE ? OR category LIKE ?) 
+                AND category = ?
+            `, [searchPattern, searchPattern, searchPattern, category]);
+        } else {
+            rows = await db.all(`
+                SELECT * FROM products 
+                WHERE name LIKE ? OR subcategory LIKE ? OR category LIKE ?
+            `, [searchPattern, searchPattern, searchPattern]);
         }
-        return await Product.find(filter);
+        return rows.map(parseProduct);
     }
 }
 
+ProductService.ALL_PRODUCTS = ALL_PRODUCTS;
 module.exports = ProductService;

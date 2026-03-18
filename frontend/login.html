@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | NexCart</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 440px; margin: 40px auto; padding: 16px; }
+    h1 { margin-bottom: 16px; }
+    .field { margin-bottom: 12px; }
+    input { width: 100%; padding: 10px; box-sizing: border-box; }
+    button { padding: 10px 14px; width: 100%; cursor: pointer; }
+    #login-message { display: none; margin: 10px 0; }
+    .helper { margin-top: 12px; font-size: 14px; }
+    #logout-btn { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="login-form">
+    <div class="field">
+      <label>Email or Phone</label>
+      <input type="text" name="identifier" placeholder="you@example.com or +911234567890" required />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="********" required />
+    </div>
+    <div id="login-message"></div>
+    <button id="login-submit" type="submit">Sign In</button>
+  </form>
+
+  <p class="helper">Don't have an account? <a href="./signup.html">Create one</a></p>
+  <p class="helper">Session user: <span id="session-user">Not logged in</span></p>
+  <button id="logout-btn" type="button">Logout</button>
+
+  <script src="./auth.js"></script>
+</body>
+</html>

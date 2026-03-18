@@ -1,28 +1,30 @@
-const mongoose = require('mongoose');
+const sqlite3 = require('sqlite3').verbose();
+const { open } = require('sqlite');
+const path = require('path');
+const fs = require('fs');
 
-// Global flag for fallback
-global.useInMemory = false;
+let dbInstance = null;
 
 const connectDB = async () => {
     try {
-        if (!process.env.MONGODB_URI) {
-            console.warn('MONGODB_URI is not set. Falling back to in-memory store.');
-            global.useInMemory = true;
-            return;
-        }
+        const dbPath = path.resolve(__dirname, '..', 'database.sqlite');
+        const dbExists = fs.existsSync(dbPath);
 
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+        dbInstance = await open({
+            filename: dbPath,
+            driver: sqlite3.Database
         });
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        console.log(`SQLite Connected: ${dbPath}`);
         global.useInMemory = false;
+
     } catch (error) {
-        console.error(`Error connecting to MongoDB: ${error.message}`);
+        console.error(`Error connecting to SQLite: ${error.message}`);
         console.warn('Falling back to in-memory store.');
         global.useInMemory = true;
     }
 };
 
-module.exports = connectDB;
+const getDb = () => dbInstance;
+
+module.exports = { connectDB, getDb };

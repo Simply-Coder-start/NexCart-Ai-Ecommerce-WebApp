@@ -5,7 +5,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.FRONTEND_PORT || 3000;
 
 // Middleware
 app.use(cors({ origin: '*', credentials: true }));
@@ -29,6 +29,10 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+const { connectDB } = require('./db');
+
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server started on port ${PORT}`);
+    });
 });

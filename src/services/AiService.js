@@ -78,7 +78,8 @@ class AiService {
             const fetch = require('node-fetch');
             const res = await fetch(garmentImageUrl);
             if (!res.ok) throw new Error("Failed to fetch garment image");
-            const buffer = await res.buffer();
+            const arrayBuffer = await res.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
             garmentPath = path.join(__dirname, '..', '..', 'uploads', `temp_garment_${jobId}.jpg`);
             fs.writeFileSync(garmentPath, buffer);
         }
@@ -101,47 +102,64 @@ class AiService {
         const humanBlob = fs.readFileSync(humanImagePath);
         const garmBlob = fs.readFileSync(garmentPath);
 
-        const prompt = "Task: Virtual clothing try-on. Use the uploaded base photo as the main person. Replace the current clothing with the selected dress image. Instructions: Keep the face, hair, and body shape of the base person unchanged. Remove the original clothing from the base photo. Extract only the dress from the selected dress image. Fit the dress naturally on the body with correct proportions. Match lighting, shadows, and perspective. Do not create a second person. Do not overlay the dress image as a separate photo. Output a single realistic image of the person wearing the selected dress. Style: realistic fashion photography, high quality, detailed fabric, natural pose. Task: virtual try-on. Preserve Face: true. Remove Old Clothing: true. Output: single realistic person wearing the selected dress.";
+        const prompt = "A realistic fashion photo of the uploaded person wearing the selected designer dress. Keep the same face, body shape, lighting and background. Replace the existing clothing with the selected dress. High quality fashion photography.";
 
-        const result = await hfClient.predict("/tryon", [
-            { background: new Blob([humanBlob]), layers: [], composite: null }, // dict
-            new Blob([garmBlob]), // file
-            prompt, // garment description
-            true, // is_checked
-            false, // is_checked_crop: false to maintain original proportions
-            40, // denoise steps
-            42, // seed
-        ]);
+        try {
+            const result = await hfClient.predict("/tryon", [
+                { background: new Blob([humanBlob], { type: "image/jpeg" }), layers: [], composite: null }, // dict
+                new Blob([garmBlob], { type: "image/jpeg" }), // file
+                prompt, // garment description
+                true, // is_checked
+                false, // is_checked_crop: false to maintain original proportions
+                40, // denoise steps
+                42, // seed
+            ]);
 
-        console.log(`[Job ${jobId}] Inference complete. Result:`, result);
+            console.log(`[Job ${jobId}] Inference complete. Result:`, result);
 
-        if (!result || !result.data || !result.data[0]) {
-            throw new Error("Invalid output from IDM-VTON space");
-        }
+            if (!result || !result.data || !result.data[0]) {
+                throw new Error("Invalid output from IDM-VTON space");
+            }
 
-        // Result data is a URL or a file path to the generated image
-        const generatedImageUrl = result.data[0].url || result.data[0].path;
+            // Result data is a URL or a file path to the generated image
+            const generatedImageUrl = result.data[0].url || result.data[0].path;
 
-        // Download it and save it to /uploads
-        const fetch = require('node-fetch');
-        const res = await fetch(generatedImageUrl);
-        if (!res.ok) throw new Error("Failed to download generated image from Gradio");
-        const buffer = await res.buffer();
+            // Download it and save it to /uploads
+            const fetch = require('node-fetch');
+            const res = await fetch(generatedImageUrl);
+            if (!res.ok) throw new Error("Failed to download generated image from Gradio");
+            const arrayBuffer = await res.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
 
-        const finalFilename = `tryon_result_${jobId}.jpg`;
-        const finalTarget = path.join(__dirname, '..', '..', 'uploads', finalFilename);
-        fs.writeFileSync(finalTarget, buffer);
+            const finalFilename = `tryon_result_${jobId}.jpg`;
+            const finalTarget = path.join(__dirname, '..', '..', 'uploads', finalFilename);
+            fs.writeFileSync(finalTarget, buffer);
 
-        // Success
-        jobs[jobId] = {
-            status: 'completed',
-            result_url: `/uploads/${finalFilename}`,
-            error: null
-        };
+            // Success
+            jobs[jobId] = {
+                status: 'completed',
+                result_url: `/uploads/${finalFilename}`,
+                error: null
+            };
 
-        // Cleanup temp garment if we downloaded it
-        if (garmentImageUrl.startsWith('http') && fs.existsSync(garmentPath)) {
-            fs.unlinkSync(garmentPath);
+            // Cleanup temp garment if we downloaded it
+            if (garmentImageUrl.startsWith('http') && fs.existsSync(garmentPath)) {
+                fs.unlinkSync(garmentPath);
+            }
+        } catch (apiError) {
+            console.error(`[Job ${jobId}] \x1b[31mIDM-VTON Raw API Error:\x1b[0m`);
+            console.error(apiError);
+            console.error(apiError.message);
+            console.error(apiError.stack);
+            if (apiError.message && apiError.message.includes('401')) {
+                console.error(`[Job ${jobId}] ⚠️ Error 401: Hugging Face Token is invalid or missing.`);
+            } else if (apiError.message && apiError.message.includes('429')) {
+                console.error(`[Job ${jobId}] ⚠️ Error 429: Too many requests to Hugging Face API.`);
+            } else if (apiError.message && apiError.message.includes('503')) {
+                console.error(`[Job ${jobId}] ⚠️ Error 503: Hugging Face model is loading. Try again in 20 seconds.`);
+            }
+
+            throw apiError; // Throw so Gemini fallback can take over
         }
     }
 

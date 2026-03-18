@@ -1,0 +1,4477 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCart | AI Fashion Store</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        /* ─── VARIABLES ─── */
+        :root {
+            --bg-body: #050505;
+            --bg-card: #121212;
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --primary: #9333ea;
+            --primary-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        /* ─── RESET ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        button {
+            font-family: var(--font-body);
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            min-height: 80vh;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* ─── UTILITIES ─── */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-hot {
+            background: linear-gradient(45deg, #ff4d4d, #f9cb28);
+            color: black;
+        }
+
+        .badge-new {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .badge-sale {
+            background: #10b981;
+            color: black;
+        }
+
+        /* ─── COMPONENTS ─── */
+        .btn {
+            padding: 10px 24px;
+            border-radius: 99px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-glass);
+            overflow: hidden;
+        }
+
+        /* ─── NAVBAR ─── */
+        nav {
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            background: #18181b;
+            padding: 5px;
+            border-radius: 99px;
+            display: flex;
+            border: 1px solid var(--border-glass);
+        }
+
+        .nav-link {
+            padding: 8px 24px;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #27272a;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-badge-nav {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .nav-cart-link {
+            position: relative;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid var(--bg-body);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            filter: blur(180px);
+            opacity: 0.15;
+            top: 20%;
+            left: -100px;
+            z-index: -1;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-glass);
+            padding-top: 30px;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 50px -20px rgba(168, 85, 247, 0.3);
+        }
+
+        /* ─── PRODUCTS ─── */
+        .product-card {
+            background: #0f0f11;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: rgba(217, 70, 239, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .product-img {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.05);
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            color: white;
+            transition: 0.2s;
+            z-index: 2;
+        }
+
+        .wishlist-btn:hover {
+            background: white;
+            color: #ef4444;
+        }
+
+        .wishlist-btn.active {
+            background: #ef4444;
+            color: white;
+        }
+
+        .product-info {
+            padding: 18px;
+        }
+
+        .color-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .color-dot.active {
+            border: 1px solid white;
+            outline: 1px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* ─── SHOP FILTER ─── */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .filter-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            padding-right: 20px;
+            border-right: 1px solid var(--border-glass);
+        }
+
+        .filter-group {
+            margin-bottom: 30px;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .checkbox-item:hover {
+            color: white;
+        }
+
+        .checkbox-item input {
+            accent-color: var(--primary);
+        }
+
+        .price-range {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 4px;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .price-fill {
+            position: absolute;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .price-knob {
+            position: absolute;
+            left: 60%;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ─── TRY ON ─── */
+        .tryon-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .upload-zone {
+            border: 2px dashed #333;
+            height: 220px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.01);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(147, 51, 234, 0.05);
+        }
+
+        .upload-zone img.preview {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .upload-zone .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .upload-zone:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        .wardrobe-item {
+            border-radius: 8px;
+            cursor: pointer;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            opacity: 0.6;
+        }
+
+        .wardrobe-item:hover {
+            opacity: 1;
+            border-color: rgba(217, 70, 239, 0.5);
+            transform: scale(1.05);
+        }
+
+        .wardrobe-item.selected {
+            border-color: #d946ef;
+            opacity: 1;
+            box-shadow: 0 0 12px rgba(217, 70, 239, 0.5);
+        }
+
+        /* Result Panel */
+        .result-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .result-tab {
+            padding: 8px 18px;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border-glass);
+            background: transparent;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+
+        .result-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .result-view {
+            display: none;
+        }
+
+        .result-view.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* AI Generation Animation */
+        .ai-gen-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 10;
+            border-radius: 20px;
+        }
+
+        .ai-gen-overlay.hidden {
+            display: none;
+        }
+
+        .gen-progress {
+            width: 80%;
+            background: #222;
+            border-radius: 99px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .gen-progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 99px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .gen-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 80%;
+        }
+
+        .gen-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .gen-step.done {
+            color: #10b981;
+        }
+
+        .gen-step.active {
+            color: white;
+        }
+
+        .gen-step i {
+            font-size: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        /* ─── FOOTER & BRANDS ─── */
+        .brands-ticker {
+            overflow: hidden;
+            padding: 40px 0;
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+            background: #080808;
+            position: relative;
+        }
+
+        .brands-track {
+            display: flex;
+            gap: 60px;
+            animation: scroll 20s linear infinite;
+            width: max-content;
+        }
+
+        .brands-ticker::before,
+        .brands-ticker::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .brands-ticker::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-body), transparent);
+        }
+
+        .brands-ticker::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-body), transparent);
+        }
+
+        .brand-item {
+            color: #555;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        footer {
+            background: #000;
+            padding: 80px 0 30px 0;
+            margin-top: 100px;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        /* ─── TOAST NOTIFICATION ─── */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #18181b;
+            border: 1px solid var(--border-glass);
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-grid,
+            .shop-layout,
+            .tryon-grid,
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image-wrapper {
+                order: -1;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .filter-sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border-glass);
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+                position: relative;
+                top: 0;
+            }
+        }
+
+        /* ─── LOGIN / REGISTER PAGE ─── */
+        .auth-page-wrap {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-page-wrap::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%);
+            top: -100px;
+            left: -150px;
+            pointer-events: none;
+        }
+
+        .auth-page-wrap::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
+            bottom: -80px;
+            right: -80px;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 480px;
+            padding: 48px;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .auth-logo-mark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 32px;
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .auth-tab-bar {
+            display: flex;
+            background: #0d0d0d;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 36px;
+            gap: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: var(--font-body);
+        }
+
+        .auth-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+        }
+
+        .auth-panel {
+            display: none;
+        }
+
+        .auth-panel.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .auth-field {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 16px 14px 44px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: rgba(168, 85, 247, 0.6);
+            background: rgba(168, 85, 247, 0.06);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+        }
+
+        .auth-input::placeholder {
+            color: #4b5563;
+        }
+
+        .auth-icon {
+            position: absolute;
+            left: 14px;
+            bottom: 15px;
+            color: #555;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .auth-eye {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            color: #555;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: none;
+            border: none;
+        }
+
+        .auth-eye:hover {
+            color: #a855f7;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            letter-spacing: 0.3px;
+            margin-top: 8px;
+        }
+
+        .auth-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(168, 85, 247, 0.5);
+        }
+
+        .auth-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-divider {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin: 22px 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-glass);
+        }
+
+        .auth-divider span {
+            background: #121212;
+            padding: 0 14px;
+            position: relative;
+        }
+
+        .oauth-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .oauth-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            margin-bottom: 18px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-error.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-success {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            margin-bottom: 18px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-success.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-footer-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer-link a {
+            color: #c084fc;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        .strength-bar {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .strength-seg {
+            height: 3px;
+            flex: 1;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: 0.3s;
+        }
+
+        /* Profile mini section (logged-in) */
+        .profile-card {
+            background: rgba(18, 18, 18, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 60px auto;
+        }
+
+        /* ─── CATEGORY NAV BAR ─── */
+        .category-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 16px 0;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 99px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-family: var(--font-body);
+        }
+
+        .category-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .category-chip.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px -3px rgba(168, 85, 247, 0.4);
+        }
+
+        .category-chip i {
+            font-size: 1.1rem;
+        }
+
+        .category-chip .chip-count {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .category-chip.active .chip-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ─── 3-BUTTON PRODUCT CARD ─── */
+        .product-card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .product-card-actions .card-action-btn {
+            flex: 1;
+            padding: 8px 4px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-family: var(--font-body);
+            border: none;
+        }
+
+        .card-action-btn.buy-now-btn {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .card-action-btn.buy-now-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px -4px rgba(168, 85, 247, 0.5);
+        }
+
+        .card-action-btn.add-cart-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass) !important;
+            color: white;
+        }
+
+        .card-action-btn.add-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .card-action-btn.tryon-btn {
+            background: rgba(217, 70, 239, 0.1);
+            border: 1px solid rgba(217, 70, 239, 0.25) !important;
+            color: #d946ef;
+        }
+
+        .card-action-btn.tryon-btn:hover {
+            background: rgba(217, 70, 239, 0.2);
+            border-color: rgba(217, 70, 239, 0.5) !important;
+        }
+
+        .card-action-btn.tryon-btn.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+        }
+
+        .card-action-btn.tryon-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Dynamic product count label */
+        #shop-product-count {
+            transition: opacity 0.2s ease;
+        }
+
+        /* No results state */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Category badge on cards */
+        .product-category-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-category-label .cat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* ─── STAR RATING ON CARDS ─── */
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .product-stars {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .product-stars .star {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .product-stars .star.filled {
+            color: #fbbf24;
+        }
+
+        .product-stars .star.half {
+            position: relative;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .product-stars .star.half::before {
+            content: '\2605';
+            position: absolute;
+            left: 0;
+            color: #fbbf24;
+            overflow: hidden;
+            width: 50%;
+        }
+
+        .product-rating-num {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .product-review-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════ */
+        /* ─── SEARCH ENGINE STYLES ─────────────────────── */
+        /* ═══════════════════════════════════════════════════ */
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 520px;
+            z-index: 200;
+        }
+
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            background: #18181b;
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .search-bar-container:focus-within {
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1), 0 8px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-cat-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: none;
+            border-right: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            min-width: 90px;
+            text-align: center;
+            outline: none;
+        }
+
+        .search-cat-select:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: white;
+        }
+
+        .search-cat-select option {
+            background: #1a1a1d;
+            color: #ccc;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 11px 14px;
+            color: white;
+            font-size: 0.92rem;
+            font-family: var(--font-body);
+            min-width: 0;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #555;
+        }
+
+        .search-submit-btn {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 0 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            align-self: stretch;
+        }
+
+        .search-submit-btn:hover {
+            filter: brightness(1.15);
+        }
+
+        /* ─── DROPDOWN ─── */
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: rgba(22, 22, 26, 0.97);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.7);
+            max-height: 420px;
+            overflow-y: auto;
+            display: none;
+            z-index: 201;
+            scrollbar-width: thin;
+            scrollbar-color: #333 transparent;
+        }
+
+        .search-dropdown.open {
+            display: block;
+            animation: searchDropIn 0.2s ease;
+        }
+
+        @keyframes searchDropIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-dropdown::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .search-dropdown::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .search-dropdown::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        /* Section headers */
+        .search-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+
+        .search-section-header button {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: 0.2s;
+        }
+
+        .search-section-header button:hover {
+            color: #f87171;
+        }
+
+        /* Suggestion items */
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .search-item:hover {
+            background: rgba(168, 85, 247, 0.08);
+        }
+
+        .search-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .search-item-icon.product-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .search-item-icon.product-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .search-item-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-item-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-item-name .hl {
+            color: #d946ef;
+            font-weight: 700;
+        }
+
+        .search-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .search-item-meta .cat-pill {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1px 8px;
+            border-radius: 99px;
+            font-size: 0.68rem;
+        }
+
+        .search-item-price {
+            font-weight: 700;
+            color: #a855f7;
+            font-size: 0.88rem;
+            white-space: nowrap;
+        }
+
+        .search-item-remove {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: 0.15s;
+            display: flex;
+            font-size: 1rem;
+        }
+
+        .search-item-remove:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* History items */
+        .search-item.history-item .search-item-icon {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+        }
+
+        /* Category suggestion items */
+        .search-item.category-item .search-item-icon {
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+        }
+
+        /* No results */
+        .search-no-results {
+            padding: 30px 18px;
+            text-align: center;
+        }
+
+        .search-no-results i {
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.08);
+            margin-bottom: 10px;
+        }
+
+        .search-no-results p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .search-no-results span {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Keyboard shortcut hint */
+        .search-kbd {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: monospace;
+            margin-left: 8px;
+        }
+
+        /* Active search results banner */
+        .search-results-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-results-banner.active {
+            display: flex;
+        }
+
+        .search-results-banner .srb-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .search-results-banner .srb-text i {
+            color: #a855f7;
+            font-size: 1.2rem;
+        }
+
+        .search-results-banner .srb-text .srb-query {
+            color: #d946ef;
+        }
+
+        .search-results-banner .srb-clear {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .search-results-banner .srb-clear:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Search overlay for mobile */
+        .search-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 199;
+        }
+
+        .search-overlay.open {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .search-wrapper {
+                max-width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                padding: 12px 16px;
+                background: rgba(5, 5, 5, 0.95);
+                backdrop-filter: blur(16px);
+                display: none;
+                z-index: 300;
+            }
+
+            .search-wrapper.mobile-open {
+                display: block;
+            }
+
+            .search-cat-select {
+                display: none;
+            }
+
+            .mobile-search-toggle {
+                display: flex !important;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .mobile-search-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="container flex-between">
+            <div class="logo" onclick="switchPage('home')">
+                <i class="ph-fill ph-hexagon" style="color: #d946ef; font-size: 1.8rem;"></i>
+                <span
+                    style="background: linear-gradient(90deg, #fff, #d8b4fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NexCart</span>
+            </div>
+
+            <div class="nav-links">
+                <a onclick="switchPage('home')" id="nav-home" class="nav-link active"><i class="ph ph-house"></i>
+                    Home</a>
+                <a href="./shop.html" id="nav-shop" class="nav-link"><i class="ph ph-bag"></i> Shop</a>
+                <a onclick="switchPage('tryon')" id="nav-tryon" class="nav-link"><i class="ph ph-camera"></i> Try-On</a>
+                <a href="./cart.html" id="nav-cart" class="nav-link nav-cart-link">
+                    <i class="ph ph-shopping-cart"></i> Cart
+                    <span class="cart-badge-nav" id="cart-badge-nav" style="display: none;">0</span>
+                </a>
+            </div>
+
+            <div class="flex-center" style="gap: 15px;">
+                <!-- Mobile search toggle -->
+                <button class="flex-center mobile-search-toggle"
+                    style="background: #18181b; padding: 8px 12px; border-radius: 99px; border: 1px solid var(--border-glass); color: var(--text-muted); cursor: pointer;"
+                    onclick="toggleMobileSearch()">
+                    <i class="ph ph-magnifying-glass"></i>
+                </button>
+                <!-- ═══ SEARCH BAR ═══ -->
+                <div class="search-wrapper" id="search-wrapper">
+                    <div class="search-bar-container" id="search-bar-container">
+                        <select class="search-cat-select" id="search-category" onchange="onSearchInput()">
+                            <option value="all">All</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="home">Home</option>
+                            <option value="books">Books</option>
+                            <option value="sports">Sports</option>
+                            <option value="beauty">Beauty</option>
+                        </select>
+                        <input type="text" class="search-input" id="search-input"
+                            placeholder="Search products, categories, brands..." autocomplete="off" spellcheck="false"
+                            oninput="onSearchInput()" onfocus="onSearchFocus()" onkeydown="onSearchKeydown(event)">
+                        <button class="search-submit-btn" onclick="executeSearch()">
+                            <i class="ph ph-magnifying-glass"></i>
+                        </button>
+                    </div>
+                    <div class="search-dropdown" id="search-dropdown"></div>
+                </div>
+                <div class="search-overlay" id="search-overlay" onclick="closeSearchDropdown()"></div>
+                <a href="./cart.html" class="cart-icon-wrapper" style="cursor: pointer; text-decoration: none;">
+                    <button class="btn-outline" style="width: 42px; height: 42px; padding: 0; border-radius: 50%;"><i
+                            class="ph ph-shopping-cart" style="font-size: 1.2rem;"></i></button>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </a>
+                <!-- Auth Button: swaps between Login and User Avatar -->
+                <div id="auth-nav-btn">
+                    <button class="btn-primary" id="nav-login-btn" onclick="switchPage('login')"
+                        style="padding: 8px 20px; font-size: 0.9rem;"><i class="ph ph-sign-in"></i> Login</button>
+                </div>
+                <div id="auth-user-nav" style="display:none; align-items: center; gap:10px;">
+                    <div id="nav-user-avatar" onclick="switchPage('profile')"
+                        style="width:38px;height:38px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;font-size:1rem;">
+                        A</div>
+                    <button onclick="logoutUser()" class="btn-outline" style="padding:7px 14px;font-size:0.82rem;"><i
+                            class="ph ph-sign-out"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ─── PAGE 1: HOME ─── -->
+    <div id="home-page" class="page-section active">
+        <section class="hero container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div
+                        style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; background: rgba(147, 51, 234, 0.15); border: 1px solid rgba(147, 51, 234, 0.3); color: #e9d5ff; padding: 8px 16px; border-radius: 99px; font-weight: 600; font-size: 0.8rem;">
+                        <span style="position: relative; display: flex; height: 8px; width: 8px;">
+                            <span
+                                style="position: absolute; display: inline-flex; height: 100%; width: 100%; border-radius: 50%; background-color: #d946ef; opacity: 0.75; animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+                            <span
+                                style="position: relative; display: inline-flex; border-radius: 50%; height: 8px; width: 8px; background-color: #d946ef;"></span>
+                        </span>
+                        AI V2.0 LIVE NOW
+                    </div>
+                    <h1 class="hero-title">Fashion Meets <br><span class="text-gradient">Artificial Intelligence</span>
+                    </h1>
+                    <p class="hero-desc">Stop guessing sizes. Upload your photo and watch our AI drape the latest trends
+                        on your digital twin instantly.</p>
+                    <div class="flex-center" style="justify-content: flex-start; gap: 16px;">
+                        <button onclick="switchPage('shop')" class="btn btn-primary"><i class="ph ph-bag"></i> Start
+                            Shopping</button>
+                        <button onclick="switchPage('tryon')" class="btn btn-outline"><i class="ph ph-magic-wand"></i>
+                            Try Demo</button>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white;">98%</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Fit Accuracy</div>
+                        </div>
+                        <div style="width: 1px; height: 40px; background: var(--border-glass);"></div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white;">24h</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Delivery</div>
+                        </div>
+                        <div style="width: 1px; height: 40px; background: var(--border-glass);"></div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white;">10k+</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Happy Users</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=1000&auto=format&fit=crop"
+                        alt="Fashion Model" style="height: 600px; width: 100%; object-fit: cover;">
+                    <div
+                        style="position: absolute; bottom: 30px; left: 30px; right: 30px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px;">
+                        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=100"
+                            style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
+                        <div>
+                            <div style="font-size: 0.9rem; font-weight: 600;">Velvet Night Dress</div>
+                            <div style="font-size: 0.8rem; color: #a855f7;">Best Match: Size M</div>
+                        </div>
+                        <button class="btn-primary"
+                            style="padding: 8px 12px; margin-left: auto; font-size: 0.8rem;">Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brands Ticker -->
+        <div class="brands-ticker">
+            <div class="brands-track">
+                <div class="brand-item">VOGUE</div>
+                <div class="brand-item">GUCCI</div>
+                <div class="brand-item">PRADA</div>
+                <div class="brand-item">ZARA</div>
+                <div class="brand-item">CHANEL</div>
+                <div class="brand-item">UNIQLO</div>
+                <div class="brand-item">H&M</div>
+                <div class="brand-item">VOGUE</div> <!-- Repeat for seamless loop -->
+                <div class="brand-item">GUCCI</div>
+                <div class="brand-item">PRADA</div>
+                <div class="brand-item">ZARA</div>
+                <div class="brand-item">CHANEL</div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <section class="container" style="padding: 100px 0;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 class="section-title">How It <span class="text-gradient">Works</span></h2>
+                <p style="color: var(--text-muted);">From screen to reality in 3 simple steps</p>
+            </div>
+            <div class="grid-3">
+                <div class="card" style="padding: 40px; text-align: center; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: -20px; right: -20px; font-size: 8rem; font-weight: 800; color: rgba(255,255,255,0.03); font-family: var(--font-display);">
+                        01</div>
+                    <div
+                        style="width: 70px; height: 70px; background: rgba(168, 85, 247, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #a855f7;">
+                        <i class="ph ph-camera" style="font-size: 32px;"></i>
+                    </div>
+                    <h3>Upload Photo</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px; line-height: 1.6;">Take a
+                        full-body photo or upload one from your gallery. Our AI creates a 3D mesh of your body.</p>
+                </div>
+                <div class="card" style="padding: 40px; text-align: center; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: -20px; right: -20px; font-size: 8rem; font-weight: 800; color: rgba(255,255,255,0.03); font-family: var(--font-display);">
+                        02</div>
+                    <div
+                        style="width: 70px; height: 70px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #3b82f6;">
+                        <i class="ph ph-t-shirt" style="font-size: 32px;"></i>
+                    </div>
+                    <h3>Select Style</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px; line-height: 1.6;">Browse
+                        our collection. Click the "Try On" button to see how the fabric drapes on your unique shape.</p>
+                </div>
+                <div class="card" style="padding: 40px; text-align: center; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: -20px; right: -20px; font-size: 8rem; font-weight: 800; color: rgba(255,255,255,0.03); font-family: var(--font-display);">
+                        03</div>
+                    <div
+                        style="width: 70px; height: 70px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #10b981;">
+                        <i class="ph ph-shopping-bag" style="font-size: 32px;"></i>
+                    </div>
+                    <h3>Perfect Fit</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 10px; line-height: 1.6;">Get
+                        precise size recommendations. Order with confidence knowing exactly how it looks.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ─── PAGE 2: SHOP ─── -->
+    <div id="shop-page" class="page-section">
+        <div class="container">
+            <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: end;">
+                <div>
+                    <h2 class="section-title">Explore <span class="text-gradient">Collection</span></h2>
+                    <p id="shop-product-count" style="color: var(--text-muted);">Showing all products</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div style="position: relative;">
+                        <select id="shop-sort-select"
+                            style="background: #18181b; color: white; border: 1px solid var(--border-glass); padding: 10px 15px; border-radius: 8px; appearance: none; padding-right: 35px; cursor: pointer;"
+                            onchange="renderShopProducts()">
+                            <option value="recommended">Sort by: Recommended</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="newest">Newest Arrivals</option>
+                        </select>
+                        <i class="ph ph-caret-down"
+                            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── CATEGORY NAV BAR ─── -->
+            <div class="category-nav" id="category-nav">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="shop-layout">
+                <!-- Sidebar -->
+                <aside class="filter-sidebar">
+                    <div class="filter-group">
+                        <div class="filter-title">Categories</div>
+                        <div id="sidebar-categories">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Price Range</div>
+                        <div class="flex-between"
+                            style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">
+                            <span>₹0</span>
+                            <span>₹500+</span>
+                        </div>
+                        <div class="price-range">
+                            <div class="price-fill"></div>
+                            <div class="price-knob"></div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.85rem;">Up to ₹300</div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Color</div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <div class="color-dot active" style="background: #000;"></div>
+                            <div class="color-dot" style="background: #fff;"></div>
+                            <div class="color-dot" style="background: #ef4444;"></div>
+                            <div class="color-dot" style="background: #3b82f6;"></div>
+                            <div class="color-dot" style="background: #10b981;"></div>
+                            <div class="color-dot" style="background: #f59e0b;"></div>
+                            <div class="color-dot" style="background: #8b5cf6;"></div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Size</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <button class="btn-outline">XS</button>
+                            <button class="btn-outline">S</button>
+                            <button class="btn-outline" style="background: #27272a; border-color: #d946ef;">M</button>
+                            <button class="btn-outline">L</button>
+                            <button class="btn-outline">XL</button>
+                            <button class="btn-outline">XXL</button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Products (dynamically rendered) -->
+                <main class="grid-3" id="shop-product-grid">
+                    <!-- Rendered by JS -->
+                </main>
+            </div>
+
+            <div class="flex-center" style="margin-top: 60px;">
+                <button class="btn-outline" style="padding: 10px 30px;" id="load-more-btn"
+                    onclick="loadMoreProducts()">Load More Products</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PAGE 3: VIRTUAL TRY-ON ─── -->
+    <div id="tryon-page" class="page-section">
+        <div class="container" style="padding-bottom: 60px;">
+            <!-- Header -->
+            <div style="text-align: center; margin-top: 40px; margin-bottom: 36px;">
+                <div
+                    style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(147, 51, 234, 0.2); color: #d8b4fe; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">
+                    BETA V2.0</div>
+                <h2 class="section-title">Virtual Try-On <span class="text-gradient">Studio</span></h2>
+                <p style="color: var(--text-muted); margin-top: 8px;">Upload your photo, pick a dress, and watch AI
+                    generate how it looks on you</p>
+
+                <!-- Progress Steps -->
+                <div id="tryon-steps"
+                    style="display: flex; justify-content: center; align-items: center; gap: 0; margin-top: 28px;">
+                    <div class="tryon-step-pill active" id="step-pill-1"
+                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:99px 0 0 99px;background:rgba(217,70,239,0.15);border:1px solid #d946ef;color:#d946ef;font-weight:700;font-size:0.85rem;">
+                        <span
+                            style="border:1px solid #d946ef;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">1</span>
+                        Upload Photo
+                    </div>
+                    <div class="tryon-step-pill" id="step-pill-2"
+                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:0;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-left:none;color:var(--text-muted);font-weight:600;font-size:0.85rem;">
+                        <span
+                            style="border:1px solid #555;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">2</span>
+                        Select Dress
+                    </div>
+                    <div class="tryon-step-pill" id="step-pill-3"
+                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:0 99px 99px 0;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-left:none;color:var(--text-muted);font-weight:600;font-size:0.85rem;">
+                        <span
+                            style="border:1px solid #555;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">3</span>
+                        Generate Result
+                    </div>
+                </div>
+            </div>
+
+            <div class="tryon-grid">
+                <!-- LEFT PANEL -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                    <!-- 1. Upload Zone -->
+                    <div class="card" style="padding: 24px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <h3 style="font-size: 1.05rem;">📸 Your Photo</h3>
+                            <span id="upload-status" style="font-size:0.75rem;color:var(--text-muted);">No file
+                                selected</span>
+                        </div>
+                        <input type="file" id="photo-input" accept="image/*" style="display:none;"
+                            onchange="previewPhoto(event)">
+                        <div class="upload-zone" id="upload-zone"
+                            onclick="document.getElementById('photo-input').click()">
+                            <i class="ph ph-user-focus" id="upload-icon"
+                                style="font-size: 44px; color: #d946ef; margin-bottom: 12px;"></i>
+                            <p id="upload-text" style="font-weight: 600; font-size: 0.9rem;">Click to upload your photo
+                            </p>
+                            <small id="upload-subtext" style="color: var(--text-muted); margin-top: 5px;">JPG or PNG,
+                                Max 10MB</small>
+                            <div class="upload-overlay" id="upload-overlay" style="display:none;">
+                                <i class="ph ph-arrow-clockwise" style="font-size:28px;color:white;"></i>
+                                <span style="font-size:0.85rem;color:white;margin-top:6px;">Change photo</span>
+                            </div>
+                        </div>
+
+                        <!-- Height Slider -->
+                        <div style="margin-top: 18px;">
+                            <div class="flex-between" style="font-size: 0.85rem; margin-bottom: 8px;">
+                                <span style="color:var(--text-muted);">Height</span>
+                                <span id="height-label" style="color: var(--primary); font-weight:600;">170 cm</span>
+                            </div>
+                            <input type="range" min="150" max="195" value="170" id="height-range"
+                                style="width: 100%; accent-color: var(--primary);"
+                                oninput="document.getElementById('height-label').textContent=this.value+' cm'">
+
+                            <!-- Body Type -->
+                            <div style="font-size:0.85rem;color:var(--text-muted);margin-top:14px;margin-bottom:8px;">
+                                Body Type</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-outline body-btn active-body" onclick="selectBody(this)"
+                                    style="flex:1;font-size:0.75rem;border-color:var(--primary);background:rgba(147,51,234,0.1);color:white;">Hourglass</button>
+                                <button class="btn-outline body-btn" onclick="selectBody(this)"
+                                    style="flex:1;font-size:0.75rem;">Pear</button>
+                                <button class="btn-outline body-btn" onclick="selectBody(this)"
+                                    style="flex:1;font-size:0.75rem;">Rectangle</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Digital Wardrobe -->
+                    <div class="card" style="padding: 24px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <h3 style="font-size: 1.05rem;">👗 Select Dress</h3>
+                            <span id="dress-label" style="font-size:0.75rem;color:#d946ef;font-weight:600;">Noir
+                                Elegance</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=300"
+                                class="wardrobe-item selected" onclick="selectDress(this,'Noir Elegance Maxi')"
+                                title="Noir Elegance Maxi">
+                            <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=300"
+                                class="wardrobe-item" onclick="selectDress(this,'Rose Petal Wrap')"
+                                title="Rose Petal Wrap">
+                            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=300"
+                                class="wardrobe-item" onclick="selectDress(this,'Lavender Dream')"
+                                title="Lavender Dream">
+                            <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=300"
+                                class="wardrobe-item" onclick="selectDress(this,'Velvet Night')" title="Velvet Night">
+                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=300"
+                                class="wardrobe-item" onclick="selectDress(this,'Summer Breeze Top')"
+                                title="Summer Breeze Top">
+                            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=300"
+                                class="wardrobe-item" onclick="selectDress(this,'Leather Rider Jacket')"
+                                title="Leather Rider Jacket">
+                        </div>
+                    </div>
+
+                    <!-- Generate Button (mobile visible here) -->
+                    <button class="btn btn-primary" id="gen-btn-mobile" onclick="generateTryon()"
+                        style="display:none;width:100%;justify-content:center;padding:14px;font-size:1rem;">
+                        <i class="ph-fill ph-sparkle"></i> Generate Try-On
+                    </button>
+                </div>
+
+                <!-- RIGHT PANEL: Result Preview -->
+                <div class="card" id="result-panel"
+                    style="padding: 24px; display: flex; flex-direction: column; position: relative; background: radial-gradient(ellipse at 30% 20%, #1a0d2e 0%, #0a0a0a 70%); min-height: 580px;">
+
+                    <!-- AI Generation Overlay -->
+                    <div class="ai-gen-overlay hidden" id="ai-gen-overlay">
+                        <div style="text-align:center;">
+                            <i class="ph-fill ph-sparkle"
+                                style="font-size:3rem;background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>
+                            <div
+                                style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-top:10px;">
+                                AI Processing...</div>
+                            <div style="color:var(--text-muted);font-size:0.85rem;margin-top:5px;">Generating your
+                                try-on images</div>
+                        </div>
+                        <div class="gen-progress">
+                            <div class="gen-progress-bar" id="gen-progress-bar"></div>
+                        </div>
+                        <div class="gen-steps" id="gen-steps">
+                            <div class="gen-step" id="gstep-1"><i class="ph ph-circle"></i> Analyzing body proportions
+                            </div>
+                            <div class="gen-step" id="gstep-2"><i class="ph ph-circle"></i> Creating 3D mesh mapping
+                            </div>
+                            <div class="gen-step" id="gstep-3"><i class="ph ph-circle"></i> Draping fabric texture</div>
+                            <div class="gen-step" id="gstep-4"><i class="ph ph-circle"></i> Rendering lighting & shadows
+                            </div>
+                            <div class="gen-step" id="gstep-5"><i class="ph ph-circle"></i> Generating 3 view angles
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Idle State -->
+                    <div id="idle-state"
+                        style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+                        <div style="position:relative;">
+                            <div
+                                style="width:120px;height:120px;border-radius:50%;background:rgba(147,51,234,0.1);display:flex;align-items:center;justify-content:center;border:2px dashed rgba(147,51,234,0.3);">
+                                <i class="ph ph-magic-wand" style="font-size:48px;color:rgba(147,51,234,0.6);"></i>
+                            </div>
+                            <div
+                                style="position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,#d946ef,transparent);top:50%;animation:scan 3s ease-in-out infinite;">
+                            </div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div
+                                style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:8px;">
+                                Ready to Generate</div>
+                            <div style="color:var(--text-muted);font-size:0.85rem;line-height:1.5;">Upload your photo &
+                                select a dress,<br>then click Generate.</div>
+                        </div>
+                        <div
+                            style="font-family:monospace;font-size:0.75rem;color:#00cc66;opacity:0.7;text-align:left;line-height:1.8;">
+                            &gt; AI_MODEL: v2.0 LOADED<br>
+                            &gt; MESH_MAPPING: READY<br>
+                            &gt; RENDER_ENGINE: STANDBY
+                        </div>
+                    </div>
+
+                    <!-- Results State (hidden until generated) -->
+                    <div id="results-state" style="display:none;flex-direction:column;height:100%;">
+                        <!-- View Tabs -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <div class="result-tabs">
+                                <button class="result-tab active" onclick="switchView('selfie',this)">🪞 Front</button>
+                            </div>
+                            <div style="display:flex;gap:8px;">
+                                <button class="btn-outline" onclick="downloadResult()"
+                                    style="padding:6px 12px;font-size:0.8rem;"><i class="ph ph-download-simple"></i>
+                                    Save</button>
+                                <button class="btn-outline" onclick="addToCartFromTryon()"
+                                    style="padding:6px 12px;font-size:0.8rem;border-color:#d946ef;color:#d946ef;"><i
+                                        class="ph ph-shopping-cart"></i> Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Selfie View -->
+                        <div class="result-view active" id="view-selfie" style="flex:1;">
+                            <div style="position:relative;display:inline-block;">
+                                <img id="result-selfie-img"
+                                    src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600&auto=format&fit=crop"
+                                    style="max-height:420px;border-radius:16px;box-shadow:0 0 40px rgba(168,85,247,0.2);">
+                                <div
+                                    style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.1);">
+                                    <div style="font-size:0.8rem;font-weight:700;" id="selfie-dress-name">Noir Elegance
+                                        Maxi</div>
+                                    <div style="font-size:0.75rem;color:#a855f7;margin-top:2px;">✓ Best Match: Size M —
+                                        98% Fit Score</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Size Recommendation -->
+                        <div
+                            style="margin-top:16px;padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:flex;align-items:center;gap:12px;">
+                            <i class="ph-fill ph-check-circle" style="color:#10b981;font-size:1.4rem;"></i>
+                            <div>
+                                <div style="font-weight:700;font-size:0.9rem;">AI Size Recommendation</div>
+                                <div style="color:var(--text-muted);font-size:0.8rem;margin-top:2px;">Best fit: <strong
+                                        style="color:white;">Size M</strong> • Chest: 86cm • Waist: 68cm • Hip: 92cm
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="addToCartFromTryon()"
+                                style="margin-left:auto;padding:8px 16px;font-size:0.8rem;">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="btn btn-primary" id="gen-btn" onclick="generateTryon()"
+                        style="width:100%;margin-top:20px;justify-content:center;padding:15px;font-size:1rem;">
+                        <i class="ph-fill ph-sparkle"></i> Generate Try-On
+                    </button>
+
+                    <style>
+                        @keyframes scan {
+                            0% {
+                                top: 10%;
+                                opacity: 0;
+                            }
+
+                            10% {
+                                opacity: 1;
+                            }
+
+                            90% {
+                                opacity: 1;
+                            }
+
+                            100% {
+                                top: 90%;
+                                opacity: 0;
+                            }
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PAGE 4: CART ─── -->
+    <div id="cart-page" class="page-section">
+        <div class="container">
+            <div style="margin-top: 40px; margin-bottom: 30px;">
+                <h2 class="section-title">Your <span class="text-gradient">Shopping Cart</span></h2>
+            </div>
+            <div id="spa-cart-root"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer id="site-footer">
+        <div class="container">
+            <div class="grid-4" style="margin-bottom: 60px;">
+                <div>
+                    <div class="logo" style="margin-bottom: 20px;"><i class="ph-fill ph-hexagon"
+                            style="color: #d946ef;"></i> NexCart</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">The world's first
+                        AI-powered fashion marketplace. Experience the perfect fit, every time.</p>
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a class="btn-outline" style="padding: 8px; border-radius: 50%; width: 36px; height: 36px;"><i
+                                class="ph-fill ph-instagram-logo"></i></a>
+                        <a class="btn-outline" style="padding: 8px; border-radius: 50%; width: 36px; height: 36px;"><i
+                                class="ph-fill ph-twitter-logo"></i></a>
+                        <a class="btn-outline" style="padding: 8px; border-radius: 50%; width: 36px; height: 36px;"><i
+                                class="ph-fill ph-tiktok-logo"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 20px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px;">
+                        SHOPPING</h4>
+                    <ul
+                        style="color: var(--text-muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 10px;">
+                        <li><a onclick="switchPage('shop')">New Arrivals</a></li>
+                        <li><a onclick="switchPage('shop')">Best Sellers</a></li>
+                        <li><a onclick="switchPage('shop')">Trending</a></li>
+                        <li><a onclick="switchPage('tryon')">AI Try-On</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 20px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px;">
+                        SUPPORT</h4>
+                    <ul
+                        style="color: var(--text-muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 10px;">
+                        <li>FAQ</li>
+                        <li>Shipping & Returns</li>
+                        <li>Order Tracking</li>
+                        <li>Size Guide</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 20px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px;">STAY
+                        IN THE LOOP</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Get the latest trends
+                        and AI features updates.</p>
+                    <div style="position: relative;">
+                        <input type="text" placeholder="Your email address"
+                            style="width: 100%; padding: 12px; background: #1f1f22; border: 1px solid var(--border-glass); color: white; border-radius: 8px;">
+                        <button
+                            style="position: absolute; right: 4px; top: 4px; bottom: 4px; background: #9333ea; color: white; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer;">Go</button>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="text-align: center; font-size: 0.85rem; color: #555; padding-top: 30px; border-top: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center;">
+                <span>&copy; 2026 NexCart AI Fashion. All rights reserved.</span>
+                <span style="display: flex; gap: 20px;">
+                    <a>Privacy Policy</a>
+                    <a>Terms of Service</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ─── PAGE: LOGIN / REGISTER ─── -->
+    <div id="login-page" class="page-section">
+        <div class="auth-page-wrap">
+            <div class="auth-card">
+                <!-- Logo -->
+                <div class="auth-logo-mark">
+                    <i class="ph-fill ph-hexagon" style="color:#d946ef;font-size:2rem;"></i>
+                    <span
+                        style="background:linear-gradient(90deg,#fff,#d8b4fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NexCart</span>
+                </div>
+
+                <!-- Tab Bar -->
+                <div class="auth-tab-bar">
+                    <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Create
+                        Account</button>
+                </div>
+
+                <!-- ── LOGIN PANEL ── -->
+                <div class="auth-panel active" id="panel-login">
+                    <div class="auth-error" id="login-error">
+                        <i class="ph ph-warning-circle"></i>
+                        <span id="login-error-msg">Invalid credentials.</span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Email Address or Phone Number</label>
+                        <i class="ph ph-user-circle auth-icon"></i>
+                        <input type="text" id="login-identifier" class="auth-input"
+                            placeholder="you@example.com or +911234567890" autocomplete="username">
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Password</label>
+                        <i class="ph ph-lock auth-icon"></i>
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••">
+                        <button class="auth-eye" onclick="togglePass('login-password',this)" type="button">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+
+                    <div style="text-align:right;margin-bottom:22px;">
+                        <a style="color:#a855f7;font-size:0.84rem;cursor:pointer;"
+                            onclick="showToast('Password reset link sent! (demo)', '#a855f7')">Forgot password?</a>
+                    </div>
+
+                    <button class="auth-submit-btn" id="login-btn" onclick="handleLogin()">
+                        <i class="ph ph-sign-in"></i> Sign In to NexCart
+                    </button>
+
+                    <div class="auth-divider"><span>or continue with</span></div>
+                    <div class="oauth-row">
+                        <div id="g_id_onload"
+                             data-client_id="678897425274-as17psse1iga5go4gso28vudm1t34fj1.apps.googleusercontent.com"
+                             data-callback="handleGoogleLogin"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-size="large"
+                             data-theme="outline"
+                             data-text="signin_with"
+                             data-shape="rectangular"
+                             data-logo_alignment="left"
+                             style="width: 100%;">
+                        </div>
+                        <button class="oauth-btn" onclick="showToast('GitHub OAuth coming soon!','#a855f7')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
+                            </svg>
+                            GitHub
+                        </button>
+                    </div>
+
+                    <p class="auth-footer-link">Don't have an account? <a onclick="switchAuthTab('register')">Sign up
+                            free →</a></p>
+                </div>
+
+                <!-- ── REGISTER PANEL ── -->
+                <div class="auth-panel" id="panel-register">
+                    <div class="auth-error" id="register-error">
+                        <i class="ph ph-warning-circle"></i>
+                        <span id="register-error-msg">Registration failed.</span>
+                    </div>
+                    <div class="auth-success" id="register-success">
+                        <i class="ph ph-check-circle"></i>
+                        <span>Account created! Signing you in…</span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Full Name</label>
+                        <i class="ph ph-user auth-icon"></i>
+                        <input type="text" id="reg-name" class="auth-input" placeholder="Jane Doe">
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Email Address</label>
+                        <i class="ph ph-envelope auth-icon"></i>
+                        <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com"
+                            autocomplete="email">
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Phone Number</label>
+                        <i class="ph ph-phone auth-icon"></i>
+                        <input type="tel" id="reg-phone" class="auth-input" placeholder="+911234567890"
+                            autocomplete="tel">
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Password</label>
+                        <i class="ph ph-lock auth-icon"></i>
+                        <input type="password" id="reg-password" class="auth-input" placeholder="Min. 8 characters"
+                            oninput="checkStrength(this.value)">
+                        <button class="auth-eye" onclick="togglePass('reg-password',this)" type="button">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                        <div class="strength-bar" id="strength-bar">
+                            <div class="strength-seg" id="seg1"></div>
+                            <div class="strength-seg" id="seg2"></div>
+                            <div class="strength-seg" id="seg3"></div>
+                            <div class="strength-seg" id="seg4"></div>
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label>Confirm Password</label>
+                        <i class="ph ph-lock-key auth-icon"></i>
+                        <input type="password" id="reg-confirm-password" class="auth-input"
+                            placeholder="Re-enter password">
+                        <button class="auth-eye" onclick="togglePass('reg-confirm-password',this)" type="button">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+
+                    <button class="auth-submit-btn" id="register-btn" onclick="handleRegister()">
+                        <i class="ph ph-sparkle"></i> Create My Account
+                    </button>
+
+                    <p class="auth-footer-link" style="margin-top:20px;">Already have an account? <a
+                            onclick="switchAuthTab('login')">← Sign in</a></p>
+                    <p style="text-align:center;font-size:0.75rem;color:#555;margin-top:14px;">By signing up you agree
+                        to our <span style="color:#a855f7;cursor:pointer;">Terms</span> & <span
+                            style="color:#a855f7;cursor:pointer;">Privacy Policy</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ─── CONSTANTS ───
+        const API = 'http://localhost:5000/api';
+
+        // ═══════════════════════════════════════════════════════════════
+        // ─── STEP 1: PRODUCT DATA SEEDER (350+ Products) ─────────────
+        // ═══════════════════════════════════════════════════════════════
+        // Programmatic generator — creates 50+ products per category.
+        // Each product has: name, price, rating, reviewCount, etc.
+
+        const CATEGORIES = [
+            { id: 'all', name: 'All Products', icon: 'ph ph-squares-four', color: '#a855f7' },
+            { id: 'fashion', name: 'Fashion', icon: 'ph ph-t-shirt', color: '#d946ef' },
+            { id: 'electronics', name: 'Electronics', icon: 'ph ph-cpu', color: '#3b82f6' },
+            { id: 'home', name: 'Home & Kitchen', icon: 'ph ph-house-line', color: '#10b981' },
+            { id: 'books', name: 'Books', icon: 'ph ph-book-open-text', color: '#f59e0b' },
+            { id: 'sports', name: 'Sports', icon: 'ph ph-basketball', color: '#ef4444' },
+            { id: 'beauty', name: 'Beauty', icon: 'ph ph-sparkle', color: '#ec4899' },
+        ];
+
+        // ── Seeded Random Number Generator (deterministic) ──
+        function seededRandom(seed) {
+            let s = seed;
+            return function () {
+                s = (s * 16807 + 0) % 2147483647;
+                return (s - 1) / 2147483646;
+            };
+        }
+
+        // ── Data Seeder Function ──
+        function generateAllProducts() {
+            const rng = seededRandom(42);
+            const rndRange = (min, max) => +(min + rng() * (max - min)).toFixed(2);
+            const rndInt = (min, max) => Math.floor(min + rng() * (max - min + 1));
+            const pick = arr => arr[Math.floor(rng() * arr.length)];
+
+            const UNSPLASH = (id) => `https://images.unsplash.com/${id}?q=80&w=800&auto=format&fit=crop`;
+
+            const PRODUCT_NAMES = {
+                fashion: {
+                    Dresses: ['Noir Elegance Maxi', 'Rose Petal Wrap', 'Lavender Dream', 'Midnight Silk Gown', 'Crystal Bloom Maxi', 'Ruby Twilight Dress', 'Pearl Essence Mini', 'Azure Wrap Dress', 'Golden Sunset Maxi', 'Ivory Lace Charm', 'Diamond Noir Dress', 'Emerald Cascade'],
+                    Tops: ['Summer Breeze', 'Cloud Cotton Blouse', 'Silk Drape Top', 'Urban Flex Tee', 'Boho Spirit Tank', 'Prairie Ruffle Blouse', 'Monaco Stripe Polo', 'Luna Knit Crop', 'Zen Flow Tee', 'Malibu Wave Top'],
+                    Suits: ['Urban Chic Blazer', 'Executive Edge Suit', 'Metropolitan Blazer', 'Pinnacle Slim Fit', 'Titanium Power Suit', 'Velvet Royal Tux', 'Obsidian Business Set', 'Sterling Grey Suit', 'Milan Double-Breast', 'Shadow Line Suit'],
+                    Outerwear: ['Leather Rider', 'Casual Denim Jacket', 'Arctic Explorer Parka', 'Storm Shield Coat', 'Heritage Wool Overcoat', 'Tokyo Street Bomber', 'Alpine Down Vest', 'Sahara Trench', 'Rebel Moto Jacket', 'Classic Peacoat'],
+                    Accessories: ['Luxe Silk Scarf', 'Woven Leather Belt', 'Artisan Sunglasses', 'Signature Watch', 'Canvas Tote Bag', 'Merino Wool Beanie', 'Titanium Cufflinks', 'Handloom Stole', 'Premium Wallet', 'Crystal Hair Pins'],
+                },
+                electronics: {
+                    Audio: ['ProMax Wireless Earbuds', 'Studio Monitor Pro', 'Bass Cannon Speaker', 'Neon Beat Headphones', 'AirPulse Mini', 'WaveSync Earphones', 'ThunderBass Sub', 'Crystal Clear ANC', 'SoundStage Open-Back', 'Micro Pod Speaker'],
+                    Wearables: ['SmartWatch Ultra X', 'FitBand Pro Max', 'HealthRing Titanium', 'Sports Tracker GPS', 'Smart Glass Vision', 'Sleep Monitor Band', 'Pulse Ox Watch', 'NFC Ring Pro', 'VR Headset Lite', 'AR Glasses Beta'],
+                    Peripherals: ['Mechanical Keyboard RGB', 'ErgoMouse Wireless', 'UltraWide Monitor 34"', 'Gaming Controller Pro', 'Webcam 4K Ultra', 'Docking Station USB-C', 'Drawing Tablet Pro', 'Mesh WiFi Router', 'SSD External 2TB', 'Thunderbolt Hub'],
+                    Accessories: ['USB-C Fast Charger 65W', 'Lightning Braided Cable', 'AirTag Smart Tracker', 'Laptop Sleeve 15"', 'Phone Grip Stand', 'Nano Screen Protector', 'Wireless Charging Pad', 'Cable Management Kit', 'Car Phone Mount', 'Universal Adapter'],
+                    'Smart Home': ['Smart Bulb Color Pack', 'Video Doorbell Pro', 'Robot Vacuum Max', 'Smart Thermostat', 'Security Camera 360', 'Voice Assistant Hub', 'Smart Lock Keyless', 'Air Quality Monitor', 'Smart Plug 4-Pack', 'LED Strip WiFi'],
+                },
+                home: {
+                    Decor: ['Ceramic Plant Pot Set', 'Boho Wall Hanging', 'Crystal Candle Holder', 'Abstract Wall Art', 'Floating Shelf Set', 'Rattan Mirror Round', 'Terracotta Vase Duo', 'Geometric Bookends', 'Macrame Dream Set', 'Vintage Photo Frames'],
+                    Kitchen: ['Bamboo Cutting Board', 'Cast Iron Skillet', 'Glass Storage Set', 'Copper Measuring Cups', 'Knife Block Premium', 'Silicone Utensil Set', 'French Press Coffee', 'Ceramic Mixing Bowls', 'Spice Rack Bamboo', 'Tea Kettle Stainless'],
+                    Lighting: ['Minimalist Desk Lamp', 'Sunset Projection Lamp', 'Moon Floor Light', 'Edison Pendant Set', 'LED Ring Light Pro', 'Nordic Table Lamp', 'Galaxy Night Light', 'Rechargeable Lantern', 'Clip Reading Light', 'Smart Ceiling Fan'],
+                    Furniture: ['Mid-Century Side Table', 'Velvet Accent Chair', 'Industrial Bookshelf', 'Floating TV Console', 'Ottoman Storage Cube', 'Rattan Coffee Table', 'Wall-Mount Desk', 'Nesting Tables Set', 'Bar Cart Gold', 'Bean Bag Premium'],
+                    Bedding: ['Egyptian Cotton Sheets', 'Weighted Blanket Pro', 'Memory Foam Pillow', 'Linen Duvet Cover', 'Silk Pillowcase Set', 'Quilted Mattress Pad', 'Bamboo Sheet Set', 'Cooling Gel Pillow', 'Throw Blanket Chunky', 'Body Pillow Premium'],
+                },
+                books: {
+                    Business: ['The Art of Innovation', 'Zero to CEO', 'Growth Hacking Bible', 'Lean Startup Method', 'Think & Grow Rich', 'Blue Ocean Strategy', 'Atomic Business', 'Money Master Guide', 'Digital Economy Now', 'Venture Capital 101'],
+                    Tech: ['JavaScript Mastery Guide', 'Design Patterns Handbook', 'Python for Data Science', 'Clean Code Principles', 'AI & Machine Learning', 'Blockchain Decoded', 'Cloud Architecture', 'DevOps Handbook', 'Cybersecurity 101', 'React Complete Guide'],
+                    'Self-Help': ['Mindset: New Psychology', 'Atomic Habits', 'Power of Now', 'Deep Work Focus', 'Subtle Art of Life', '7 Habits Effective', 'Grit: Power of Passion', 'Flow State', 'Emotional Intelligence', 'Meditation Practice'],
+                    Fiction: ['Midnight in Paris', 'The Last Algorithm', 'Quantum Dreams', 'Forest of Stars', 'Ocean\'s Memory', 'The Glass Castle', 'Shadow Chronicles', 'Infinite Gardens', 'Arctic Whispers', 'Ember & Ash'],
+                    Science: ['Brief History of Time', 'Cosmos: A Journey', 'The Gene: An Intimate', 'Sapiens Illustrated', 'Astrophysics for All', 'The Elegant Universe', 'Silent Spring Modern', 'Code of Life: DNA', 'Periodic Table Tales', 'Origin of Species Now'],
+                },
+                sports: {
+                    Footwear: ['Pro Running Shoes', 'Trail Blazer Boots', 'Basketball Air Max', 'Tennis Court Pro', 'CrossFit Lifters', 'Soccer Cleats Elite', 'Hiking Summit Boots', 'Swimming Aqua Shoes', 'Skating Street Pro', 'Marathon Racer Ultra'],
+                    Fitness: ['Yoga Mat Premium', 'Resistance Bands Set', 'Adjustable Dumbbells', 'Pull-Up Bar Pro', 'Jump Rope Speed', 'Kettlebell Cast Iron', 'Ab Roller Wheel', 'Foam Roller Deep', 'Push-Up Board', 'Battle Ropes 30ft'],
+                    Accessories: ['Stainless Water Bottle', 'Gym Duffel Bag', 'Cooling Sports Towel', 'Wrist Wraps Pro', 'Heart Rate Monitor', 'Athletic Tape Roll', 'Sweatband Set', 'Compression Socks', 'Knee Sleeve Pair', 'Yoga Block Set'],
+                    Equipment: ['Spin Bike Pro', 'Treadmill Foldable', 'Boxing Heavy Bag', 'Rowing Machine', 'Power Rack Home', 'TRX Suspension Kit', 'Climbing Holds Set', 'Badminton Net Pro', 'Table Tennis Set', 'Archery Target Pro'],
+                    Nutrition: ['Whey Protein Isolate', 'BCAA Recovery Mix', 'Creatine Monohydrate', 'Pre-Workout Surge', 'Mass Gainer Pro', 'Electrolyte Powder', 'Vegan Protein Blend', 'Omega-3 Fish Oil', 'Multivitamin Sport', 'Collagen Peptides'],
+                },
+                beauty: {
+                    Skincare: ['Luxury Skincare Kit', 'Vitamin C Serum Pro', 'Retinol Night Cream', 'Hyaluronic Acid Gel', 'Sunscreen SPF 50+', 'Clay Mask Detox', 'Eye Cream Anti-Age', 'Micellar Water XL', 'AHA/BHA Exfoliator', 'Aloe Vera Gel Pure'],
+                    Makeup: ['Matte Lipstick Collection', 'Foundation Perfect Match', 'Eyeshadow Palette Pro', 'Mascara Volume Max', 'Setting Spray All-Day', 'Concealer HD Cover', 'Blush Duo Compact', 'Brow Kit Complete', 'Primer Pore-Blur', 'Lip Gloss Shine Set'],
+                    'Hair Care': ['Rose Gold Hair Dryer', 'Keratin Shampoo Pro', 'Deep Conditioner Mask', 'Heat Protectant Spray', 'Scalp Treatment Oil', 'Dry Shampoo Refresh', 'Hair Serum Argan', 'Curl Cream Define', 'Straightening Brush', 'Anti-Frizz Leave-In'],
+                    Fragrance: ['Noir Eau de Parfum', 'Rose Garden EDT', 'Citrus Burst Cologne', 'Vanilla Dreams Mist', 'Ocean Breeze Fresh', 'Amber & Oud Intense', 'White Jasmine Pure', 'Cedarwood Classic', 'Floral Bouquet Luxe', 'Sandalwood Reserve'],
+                    Wellness: ['Essential Oils Diffuser', 'Bath Bomb Collection', 'Jade Roller & Gua Sha', 'Aromatherapy Candles', 'Silk Sleep Mask', 'Scalp Massager', 'Body Scrub Coffee', 'Nail Care Kit Pro', 'Foot Spa Machine', 'Meditation Crystals'],
+                },
+            };
+
+            const IMAGES = {
+                fashion: ['photo-1595777457583-95e059d581b8', 'photo-1572804013309-59a88b7e92f1', 'photo-1541099649105-f69ad21f3246', 'photo-1617114919297-3c8ddb01f599', 'photo-1515886657613-9f3515b0c78f', 'photo-1509631179647-0177331693ae', 'photo-1566174053879-31528523f8ae', 'photo-1551028719-00167b16eac5', 'photo-1496747611176-843222e1e57c', 'photo-1539008835657-9e8e9680c956', 'photo-1485462537746-965f33f7f6a7', 'photo-1591047139829-d91aecb6caea', 'photo-1534528741775-53994a69daeb', 'photo-1469334031218-e382a71b716b', 'photo-1490481651871-ab68de25d43d', 'photo-1492707892479-7bc8d5a4ee93', 'photo-1549062572-544a64fb0c56'],
+                electronics: ['photo-1590658268037-6bf12f032f55', 'photo-1546868871-af0de0ae72be', 'photo-1608043152269-423dbba4e7e1', 'photo-1583394838336-acd977736f90', 'photo-1618384887929-16ec33fab9ef', 'photo-1505740420928-5e560c06d30e', 'photo-1593642702821-c8da6771f0c6', 'photo-1588872657578-7efd1f1555ed', 'photo-1572569511254-d8f925fe2cda', 'photo-1517336714731-489689fd1ca8', 'photo-1526738549149-8e07eca6c147', 'photo-1601524909162-ae8725290836', 'photo-1606220945770-b5b6c2c55bf1', 'photo-1544244015-0df4b3ffc6b0'],
+                home: ['photo-1485955900006-10f4d324d411', 'photo-1507473885765-e6ed057ab6fe', 'photo-1594226801341-41427b4e5c22', 'photo-1602028915047-37269d1a73f7', 'photo-1556909114-f6e7ad7d3136', 'photo-1524758631624-e2822e304c36', 'photo-1540574163026-643ea20ade25', 'photo-1556909172-54557c7e4fb7', 'photo-1513694203232-719a280e022f', 'photo-1555041469-a586c61ea9bc', 'photo-1540518614846-7eded433c457', 'photo-1618220179428-22790b461013', 'photo-1600607687939-ce8a6c25118c'],
+                books: ['photo-1544947950-fa07a98d237f', 'photo-1532012197267-da84d127e765', 'photo-1512820790803-83ca734da794', 'photo-1497633762265-9d179a990aa6', 'photo-1524578271613-d550eacf6090', 'photo-1543002588-bfa74002ed7e', 'photo-1519682337058-a94d519337bc', 'photo-1495446815901-a7297e633e8d', 'photo-1507842217343-583bb7270b66', 'photo-1516979187457-637abb4f9353', 'photo-1526243741027-444d633d7365', 'photo-1506880018603-83d5b814b5a6'],
+                sports: ['photo-1542291026-7eec264c27ff', 'photo-1601925260368-ae2f83cf8b7f', 'photo-1598289431512-b97b0917affc', 'photo-1602143407151-7111542de6e8', 'photo-1579952363873-27f3bade9f55', 'photo-1599058917212-d750089bc07e', 'photo-1571019613454-1cb2f99b2d8b', 'photo-1517836357463-d25dfeac3438', 'photo-1576435728678-68d0fbf94e91', 'photo-1530549387789-4c1017266635', 'photo-1552674605-db6ffd4facb5', 'photo-1461896836934-bd45ba8fa83e'],
+                beauty: ['photo-1556228578-0d85b1a4d571', 'photo-1586495777744-4413f21062fa', 'photo-1522338242992-e1a54571a9f7', 'photo-1608571423902-eed4a5ad8108', 'photo-1596462502278-27bfdc403348', 'photo-1571781926291-c477ebfd024b', 'photo-1598440947619-2c35fc9aa908', 'photo-1512496015851-a90fb38ba796', 'photo-1571875257727-256c39da42af', 'photo-1596755094514-f87e34085b2c', 'photo-1573461160327-b450ce3d8e7f', 'photo-1599305445671-ac291c95aaa9'],
+            };
+
+            const COLORS = {
+                fashion: [['#000', '#881337'], ['#ef4444', '#fff'], ['#6366f1'], ['#d6d3d1', '#000'], ['#fca5a5'], ['#92400e'], ['#1e1b4b', '#4c1d95'], ['#3b82f6'], ['#10b981', '#fff'], ['#f59e0b']],
+                electronics: [['#000', '#fff'], ['#1f2937', '#d97706'], ['#000', '#ef4444', '#3b82f6'], ['#fff'], ['#000', '#fff']],
+                home: [['#d6d3d1', '#10b981'], ['#000', '#f5f5f4'], ['#92400e'], ['#fbbf24', '#f87171', '#a78bfa']],
+                books: [],
+                sports: [['#ef4444', '#000', '#fff'], ['#8b5cf6', '#10b981', '#3b82f6'], ['#6b7280', '#000']],
+                beauty: [['#fdf2f8', '#fce7f3'], ['#ef4444', '#ec4899', '#be185d'], ['#f9a8d4', '#fbbf24'], ['#f5f5f4', '#d6d3d1']],
+            };
+
+            const WEARABLE_SUBS = new Set(['Dresses', 'Tops', 'Suits', 'Outerwear', 'Accessories', 'Footwear']);
+            const WEARABLE_CATS = new Set(['fashion', 'sports']);
+            const PRICE_RANGES = {
+                fashion: [29.99, 399.99], electronics: [19.99, 499.99],
+                home: [14.99, 299.99], books: [9.99, 59.99],
+                sports: [14.99, 299.99], beauty: [9.99, 149.99],
+            };
+
+            const products = [];
+            let id = 1;
+
+            for (const [category, subcategories] of Object.entries(PRODUCT_NAMES)) {
+                const imgs = IMAGES[category] || [];
+                const colorsPool = COLORS[category] || [];
+                const [minP, maxP] = PRICE_RANGES[category] || [9.99, 199.99];
+
+                for (const [subcategory, names] of Object.entries(subcategories)) {
+                    for (const name of names) {
+                        const price = rndRange(minP, maxP);
+                        const hasOrigPrice = rng() < 0.3;
+                        const originalPrice = hasOrigPrice ? rndRange(price * 1.15, price * 1.5) : null;
+                        const r = rng();
+                        const badge = r < 0.12 ? 'hot' : r < 0.25 ? 'new' : originalPrice ? 'sale' : null;
+                        const rating = +Math.min(rndRange(3.2, 5.0), 5.0).toFixed(1);
+                        let reviewCount = rndInt(12, 8500);
+                        if (rating >= 4.5) reviewCount = rndInt(500, 8500);
+                        else if (rating >= 4.0) reviewCount = rndInt(100, 4000);
+
+                        products.push({
+                            id: id,
+                            name: name,
+                            category: category,
+                            subcategory: subcategory,
+                            price: price,
+                            originalPrice: originalPrice,
+                            badge: badge,
+                            tryOnEligible: WEARABLE_CATS.has(category) && WEARABLE_SUBS.has(subcategory),
+                            image: imgs.length ? UNSPLASH(imgs[id % imgs.length]) : UNSPLASH('photo-1544947950-fa07a98d237f'),
+                            colors: colorsPool.length ? colorsPool[id % colorsPool.length] : [],
+                            isNew: badge === 'new',
+                            rating: rating,
+                            reviewCount: reviewCount,
+                        });
+                        id++;
+                    }
+                }
+            }
+            return products;
+        }
+
+        const allProducts = generateAllProducts();
+        console.log(`🛒 NexCart: ${allProducts.length} products loaded across ${CATEGORIES.length - 1} categories`);
+
+        // ═══════════════════════════════════════════════════════════════
+        // ─── STEP 2 & 3: CATEGORY FILTER + PRODUCT RENDERING ─────────
+        // ═══════════════════════════════════════════════════════════════
+        let activeCategory = 'all';
+        let visibleProductCount = 12; // initial count shown
+
+        // Category color map
+        const categoryColorMap = {};
+        CATEGORIES.forEach(c => categoryColorMap[c.id] = c.color);
+
+        // Build category nav chips
+        function buildCategoryNav() {
+            const nav = document.getElementById('category-nav');
+            nav.innerHTML = '';
+            CATEGORIES.forEach(cat => {
+                const count = cat.id === 'all' ? allProducts.length : allProducts.filter(p => p.category === cat.id).length;
+                const chip = document.createElement('button');
+                chip.className = 'category-chip' + (cat.id === activeCategory ? ' active' : '');
+                chip.setAttribute('data-category', cat.id);
+                chip.innerHTML = `<i class="${cat.icon}"></i> ${cat.name} <span class="chip-count">${count}</span>`;
+                chip.onclick = () => filterByCategory(cat.id);
+                nav.appendChild(chip);
+            });
+        }
+
+        // Build sidebar category checkboxes
+        function buildSidebarCategories() {
+            const container = document.getElementById('sidebar-categories');
+            container.innerHTML = '';
+            CATEGORIES.forEach(cat => {
+                const item = document.createElement('div');
+                item.className = 'checkbox-item';
+                item.innerHTML = `<input type="checkbox" ${cat.id === activeCategory ? 'checked' : ''} onchange="filterByCategory('${cat.id}')"> ${cat.name}`;
+                container.appendChild(item);
+            });
+        }
+
+        // Filter by category
+        function filterByCategory(categoryId) {
+            activeCategory = categoryId;
+            visibleProductCount = 12;
+            buildCategoryNav();
+            buildSidebarCategories();
+            renderShopProducts();
+        }
+
+        // Get badge HTML
+        function getBadgeHTML(badge) {
+            if (!badge) return '';
+            const badgeMap = {
+                'hot': '<span class="badge badge-hot">HOT</span>',
+                'new': '<span class="badge badge-new">NEW</span>',
+                'sale': '<span class="badge badge-sale">SALE</span>',
+            };
+            return `<div class="card-badges">${badgeMap[badge] || ''}</div>`;
+        }
+
+        // ── Star Rating HTML Generator ──
+        function getStarRatingHTML(rating, reviewCount) {
+            const full = Math.floor(rating);
+            const hasHalf = rating - full >= 0.3;
+            const empty = 5 - full - (hasHalf ? 1 : 0);
+            let stars = '';
+            for (let i = 0; i < full; i++) stars += '<span class="star filled">★</span>';
+            if (hasHalf) stars += '<span class="star half">★</span>';
+            for (let i = 0; i < empty; i++) stars += '<span class="star">★</span>';
+            const reviewText = reviewCount >= 1000 ? (reviewCount / 1000).toFixed(1) + 'k' : reviewCount;
+            return `<div class="product-rating">
+                <div class="product-stars">${stars}</div>
+                <span class="product-rating-num">${rating}</span>
+                <span class="product-review-count">(${reviewText})</span>
+            </div>`;
+        }
+
+        // Build a single product card HTML (with ratings + backend-connected buttons)
+        function buildProductCardHTML(product) {
+            const catColor = categoryColorMap[product.category] || '#a855f7';
+            const colorDotsHTML = product.colors.length > 0
+                ? `<div class="color-dots">${product.colors.map((c, i) => `<div class="color-dot${i === 0 ? ' active' : ''}" style="background: ${c};"></div>`).join('')}</div>`
+                : '';
+
+            const priceHTML = product.originalPrice
+                ? `₹${product.price} <span style="font-size:0.8rem;text-decoration:line-through;color:var(--text-muted);margin-left:5px;">₹${product.originalPrice}</span>`
+                : `₹${product.price}`;
+
+            const ratingHTML = getStarRatingHTML(product.rating || 4.0, product.reviewCount || 0);
+
+            const tryOnClass = product.tryOnEligible ? 'tryon-btn' : 'tryon-btn disabled';
+            const pNameSafe = product.name.replace(/'/g, "\\'");
+
+            return `
+                <div class="product-card" data-product-id="${product.id}" data-category="${product.category}">
+                    ${getBadgeHTML(product.badge)}
+                    <button class="wishlist-btn" onclick="toggleHeart(this)"><i class="ph ph-heart"></i></button>
+                    <div class="product-img"><img src="${product.image}" alt="${product.name}" loading="lazy"></div>
+                    <div class="product-info">
+                        ${colorDotsHTML}
+                        <div class="product-category-label">
+                            <span class="cat-dot" style="background: ${catColor};"></span>
+                            ${product.subcategory}
+                        </div>
+                        <h3 style="font-size: 1rem; margin-bottom: 4px;">${product.name}</h3>
+                        ${ratingHTML}
+                        <div class="price" style="font-weight: 700; font-size: 1.1rem; margin-bottom: 2px;">${priceHTML}</div>
+                        <div class="product-card-actions">
+                            <button class="card-action-btn buy-now-btn" onclick="buyNowAPI(${product.id}, '${pNameSafe}', ${product.price})">
+                                <i class="ph ph-lightning"></i> Buy Now
+                            </button>
+                            <button class="card-action-btn add-cart-btn" onclick="addToCartAPI(${product.id}, '${pNameSafe}', ${product.price}, '${product.image}')">
+                                <i class="ph ph-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="card-action-btn ${tryOnClass}" onclick="tryOnAPI(${product.id}, '${pNameSafe}', '${product.category}')">
+                                <i class="ph ph-camera"></i> Try On
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render products into the grid
+        function renderShopProducts() {
+            const grid = document.getElementById('shop-product-grid');
+            const sortSelect = document.getElementById('shop-sort-select');
+            const countLabel = document.getElementById('shop-product-count');
+
+            // Filter
+            let filtered = activeCategory === 'all'
+                ? [...allProducts]
+                : allProducts.filter(p => p.category === activeCategory);
+
+            // Sort
+            const sortVal = sortSelect ? sortSelect.value : 'recommended';
+            if (sortVal === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            else if (sortVal === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            else if (sortVal === 'newest') filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+
+            // Update count
+            const categoryName = CATEGORIES.find(c => c.id === activeCategory)?.name || 'All';
+            countLabel.textContent = `Showing ${Math.min(visibleProductCount, filtered.length)} of ${filtered.length} products` + (activeCategory !== 'all' ? ` in ${categoryName}` : '');
+
+            // Slice for pagination
+            const visible = filtered.slice(0, visibleProductCount);
+
+            // Show/hide load more
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = visibleProductCount >= filtered.length ? 'none' : 'inline-flex';
+            }
+
+            if (visible.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <h3>No products found</h3>
+                        <p>Try selecting a different category or clearing filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = visible.map(p => buildProductCardHTML(p)).join('');
+        }
+
+        // Load More
+        function loadMoreProducts() {
+            visibleProductCount += 8;
+            renderShopProducts();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // ─── STEP 4: FRONTEND ↔ BACKEND API INTEGRATION ──────────────
+        // ═══════════════════════════════════════════════════════════════
+
+        // ── Add to Cart (API) ──
+        async function addToCartAPI(productId, productName, price, image) {
+            // Optimistic UI update
+            const badge = document.getElementById('cart-count');
+            const navBadge = document.getElementById('cart-badge-nav');
+            const token = localStorage.getItem('nexcart_token');
+
+            if (token) {
+                // Logged-in user: send to backend
+                try {
+                    const res = await fetch(`${API}/cart/add`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            productId: String(productId),
+                            productName: productName,
+                            price: price,
+                            quantity: 1,
+                            productImage: image || '',
+                        }),
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const total = data.cart.totalItems || 0;
+                        badge.textContent = total;
+                        if (navBadge) { navBadge.textContent = total; navBadge.style.display = total > 0 ? 'flex' : 'none'; }
+                    }
+                    showToast(`🛒 Added <b>${productName}</b> to cart!`);
+                } catch (e) {
+                    console.log('Cart API error, saving locally', e);
+                    saveToGuestCart(productId, productName, price, image);
+                    showToast(`🛒 Added <b>${productName}</b> to cart!`);
+                }
+            } else {
+                // Guest user: save to localStorage
+                saveToGuestCart(productId, productName, price, image);
+                showToast(`🛒 Added <b>${productName}</b> to cart!`);
+            }
+        }
+
+        function saveToGuestCart(productId, productName, price, image) {
+            const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            const existing = cart.find(item => item.productId === String(productId));
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ productId: String(productId), productName, productImage: image || '', price, quantity: 1 });
+            }
+            localStorage.setItem('guestCart', JSON.stringify(cart));
+            const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
+            const badge = document.getElementById('cart-count');
+            const navBadge = document.getElementById('cart-badge-nav');
+            badge.textContent = totalItems;
+            if (navBadge) { navBadge.textContent = totalItems; navBadge.style.display = totalItems > 0 ? 'flex' : 'none'; }
+        }
+
+        // ── Buy Now (API) ──
+        async function buyNowAPI(productId, productName, price) {
+            showToast(`⚡ Processing order for <b>${productName}</b>...`, '#a855f7');
+
+            try {
+                const res = await fetch(`${API}/checkout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        product_name: productName,
+                        price: price,
+                        quantity: 1,
+                        payment_method: 'cod',
+                    }),
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    showToast(`✅ Order <b>${data.order.order_id}</b> confirmed! Total: ₹${data.order.total}`, '#10b981');
+                } else {
+                    showToast(`⚡ Order placed for <b>${productName}</b> — ₹${price}`, '#a855f7');
+                }
+            } catch (e) {
+                // Fallback if backend is down
+                showToast(`⚡ Order placed for <b>${productName}</b> — ₹${price}`, '#a855f7');
+            }
+        }
+
+        // ── Try On Validation (API) ──
+        async function tryOnAPI(productId, productName, category) {
+            try {
+                const res = await fetch(`${API}/try-on/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        product_name: productName,
+                        category: category,
+                    }),
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.eligible) {
+                        showToast(`👗 Opening Try-On for <b>${productName}</b>...`, '#d946ef');
+                        switchPage('tryon');
+                    } else {
+                        showToast(`⚠️ ${data.message}`, '#f59e0b');
+                    }
+                } else {
+                    tryOnFallback(productName, category);
+                }
+            } catch (e) {
+                // Fallback if backend is down
+                tryOnFallback(productName, category);
+            }
+        }
+
+        function tryOnFallback(productName, category) {
+            const wearableCats = new Set(['fashion', 'sports']);
+            if (wearableCats.has(category)) {
+                showToast(`👗 Opening Try-On for <b>${productName}</b>...`, '#d946ef');
+                switchPage('tryon');
+            } else {
+                showToast(`⚠️ Try On is not available for ${category} products.`, '#f59e0b');
+            }
+        }
+
+        // Legacy fallback wrappers (keep existing onclick handlers working)
+        function addToCart(productName) {
+            const p = allProducts.find(x => x.name === productName);
+            if (p) addToCartAPI(p.id, p.name, p.price, p.image);
+            else {
+                const badge = document.getElementById('cart-count');
+                badge.textContent = parseInt(badge.textContent || '0') + 1;
+                showToast(`🛒 Added <b>${productName}</b> to cart!`);
+            }
+        }
+
+        function buyNow(productName, price) {
+            const p = allProducts.find(x => x.name === productName);
+            if (p) buyNowAPI(p.id, p.name, p.price);
+            else showToast(`⚡ Proceeding to buy <b>${productName}</b> for ₹${price}`, '#a855f7');
+        }
+
+        function handleTryOn(productName) {
+            const p = allProducts.find(x => x.name === productName);
+            if (p) tryOnAPI(p.id, p.name, p.category);
+            else { showToast(`👗 Opening Try-On for <b>${productName}</b>...`, '#d946ef'); switchPage('tryon'); }
+        }
+
+        // ── Initialize shop on page load ──
+        buildCategoryNav();
+        buildSidebarCategories();
+        renderShopProducts();
+
+        // ═══════════════════════════════════════════════════════════════
+        // ─── SEARCH ENGINE (Amazon-Style) ────────────────────────────
+        // ═══════════════════════════════════════════════════════════════
+
+        // ── STEP 2A: Debounce Utility ──
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // ── STEP 2B: Recent Searches (localStorage) ──
+        const SEARCH_HISTORY_KEY = 'nexcart_search_history';
+        const MAX_HISTORY = 8;
+
+        function getSearchHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)) || [];
+            } catch { return []; }
+        }
+
+        function addToSearchHistory(query) {
+            if (!query || query.trim().length < 2) return;
+            const q = query.trim();
+            let history = getSearchHistory();
+            // Remove duplicate if exists
+            history = history.filter(h => h.toLowerCase() !== q.toLowerCase());
+            // Add to front
+            history.unshift(q);
+            // Cap at max
+            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+            localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
+        }
+
+        function removeFromSearchHistory(query) {
+            let history = getSearchHistory();
+            history = history.filter(h => h.toLowerCase() !== query.toLowerCase());
+            localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
+        }
+
+        function clearSearchHistory() {
+            localStorage.removeItem(SEARCH_HISTORY_KEY);
+            showSearchHistory();
+            showToast('🗑️ Search history cleared');
+        }
+
+        // ── STEP 1: Fuzzy Search (Levenshtein Distance) ──
+        function levenshtein(a, b) {
+            const m = a.length, n = b.length;
+            if (m === 0) return n;
+            if (n === 0) return m;
+            const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+            for (let i = 0; i <= m; i++) dp[i][0] = i;
+            for (let j = 0; j <= n; j++) dp[0][j] = j;
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    dp[i][j] = a[i - 1] === b[j - 1]
+                        ? dp[i - 1][j - 1]
+                        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+                }
+            }
+            return dp[m][n];
+        }
+
+        // Fuzzy match: check if query fuzzy-matches a target string
+        function fuzzyMatch(query, target) {
+            const q = query.toLowerCase();
+            const t = target.toLowerCase();
+            // Exact substring match (highest priority)
+            if (t.includes(q)) return { match: true, score: 0, type: 'exact' };
+            // Check each word in the target
+            const targetWords = t.split(/[\s\-\_\/]+/);
+            for (const word of targetWords) {
+                if (word.startsWith(q)) return { match: true, score: 1, type: 'prefix' };
+            }
+            // Fuzzy: check Levenshtein distance on whole and per-word
+            if (q.length >= 3) {
+                // Per-word fuzzy
+                for (const word of targetWords) {
+                    const dist = levenshtein(q, word.substring(0, q.length + 2));
+                    const threshold = q.length <= 4 ? 1 : 2;
+                    if (dist <= threshold) return { match: true, score: 2 + dist, type: 'fuzzy' };
+                }
+                // Whole string containment with typo tolerance
+                const dist = levenshtein(q, t.substring(0, q.length + 2));
+                if (dist <= 2) return { match: true, score: 3 + dist, type: 'fuzzy' };
+            }
+            return { match: false, score: 999, type: null };
+        }
+
+        // Search products with scoring & sorting
+        function searchProducts(query, categoryFilter) {
+            const q = query.trim();
+            if (!q) return [];
+
+            let pool = categoryFilter && categoryFilter !== 'all'
+                ? allProducts.filter(p => p.category === categoryFilter)
+                : [...allProducts];
+
+            const results = [];
+            for (const product of pool) {
+                // Match against name, subcategory, category
+                const nameMatch = fuzzyMatch(q, product.name);
+                const subMatch = fuzzyMatch(q, product.subcategory);
+                const catMatch = fuzzyMatch(q, product.category);
+
+                const bestMatch = [nameMatch, subMatch, catMatch].sort((a, b) => a.score - b.score)[0];
+                if (bestMatch.match) {
+                    results.push({ product, score: bestMatch.score, matchType: bestMatch.type });
+                }
+            }
+
+            // Sort by score (lower is better), then by name
+            results.sort((a, b) => a.score - b.score || a.product.name.localeCompare(b.product.name));
+            return results;
+        }
+
+        // Match categories by query
+        function searchCategories(query) {
+            const q = query.trim().toLowerCase();
+            if (!q) return [];
+            return CATEGORIES.filter(c => c.id !== 'all' && (
+                c.name.toLowerCase().includes(q) ||
+                c.id.toLowerCase().includes(q)
+            ));
+        }
+
+        // ── STEP 3A: Highlight matching text ──
+        function highlightMatch(text, query) {
+            if (!query || !query.trim()) return escapeHtml(text);
+            const q = query.trim();
+            const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return escapeHtml(text).replace(regex, '<span class="hl">$1</span>');
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ── STEP 3B: Render Dropdown Content ──
+        const searchDropdown = document.getElementById('search-dropdown');
+        const searchInput = document.getElementById('search-input');
+        const searchOverlay = document.getElementById('search-overlay');
+        let highlightedIndex = -1;
+        let currentSuggestions = []; // flat list for keyboard nav
+        let activeSearchQuery = ''; // the query currently filtering the grid
+
+        function showSearchHistory() {
+            const history = getSearchHistory();
+            if (history.length === 0) {
+                searchDropdown.innerHTML = `
+                    <div class="search-no-results" style="padding: 24px;">
+                        <i class="ph ph-clock-counter-clockwise"></i>
+                        <p>No recent searches</p>
+                    </div>
+                `;
+            } else {
+                let html = `<div class="search-section-header">
+                    <span><i class="ph ph-clock-counter-clockwise"></i> Recent Searches</span>
+                    <button onclick="event.stopPropagation(); clearSearchHistory()">Clear All</button>
+                </div>`;
+                history.forEach((q, i) => {
+                    html += `
+                    <div class="search-item history-item" data-index="${i}" data-action="history" data-query="${escapeHtml(q)}"
+                         onclick="selectSearchSuggestion('${q.replace(/'/g, "\\'")}')"
+                         onmouseenter="highlightedIndex=${i}">
+                        <div class="search-item-icon">
+                            <i class="ph ph-clock-counter-clockwise"></i>
+                        </div>
+                        <div class="search-item-text">
+                            <div class="search-item-name">${escapeHtml(q)}</div>
+                        </div>
+                        <button class="search-item-remove" onclick="event.stopPropagation(); removeFromSearchHistory('${q.replace(/'/g, "\\'")}''); showSearchHistory();" title="Remove">
+                            <i class="ph ph-x"></i>
+                        </button>
+                    </div>`;
+                });
+                searchDropdown.innerHTML = html;
+            }
+            currentSuggestions = history.map(q => ({ type: 'history', query: q }));
+            highlightedIndex = -1;
+            openDropdown();
+        }
+
+        function showSuggestions(query) {
+            const catFilter = document.getElementById('search-category').value;
+            const productResults = searchProducts(query, catFilter).slice(0, 8);
+            const categoryResults = searchCategories(query).slice(0, 3);
+            currentSuggestions = [];
+
+            if (productResults.length === 0 && categoryResults.length === 0) {
+                searchDropdown.innerHTML = `
+                    <div class="search-no-results">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <p>No results for <span>"${escapeHtml(query)}"</span></p>
+                        <p style="font-size:0.78rem;margin-top:6px;">Try checking your spelling or using broader terms</p>
+                    </div>
+                `;
+                highlightedIndex = -1;
+                openDropdown();
+                return;
+            }
+
+            let html = '';
+            let idx = 0;
+
+            // Category matches
+            if (categoryResults.length > 0) {
+                html += '<div class="search-section-header"><span>Categories</span></div>';
+                categoryResults.forEach(cat => {
+                    const count = allProducts.filter(p => p.category === cat.id).length;
+                    currentSuggestions.push({ type: 'category', id: cat.id, name: cat.name });
+                    html += `
+                    <div class="search-item category-item" data-index="${idx}"
+                         onclick="selectCategory('${cat.id}')"
+                         onmouseenter="highlightedIndex=${idx}">
+                        <div class="search-item-icon">
+                            <i class="${cat.icon}"></i>
+                        </div>
+                        <div class="search-item-text">
+                            <div class="search-item-name">${highlightMatch(cat.name, query)}</div>
+                            <div class="search-item-meta">${count} products</div>
+                        </div>
+                        <i class="ph ph-arrow-right" style="color:var(--text-muted);font-size:0.9rem;"></i>
+                    </div>`;
+                    idx++;
+                });
+            }
+
+            // Product matches
+            if (productResults.length > 0) {
+                html += '<div class="search-section-header"><span>Products</span></div>';
+                productResults.forEach(({ product, matchType }) => {
+                    const catObj = CATEGORIES.find(c => c.id === product.category);
+                    currentSuggestions.push({ type: 'product', name: product.name, product });
+                    html += `
+                    <div class="search-item product-item" data-index="${idx}"
+                         onclick="selectSearchSuggestion('${product.name.replace(/'/g, "\\'")}')"
+                         onmouseenter="highlightedIndex=${idx}">
+                        <div class="search-item-icon product-thumb">
+                            <img src="${product.image}" alt="" loading="lazy">
+                        </div>
+                        <div class="search-item-text">
+                            <div class="search-item-name">${highlightMatch(product.name, query)}</div>
+                            <div class="search-item-meta">
+                                <span class="cat-pill">${product.subcategory}</span>
+                                ${matchType === 'fuzzy' ? '<span style="color:#f59e0b;">≈ fuzzy match</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="search-item-price">₹${product.price}</div>
+                    </div>`;
+                    idx++;
+                });
+            }
+
+            // Footer hint
+            html += `<div style="padding:10px 18px;text-align:center;font-size:0.75rem;color:#444;border-top:1px solid rgba(255,255,255,0.04);">
+                Press <span class="search-kbd">↵ Enter</span> to search all &bull; <span class="search-kbd">↑↓</span> to navigate
+            </div>`;
+
+            searchDropdown.innerHTML = html;
+            highlightedIndex = -1;
+            openDropdown();
+        }
+
+        // Debounced suggestion handler
+        const debouncedShowSuggestions = debounce((query) => {
+            if (query.trim().length > 0) {
+                showSuggestions(query);
+            } else {
+                showSearchHistory();
+            }
+        }, 250);
+
+        // ── Event Handlers ──
+        function onSearchInput() {
+            const query = searchInput.value;
+            debouncedShowSuggestions(query);
+        }
+
+        function onSearchFocus() {
+            const query = searchInput.value.trim();
+            if (query.length > 0) {
+                showSuggestions(query);
+            } else {
+                showSearchHistory();
+            }
+        }
+
+        function onSearchKeydown(e) {
+            const items = searchDropdown.querySelectorAll('.search-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                highlightedIndex = Math.min(highlightedIndex + 1, items.length - 1);
+                updateHighlight(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                highlightedIndex = Math.max(highlightedIndex - 1, -1);
+                updateHighlight(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (highlightedIndex >= 0 && highlightedIndex < currentSuggestions.length) {
+                    const suggestion = currentSuggestions[highlightedIndex];
+                    if (suggestion.type === 'category') {
+                        selectCategory(suggestion.id);
+                    } else {
+                        selectSearchSuggestion(suggestion.query || suggestion.name);
+                    }
+                } else {
+                    executeSearch();
+                }
+            } else if (e.key === 'Escape') {
+                closeSearchDropdown();
+                searchInput.blur();
+            }
+        }
+
+        function updateHighlight(items) {
+            items.forEach((item, i) => {
+                item.style.background = i === highlightedIndex ? 'rgba(168, 85, 247, 0.12)' : '';
+            });
+            if (highlightedIndex >= 0 && items[highlightedIndex]) {
+                items[highlightedIndex].scrollIntoView({ block: 'nearest' });
+            }
+        }
+
+        function openDropdown() {
+            searchDropdown.classList.add('open');
+            searchOverlay.classList.add('open');
+        }
+
+        function closeSearchDropdown() {
+            searchDropdown.classList.remove('open');
+            searchOverlay.classList.remove('open');
+            highlightedIndex = -1;
+            // Close mobile search
+            document.getElementById('search-wrapper').classList.remove('mobile-open');
+        }
+
+        function toggleMobileSearch() {
+            const wrapper = document.getElementById('search-wrapper');
+            wrapper.classList.toggle('mobile-open');
+            if (wrapper.classList.contains('mobile-open')) {
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        }
+
+        // ── STEP 4: Integration — Execute Search & Update Grid ──
+        function selectSearchSuggestion(query) {
+            searchInput.value = query;
+            addToSearchHistory(query);
+            closeSearchDropdown();
+            performSearch(query);
+        }
+
+        function selectCategory(categoryId) {
+            closeSearchDropdown();
+            searchInput.value = '';
+            activeSearchQuery = '';
+            hideSearchBanner();
+            filterByCategory(categoryId);
+            switchPage('shop');
+            showToast(`📂 Browsing <b>${CATEGORIES.find(c => c.id === categoryId)?.name}</b>`, '#a855f7');
+        }
+
+        function executeSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+            addToSearchHistory(query);
+            closeSearchDropdown();
+            performSearch(query);
+        }
+
+        function performSearch(query) {
+            activeSearchQuery = query;
+            const catFilter = document.getElementById('search-category').value;
+
+            // Override the renderShopProducts to use search results
+            const grid = document.getElementById('shop-product-grid');
+            const countLabel = document.getElementById('shop-product-count');
+
+            // Get results
+            const results = searchProducts(query, catFilter);
+
+            // Switch to shop page
+            switchPage('shop');
+
+            // Show search results banner
+            showSearchBanner(query, results.length);
+
+            // Update category to 'all' (or the selected search category) without re-rendering
+            activeCategory = catFilter;
+            buildCategoryNav();
+            buildSidebarCategories();
+
+            // Render results
+            countLabel.textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+
+            if (results.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <h3>No results for "${escapeHtml(query)}"</h3>
+                        <p>Try different keywords or browse our categories above.</p>
+                    </div>
+                `;
+                document.getElementById('load-more-btn').style.display = 'none';
+            } else {
+                grid.innerHTML = results.map(r => buildProductCardHTML(r.product)).join('');
+                document.getElementById('load-more-btn').style.display = 'none';
+            }
+        }
+
+        function showSearchBanner(query, count) {
+            // Remove existing banner
+            hideSearchBanner();
+            // Create and insert banner before the shop-layout
+            const banner = document.createElement('div');
+            banner.className = 'search-results-banner active';
+            banner.id = 'search-results-banner';
+            banner.innerHTML = `
+                <div class="srb-text">
+                    <i class="ph ph-magnifying-glass"></i>
+                    Search results for "<span class="srb-query">${escapeHtml(query)}</span>" — ${count} item${count !== 1 ? 's' : ''} found
+                </div>
+                <button class="srb-clear" onclick="clearSearch()">
+                    <i class="ph ph-x"></i> Clear Search
+                </button>
+            `;
+            const shopLayout = document.querySelector('#shop-page .shop-layout');
+            shopLayout.parentNode.insertBefore(banner, shopLayout);
+        }
+
+        function hideSearchBanner() {
+            const existing = document.getElementById('search-results-banner');
+            if (existing) existing.remove();
+        }
+
+        function clearSearch() {
+            activeSearchQuery = '';
+            searchInput.value = '';
+            hideSearchBanner();
+            activeCategory = 'all';
+            visibleProductCount = 12;
+            buildCategoryNav();
+            buildSidebarCategories();
+            renderShopProducts();
+            showToast('🔄 Showing all products');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('search-wrapper');
+            if (!wrapper.contains(e.target) && !e.target.closest('.search-overlay')) {
+                closeSearchDropdown();
+            }
+        });
+
+        // Keyboard shortcut: Ctrl+K or / to focus search
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName))) {
+                e.preventDefault();
+                searchInput.focus();
+                onSearchFocus();
+            }
+        });
+
+        // ── Page Switching ──
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(pageId + '-page');
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const activeNav = document.getElementById('nav-' + pageId);
+            if (activeNav) activeNav.classList.add('active');
+
+            const footer = document.getElementById('site-footer');
+            if (footer) {
+                footer.style.display = pageId === 'login' ? 'none' : '';
+            }
+
+            if (pageId === 'cart') loadSpaCart();
+
+            window.scrollTo(0, 0);
+        }
+
+        // ─── AUTH STATE ───
+        let currentUser = null;
+        async function restoreSession() {
+            const savedToken = localStorage.getItem('nexcart_token');
+            const savedUser = localStorage.getItem('nexcart_user');
+
+            if (!savedToken) return;
+
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    updateNavForUser(currentUser);
+                } catch {
+                    localStorage.removeItem('nexcart_user');
+                }
+            }
+
+            try {
+                const res = await fetch(`${API}/auth/me`, {
+                    headers: { Authorization: `Bearer ${savedToken}` }
+                });
+
+                if (!res.ok) throw new Error('Session expired');
+                const profile = await res.json();
+                currentUser = profile.user;
+                localStorage.setItem('nexcart_user', JSON.stringify(profile.user));
+                updateNavForUser(profile.user);
+            } catch {
+                localStorage.removeItem('nexcart_token');
+                localStorage.removeItem('nexcart_user');
+                currentUser = null;
+                document.getElementById('auth-nav-btn').style.display = 'block';
+                document.getElementById('auth-user-nav').style.display = 'none';
+            }
+        }
+
+        restoreSession();
+        updateCartBadge();
+
+        // ─── UPDATE CART BADGE ───
+        async function updateCartBadge() {
+            const badge = document.getElementById('cart-badge-nav');
+            const cartCount = document.getElementById('cart-count');
+
+            const token = localStorage.getItem('nexcart_token');
+            let totalItems = 0;
+
+            if (token) {
+                // Logged in - try to get cart from backend
+                try {
+                    const response = await fetch(`${API}/cart`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        totalItems = data.cart.totalItems || 0;
+                    }
+                } catch (error) {
+                    console.error('Error fetching cart count:', error);
+                }
+            } else {
+                // Guest - get from localStorage
+                const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                totalItems = guestCart.reduce((sum, item) => sum + item.quantity, 0);
+            }
+
+            if (badge) {
+                badge.textContent = totalItems;
+                badge.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+                cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        }
+
+        // Update cart badge periodically
+        setInterval(updateCartBadge, 5000);
+
+        function updateNavForUser(user) {
+            document.getElementById('auth-nav-btn').style.display = 'none';
+            const userNav = document.getElementById('auth-user-nav');
+            userNav.style.display = 'flex';
+            const initial = user.name ? user.name[0].toUpperCase() : 'U';
+            document.getElementById('nav-user-avatar').textContent = initial;
+        }
+
+        // ─── AUTH TAB SWITCHING ───
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('panel-' + tab).classList.add('active');
+            // clear errors
+            document.querySelectorAll('.auth-error, .auth-success').forEach(e => e.classList.remove('show'));
+        }
+
+        // ─── PASSWORD VISIBILITY ───
+        function togglePass(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'ph ph-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'ph ph-eye';
+            }
+        }
+
+        // ─── PASSWORD STRENGTH ───
+        function checkStrength(val) {
+            const segs = ['seg1', 'seg2', 'seg3', 'seg4'];
+            const colors = ['#ef4444', '#f97316', '#eab308', '#10b981'];
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (val.length >= 10) score++;
+            if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+            segs.forEach((id, i) => {
+                document.getElementById(id).style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.08)';
+            });
+        }
+
+        async function handleGoogleLogin(response) {
+            try {
+                const res = await fetch(`${API}/auth/google`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: response.credential })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Google login failed.');
+
+                localStorage.setItem('nexcart_token', data.token);
+                localStorage.setItem('nexcart_user', JSON.stringify(data.user));
+                currentUser = data.user;
+                
+                showToast(`Welcome back, ${data.user.name}!`, '#a855f7');
+                updateNavForUser(data.user);
+                
+                // Close modal/overlay if open
+                switchPage('home');
+            } catch (err) {
+                showToast(err.message, '#ef4444');
+            }
+        }
+
+        // ─── LOGIN ───
+        async function handleLogin() {
+            const identifier = document.getElementById('login-identifier').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            const errEl = document.getElementById('login-error');
+            const errMsg = document.getElementById('login-error-msg');
+
+            errEl.classList.remove('show');
+            if (!identifier || !password) {
+                errMsg.textContent = 'Please fill in all fields.';
+                errEl.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner spinning"></i> Signing in…';
+
+            try {
+                const res = await fetch(`${API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier, password })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Login failed.');
+
+                // Persist
+                localStorage.setItem('nexcart_token', data.token);
+                localStorage.setItem('nexcart_user', JSON.stringify(data.user));
+                currentUser = data.user;
+                updateNavForUser(data.user);
+
+                showToast(`👋 Welcome back, <b>${data.user.name}</b>!`, '#a855f7');
+                switchPage('home');
+            } catch (err) {
+                errMsg.textContent = err.message;
+                errEl.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ph ph-sign-in"></i> Sign In to NexCart';
+            }
+        }
+
+        // ─── REGISTER ───
+        async function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            const btn = document.getElementById('register-btn');
+            const errEl = document.getElementById('register-error');
+            const errMsg = document.getElementById('register-error-msg');
+            const succEl = document.getElementById('register-success');
+
+            errEl.classList.remove('show');
+            succEl.classList.remove('show');
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                errMsg.textContent = 'Please fill in all fields.';
+                errEl.classList.add('show');
+                return;
+            }
+            if (password.length < 8) {
+                errMsg.textContent = 'Password must be at least 8 characters.';
+                errEl.classList.add('show');
+                return;
+            }
+            if (!/^\+?[1-9]\d{9,14}$/.test(phone)) {
+                errMsg.textContent = 'Please enter a valid phone number.';
+                errEl.classList.add('show');
+                return;
+            }
+            if (password !== confirmPassword) {
+                errMsg.textContent = 'Password confirmation does not match.';
+                errEl.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner spinning"></i> Creating account…';
+
+            try {
+                const res = await fetch(`${API}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        password,
+                        confirm_password: confirmPassword
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Registration failed.');
+
+                succEl.classList.add('show');
+                succEl.querySelector('span').textContent = 'Account created! Redirecting to sign in…';
+
+                setTimeout(() => {
+                    switchAuthTab('login');
+                    const loginInput = document.getElementById('login-identifier');
+                    if (loginInput) loginInput.value = email;
+                    showToast('✅ Account created successfully. Please sign in.', '#10b981');
+                }, 1200);
+            } catch (err) {
+                errMsg.textContent = err.message;
+                errEl.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ph ph-sparkle"></i> Create My Account';
+            }
+        }
+
+        // ─── LOGOUT ───
+        function logoutUser() {
+            localStorage.removeItem('nexcart_token');
+            localStorage.removeItem('nexcart_user');
+            currentUser = null;
+            document.getElementById('auth-nav-btn').style.display = 'block';
+            document.getElementById('auth-user-nav').style.display = 'none';
+            showToast('You have been logged out.', '#6b7280');
+            switchPage('home');
+        }
+
+        // ─── ENTER KEY SUPPORT ───
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const tab = document.getElementById('tab-login');
+                if (tab && tab.classList.contains('active')) handleLogin();
+                else {
+                    const regTab = document.getElementById('tab-register');
+                    if (regTab && regTab.classList.contains('active')) handleRegister();
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // ─── SPA CART (PAGE 4) ────────────────────────────────────────
+        // ═══════════════════════════════════════════════════════════════
+        const SHIPPING_COST = 12;
+        const FREE_SHIPPING_THRESHOLD = 500;
+
+        async function loadSpaCart() {
+            const root = document.getElementById('spa-cart-root');
+            if (!root) return;
+            root.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px 0;">Loading cart…</p>';
+
+            let items = [];
+            const token = localStorage.getItem('nexcart_token');
+
+            if (token) {
+                try {
+                    const res = await fetch(`${API}/cart`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        items = data.cart.items || [];
+                    }
+                } catch (e) { /* fall through to localStorage */ }
+            }
+
+            if (!token || items.length === 0) {
+                items = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            }
+
+            renderSpaCart(items);
+        }
+
+        function renderSpaCart(items) {
+            const root = document.getElementById('spa-cart-root');
+            if (!root) return;
+
+            if (items.length === 0) {
+                root.innerHTML = `
+                    <div class="card" style="padding:60px;text-align:center;">
+                        <i class="ph ph-shopping-cart" style="font-size:64px;color:var(--text-muted);margin-bottom:20px;display:block;"></i>
+                        <h3 style="margin-bottom:12px;">Your cart is empty</h3>
+                        <p style="color:var(--text-muted);margin-bottom:24px;">Add some products and they'll show up here.</p>
+                        <button class="btn-primary" onclick="switchPage('shop')"><i class="ph ph-bag"></i> Browse Shop</button>
+                    </div>`;
+                updateCartBadge();
+                return;
+            }
+
+            const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
+            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const total = subtotal + shipping;
+            const toFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
+
+            const itemsHTML = items.map(item => `
+                <div class="card" style="display:flex;align-items:center;padding:20px;gap:20px;" data-pid="${item.productId}">
+                    ${item.productImage
+                        ? `<img src="${item.productImage}" style="width:90px;height:110px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
+                        : `<div style="width:90px;height:110px;border-radius:8px;background:#27272a;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;">📦</div>`}
+                    <div style="flex:1;min-width:0;">
+                        <div class="flex-between" style="align-items:flex-start;">
+                            <h3 style="font-size:1rem;margin-bottom:4px;">${item.productName}</h3>
+                            <button onclick="spaRemoveItem('${item.productId}')"
+                                style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;flex-shrink:0;padding:4px;">
+                                <i class="ph ph-x"></i>
+                            </button>
+                        </div>
+                        <div class="flex-between" style="margin-top:16px;align-items:center;">
+                            <div style="display:flex;align-items:center;gap:8px;background:#27272a;padding:5px 10px;border-radius:8px;">
+                                <button onclick="spaChangeQty('${item.productId}', ${item.quantity - 1})"
+                                    style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;width:24px;"
+                                    ${item.quantity <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>−</button>
+                                <span style="min-width:24px;text-align:center;font-weight:600;">${item.quantity}</span>
+                                <button onclick="spaChangeQty('${item.productId}', ${item.quantity + 1})"
+                                    style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;width:24px;">+</button>
+                            </div>
+                            <div class="price" style="font-size:1rem;">₹${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            root.innerHTML = `
+                <div class="cart-layout">
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        ${toFreeShipping > 0
+                            ? `<div style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.3);padding:12px 20px;border-radius:8px;color:#e9d5ff;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
+                                <i class="ph-fill ph-truck"></i> You are ₹${toFreeShipping.toFixed(2)} away from Free Express Shipping!
+                               </div>`
+                            : `<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:12px 20px;border-radius:8px;color:#6ee7b7;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
+                                <i class="ph-fill ph-truck"></i> 🎉 You qualify for Free Express Shipping!
+                               </div>`}
+                        ${itemsHTML}
+                    </div>
+
+                    <div class="card" style="padding:30px;height:fit-content;position:sticky;top:80px;">
+                        <h3 style="margin-bottom:25px;">Order Summary</h3>
+
+                        <div style="margin-bottom:20px;">
+                            <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px;">Promo Code</label>
+                            <div style="display:flex;gap:10px;">
+                                <input type="text" id="promo-input" placeholder="Enter code"
+                                    style="width:100%;background:#1f1f22;border:1px solid var(--border-glass);padding:10px;border-radius:8px;color:white;">
+                                <button class="btn-outline" onclick="applyPromo()">Apply</button>
+                            </div>
+                            <div id="promo-msg" style="font-size:0.8rem;margin-top:6px;display:none;"></div>
+                        </div>
+
+                        <div class="flex-between" style="margin-bottom:12px;color:var(--text-muted);font-size:0.95rem;">
+                            <span>Subtotal</span><span>₹${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="flex-between" style="margin-bottom:12px;color:var(--text-muted);font-size:0.95rem;">
+                            <span>Shipping</span>
+                            <span>${shipping === 0 ? '<span style="color:#10b981;">FREE</span>' : '₹' + shipping.toFixed(2)}</span>
+                        </div>
+                        <div class="flex-between" id="spa-discount-row" style="margin-bottom:12px;color:#10b981;font-size:0.95rem;display:none;">
+                            <span>Discount</span><span id="spa-discount-val">-₹0.00</span>
+                        </div>
+
+                        <div class="flex-between" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border-glass);font-weight:700;font-size:1.3rem;">
+                            <span>Total</span>
+                            <span class="text-gradient" id="spa-total">₹${total.toFixed(2)}</span>
+                        </div>
+
+                        <button class="btn-primary" onclick="spaCheckout()"
+                            style="width:100%;margin-top:25px;justify-content:center;padding:14px;">
+                            Proceed to Checkout <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                        <button class="btn-outline" onclick="switchPage('shop')"
+                            style="width:100%;margin-top:12px;justify-content:center;padding:12px;">
+                            <i class="ph ph-bag"></i> Continue Shopping
+                        </button>
+
+                        <div style="display:flex;justify-content:center;gap:15px;margin-top:25px;opacity:0.5;">
+                            <i class="ph ph-credit-card" style="font-size:24px;"></i>
+                            <i class="ph ph-paypal-logo" style="font-size:24px;"></i>
+                            <i class="ph ph-google-logo" style="font-size:24px;"></i>
+                        </div>
+                    </div>
+                </div>`;
+
+            updateCartBadge();
+        }
+
+        async function spaChangeQty(productId, newQty) {
+            if (newQty < 1) return;
+            const token = localStorage.getItem('nexcart_token');
+            if (token) {
+                try {
+                    await fetch(`${API}/cart/update`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ productId, quantity: newQty })
+                    });
+                } catch (e) { /* update locally anyway */ }
+            } else {
+                const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                const idx = cart.findIndex(i => i.productId === String(productId));
+                if (idx > -1) { cart[idx].quantity = newQty; localStorage.setItem('guestCart', JSON.stringify(cart)); }
+            }
+            await loadSpaCart();
+        }
+
+        async function spaRemoveItem(productId) {
+            const token = localStorage.getItem('nexcart_token');
+            if (token) {
+                try {
+                    await fetch(`${API}/cart/remove`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ productId })
+                    });
+                } catch (e) { /* remove locally anyway */ }
+            } else {
+                let cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                cart = cart.filter(i => i.productId !== String(productId));
+                localStorage.setItem('guestCart', JSON.stringify(cart));
+            }
+            showToast('Item removed from cart', '#6b7280');
+            await loadSpaCart();
+        }
+
+        function applyPromo() {
+            const code = (document.getElementById('promo-input')?.value || '').trim().toUpperCase();
+            const msgEl = document.getElementById('promo-msg');
+            const discountRow = document.getElementById('spa-discount-row');
+            if (!msgEl) return;
+            msgEl.style.display = 'block';
+            if (code === 'NEXCART10') {
+                msgEl.style.color = '#10b981';
+                msgEl.textContent = '✓ 10% discount applied!';
+                if (discountRow) discountRow.style.display = 'flex';
+                const totalEl = document.getElementById('spa-total');
+                const discountEl = document.getElementById('spa-discount-val');
+                if (totalEl) {
+                    const current = parseFloat(totalEl.textContent.replace('₹', ''));
+                    const disc = current * 0.1;
+                    if (discountEl) discountEl.textContent = `-₹${disc.toFixed(2)}`;
+                    totalEl.textContent = `₹${(current - disc).toFixed(2)}`;
+                }
+            } else if (code) {
+                msgEl.style.color = '#ef4444';
+                msgEl.textContent = '✗ Invalid promo code.';
+            } else {
+                msgEl.style.display = 'none';
+            }
+        }
+
+        function spaCheckout() {
+            const token = localStorage.getItem('nexcart_token');
+            if (!token) {
+                showToast('Please sign in to checkout.', '#f59e0b');
+                switchPage('login');
+                return;
+            }
+            showToast('🎉 Order placed successfully! (demo)', '#10b981');
+        }
+
+        // ── Cart Logic ──
+        let cartCount = 2;
+        function addToCart(productName) {
+            cartCount++;
+            const badge = document.getElementById('cart-count');
+            badge.innerText = cartCount;
+            badge.style.transform = 'scale(1.5)';
+            setTimeout(() => badge.style.transform = 'scale(1)', 200);
+            showToast(`Added <b>${productName}</b> to cart`);
+        }
+
+        // ── Wishlist Toggle ──
+        function toggleHeart(btn) {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                btn.querySelector('i').classList.replace('ph', 'ph-fill');
+            } else {
+                btn.querySelector('i').classList.replace('ph-fill', 'ph');
+            }
+        }
+
+        // ── Toast System ──
+        function showToast(message, color) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const iconColor = color || '#10b981';
+            toast.innerHTML = `<i class="ph-fill ph-check-circle" style="color:${iconColor};"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3500);
+        }
+
+        // ── TRY-ON: Photo Upload Preview ──
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const zone = document.getElementById('upload-zone');
+                // Remove old preview
+                const old = zone.querySelector('img.preview');
+                if (old) old.remove();
+                // Create preview image
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview';
+                zone.prepend(img);
+                // Show overlay, hide text
+                document.getElementById('upload-icon').style.display = 'none';
+                document.getElementById('upload-text').style.display = 'none';
+                document.getElementById('upload-subtext').style.display = 'none';
+                const overlay = document.getElementById('upload-overlay');
+                overlay.style.display = 'flex';
+                document.getElementById('upload-status').textContent = file.name.length > 18 ? file.name.substring(0, 15) + '...' : file.name;
+                document.getElementById('upload-status').style.color = '#10b981';
+                // Activate step 1 pill
+                activateStepPill(2);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ── TRY-ON: Dress Selection ──
+        let selectedDressName = 'Noir Elegance Maxi';
+        const dressTryonImages = {
+            'Noir Elegance Maxi': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600', back: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600' },
+            'Rose Petal Wrap': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=600', back: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600' },
+            'Lavender Dream': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600', back: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=600' },
+            'Velvet Night': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600', back: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' },
+            'Summer Breeze Top': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600', back: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=600' },
+            'Leather Rider Jacket': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=600', back: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600' },
+        };
+
+        function selectDress(el, name) {
+            document.querySelectorAll('.wardrobe-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedDressName = name;
+            document.getElementById('dress-label').textContent = name;
+            activateStepPill(3);
+        }
+
+        // ── TRY-ON: Body Type Selection ──
+        function selectBody(btn) {
+            document.querySelectorAll('.body-btn').forEach(b => {
+                b.classList.remove('active-body');
+                b.style.borderColor = '';
+                b.style.background = '';
+                b.style.color = '';
+            });
+            btn.style.borderColor = 'var(--primary)';
+            btn.style.background = 'rgba(147,51,234,0.1)';
+            btn.style.color = 'white';
+        }
+
+        // ── TRY-ON: Step Pill Activator ──
+        function activateStepPill(step) {
+            const colors = { border: '#d946ef', bg: 'rgba(217,70,239,0.15)', color: '#d946ef' };
+            const inactive = { border: 'var(--border-glass)', bg: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)' };
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById('step-pill-' + i);
+                if (!el) continue;
+                const radiusMap = { 1: '99px 0 0 99px', 2: '0', 3: '0 99px 99px 0' };
+                el.style.borderRadius = radiusMap[i];
+                if (i <= step) {
+                    el.style.borderColor = colors.border;
+                    el.style.background = colors.bg;
+                    el.style.color = colors.color;
+                    el.querySelector('span').style.borderColor = colors.border;
+                } else {
+                    el.style.borderColor = inactive.border;
+                    el.style.background = inactive.bg;
+                    el.style.color = inactive.color;
+                    el.querySelector('span').style.borderColor = '#555';
+                }
+            }
+        }
+
+        // ── TRY-ON: Generate Animation + API Call ──
+        let tryonGenerated = false;
+        let generatedResultImage = null;
+        let aiMethod = '';
+
+        // Map dress names to their full-size image URLs
+        const dressFullImages = {
+            'Noir Elegance Maxi': 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+            'Rose Petal Wrap': 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
+            'Lavender Dream': 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop',
+            'Velvet Night': 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=800&auto=format&fit=crop',
+            'Summer Breeze Top': 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
+            'Leather Rider Jacket': 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop',
+        };
+
+        // NOTE: Client-side canvas compositing (face overlay) has been REMOVED.
+        // The old approach was pasting the user's face onto a dress image — that looked fake.
+        // Now, ALL try-on generation goes through the backend AI pipeline:
+        //   1. IDM-VTON (proper garment transfer with pose detection + cloth reshaping)
+        //   2. Gemini AI (generative fallback)
+        //   3. Server-side composite preview (last resort)
+
+        // ── Run step animation ──
+        function runStepAnimation(steps, durations, progressBar) {
+            return new Promise(resolve => {
+                let elapsed = 0;
+                steps.forEach((stepId, idx) => {
+                    setTimeout(() => {
+                        requestAnimationFrame(() => {
+                            if (idx > 0) {
+                                const prev = document.getElementById(steps[idx - 1]);
+                                prev.classList.remove('active');
+                                prev.classList.add('done');
+                                prev.querySelector('i').className = 'ph-fill ph-check-circle';
+                            }
+                            const cur = document.getElementById(stepId);
+                            cur.classList.add('active');
+                            cur.querySelector('i').className = 'ph ph-spinner spinning';
+                            progressBar.style.width = ((idx + 1) / steps.length * 85) + '%';
+                        });
+                    }, elapsed);
+                    elapsed += durations[idx];
+                });
+                setTimeout(resolve, elapsed);
+            });
+        }
+
+        // ── Call server API for try-on ──
+        let aiConfigChecked = false;
+        let aiIsEnabled = false;
+
+        // Check AI status on page load
+        (async () => {
+            try {
+                const res = await fetch(`${API}/tryon/config`);
+                const config = await res.json();
+                aiIsEnabled = config.aiEnabled;
+                aiConfigChecked = true;
+                if (config.aiEnabled) {
+                    const providers = Object.entries(config.providers).filter(([k, v]) => v).map(([k]) => k);
+                    console.log(`🤖 AI Try-On enabled via: ${providers.join(', ')}`);
+                } else {
+                    console.log('📸 AI Try-On: Using client-side compositing (no API key configured)');
+                }
+            } catch (e) {
+                console.log('📸 Server not available — will use client-side compositing');
+            }
+        })();
+
+        async function callTryOnAPI(fileInput, dressImageUrl) {
+            // 1. Download dress image and upload it
+            const dressRes = await fetch(dressImageUrl);
+            const dressBlob = await dressRes.blob();
+            const dressFile = new File([dressBlob], 'dress.jpg', { type: 'image/jpeg' });
+
+            const dressData = new FormData();
+            dressData.append('file', dressFile);
+            const resDressUpload = await fetch(`${API}/upload-dress`, { method: 'POST', body: dressData });
+            const dressJson = await resDressUpload.json();
+            const dress_image_id = dressJson.dress_image_id;
+            console.log('✅ Uploaded dress image ->', dress_image_id);
+
+            // 2. Upload User Image
+            const userData = new FormData();
+            userData.append('file', fileInput.files[0]);
+            const resUserUpload = await fetch(`${API}/upload-user`, { method: 'POST', body: userData });
+            const userJson = await resUserUpload.json();
+            const user_image_id = userJson.user_image_id;
+            console.log('✅ Uploaded user image ->', user_image_id);
+
+            // Map dress name to category
+            let category = "Dresses";
+            if (selectedDressName.toLowerCase().includes('top') || selectedDressName.toLowerCase().includes('jacket')) category = "Tops";
+            if (selectedDressName.toLowerCase().includes('pant') || selectedDressName.toLowerCase().includes('skirt')) category = "Bottoms";
+
+            // 3. Start Generation Job
+            const resGen = await fetch(`${API}/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_image_id: user_image_id,
+                    dress_image_id: dress_image_id,
+                    view_mode: 'front',
+                    height: 165.0,
+                    body_type: "average",
+                    category: category
+                })
+            });
+            const genJson = await resGen.json();
+            const job_id = genJson.job_id;
+            console.log('✅ Started Generation Job ->', job_id);
+
+            // 4. Poll for Result
+            let pollResult = null;
+            while (true) {
+                const resPoll = await fetch(`${API}/result/${job_id}`);
+                pollResult = await resPoll.json();
+
+                if (pollResult.status === 'completed' || pollResult.status === 'failed' || pollResult.status === 'not_found') {
+                    break;
+                }
+
+                console.log(`...polling job ${job_id} (${pollResult.status})`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+
+            if (pollResult.status !== 'completed') {
+                throw new Error("AI Generation failed: " + (pollResult.error || 'Unknown error'));
+            }
+
+            // Return the AI-generated image and the method used by the backend
+            const method = pollResult.method || 'ai-generated';
+            return { image: `http://localhost:5000${pollResult.result_url}`, method: `ai-${method}` };
+        }
+
+        async function generateTryon() {
+            const fileInput = document.getElementById('photo-input');
+            const overlay = document.getElementById('ai-gen-overlay');
+            const progressBar = document.getElementById('gen-progress-bar');
+            const steps = ['gstep-1', 'gstep-2', 'gstep-3', 'gstep-4', 'gstep-5'];
+
+            // Validate: user must upload a photo
+            if (!fileInput.files || !fileInput.files[0]) {
+                showToast('⚠️ Please upload your photo first!', '#ef4444');
+                return;
+            }
+
+            // Show overlay, hide idle/results
+            document.getElementById('idle-state').style.display = 'none';
+            document.getElementById('results-state').style.display = 'none';
+            document.getElementById('gen-btn').style.display = 'none';
+            overlay.classList.remove('hidden');
+
+            // Reset steps
+            steps.forEach(s => {
+                const el = document.getElementById(s);
+                el.classList.remove('done', 'active');
+                el.querySelector('i').className = 'ph ph-circle';
+            });
+            progressBar.style.width = '0%';
+
+            // Get dress image URL
+            const dressImageUrl = dressFullImages[selectedDressName] || dressFullImages['Noir Elegance Maxi'];
+
+            // Run animation and API call CONCURRENTLY
+            const animDurations = [1200, 1000, 1500, 1200, 800];
+            const animPromise = runStepAnimation(steps, animDurations, progressBar);
+
+            let resultImageSrc = null;
+            aiMethod = '';
+
+            // ── Send to backend AI pipeline (IDM-VTON → Gemini → composite) ──
+            // NO client-side compositing/overlay — all processing is server-side
+            const apiPromise = (async () => {
+                try {
+                    const result = await callTryOnAPI(fileInput, dressImageUrl);
+                    resultImageSrc = result.image;
+                    aiMethod = result.method;
+                    console.log(`✅ Try-on complete via: ${aiMethod}`);
+                } catch (apiErr) {
+                    console.error('❌ AI Try-On API failed:', apiErr.message);
+                    // Show error to user instead of fake overlay
+                    resultImageSrc = null;
+                    aiMethod = 'error';
+                }
+            })();
+
+            // Wait for both animation and API to complete
+            await Promise.all([animPromise, apiPromise]);
+
+            generatedResultImage = resultImageSrc;
+
+            // Complete the remaining animation steps
+            const lastStep = document.getElementById(steps[steps.length - 1]);
+            lastStep.classList.remove('active');
+            lastStep.classList.add('done');
+            lastStep.querySelector('i').className = 'ph-fill ph-check-circle';
+            progressBar.style.width = '100%';
+
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    overlay.classList.add('hidden');
+                    showResults();
+                });
+            }, 500);
+        }
+
+        function showResults() {
+            if (aiMethod === 'error' || !generatedResultImage) {
+                // AI failed — show error state, not a fake overlay
+                document.getElementById('results-state').style.display = 'flex';
+                document.getElementById('results-state').style.flexDirection = 'column';
+                document.getElementById('gen-btn').style.display = 'flex';
+                document.getElementById('gen-btn').innerHTML = '<i class="ph ph-arrow-clockwise"></i> Retry';
+                showToast('❌ AI generation failed. Please try again or check server.', '#ef4444');
+                return;
+            }
+
+            // Show the REAL AI-generated image (no fake overlays)
+            document.getElementById('result-selfie-img').src = generatedResultImage;
+            document.getElementById('selfie-dress-name').textContent = selectedDressName;
+
+            // Determine the method label
+            let statusLabel, methodIcon;
+            if (aiMethod.includes('idm-vton')) {
+                statusLabel = '🤖 AI Virtual Try-On (IDM-VTON)';
+                methodIcon = '🤖';
+            } else if (aiMethod.includes('gemini')) {
+                statusLabel = '🤖 AI Generated (Gemini)';
+                methodIcon = '🤖';
+            } else if (aiMethod.includes('composite')) {
+                statusLabel = '📸 Preview (Side-by-Side)';
+                methodIcon = '📸';
+            } else {
+                statusLabel = '✨ AI Generated';
+                methodIcon = '✨';
+            }
+
+            document.getElementById('results-state').style.display = 'flex';
+            document.getElementById('results-state').style.flexDirection = 'column';
+            document.getElementById('gen-btn').style.display = 'flex';
+            document.getElementById('gen-btn').innerHTML = '<i class="ph ph-arrow-clockwise"></i> Regenerate';
+            activateStepPill(3);
+            tryonGenerated = true;
+
+            showToast(`${methodIcon} Try-on for <b>${selectedDressName}</b> generated! (${statusLabel})`, '#a855f7');
+        }
+
+        // ── TRY-ON: View Tabs ──
+        function switchView(viewId, btn) {
+            document.querySelectorAll('.result-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ── TRY-ON: Add to Cart from Try-On ──
+        function addToCartFromTryon() {
+            addToCart(selectedDressName);
+        }
+
+        // ── TRY-ON: Download (real) ──
+        function downloadResult() {
+            if (generatedResultImage) {
+                const link = document.createElement('a');
+                link.download = `NexCart_TryOn_${selectedDressName.replace(/\s+/g, '_')}.png`;
+                link.href = generatedResultImage;
+                link.click();
+                showToast('📥 Image saved to your downloads!');
+            } else {
+                showToast('⚠️ Generate a try-on first!', '#ef4444');
+            }
+        }
+    </script>
+</body>
+
+</html>
