@@ -1,8 +1,19 @@
-node_modules/
+# Project Ignores
 .env
-uploads/
-outputs/
-logs/
 *.log
-__pycache__/
-.DS_Store
+logs/
+uploads/
+node_modules/
+database.sqlite
+
+# GSD template files
+.agent/
+.agents/
+.gemini/
+.gsd/
+adapters/
+docs/
+scripts/
+PROJECT_RULES.md
+GSD-STYLE.md
+model_capabilities.yaml
