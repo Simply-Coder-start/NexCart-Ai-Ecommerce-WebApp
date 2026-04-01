@@ -11,9 +11,11 @@ const PORT = process.env.FRONTEND_PORT || 3000;
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
-// Ensure uploads directory exists (created during setup)
+// Ensure uploads and images directories exist
 const uploadsPath = path.join(__dirname, '..', 'uploads');
+const imagesPath = path.join(__dirname, '..', 'frontend', 'images');
 app.use('/uploads', express.static(uploadsPath));
+app.use('/images', express.static(imagesPath));
 
 // Static serve the frontend id.html from root folder
 // For any GET request that doesn't match an API route or file, serve id.html
