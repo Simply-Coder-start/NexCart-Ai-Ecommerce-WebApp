@@ -167,7 +167,6 @@ Feel free to check the [issues page](https://github.com/Simply-Coder-start/NexCa
 ### Core Contributors
 A special thanks to the following developers for bringing this project to life:
 - [@Simply-Coder-start](https://github.com/Simply-Coder-start)
-- [@Bababoi123331](https://github.com/Bababoi123331)
 - [@rishavsingh181](https://github.com/rishavsingh181)
 
 ## 📜 License
