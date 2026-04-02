@@ -18,25 +18,69 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// === AUTH ROUTES ===
-router.post('/auth/register', (req, res) => {
-    const { email, password, name } = req.body;
-    // Simple mock
-    res.json({
-        message: 'Registered successfully',
-        token: 'mock-jwt-token-777',
-        user: { name, email }
-    });
+const BACKEND_API = 'http://localhost:5000/api';
+// Use native fetch (Node 18+) or fallback to commonjs compatible node-fetch if available
+const fetch = global.fetch || (() => {
+    try { return require('node-fetch'); } catch(e) { return null; }
+})();
+
+// === AUTH ROUTES (Proxy to Backend :5000) ===
+router.post('/auth/register', async (req, res) => {
+    try {
+        const response = await fetch(`${BACKEND_API}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+        });
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Auth proxy error', error: error.message });
+    }
 });
 
-router.post('/auth/login', (req, res) => {
-    const { email, password } = req.body;
-    // Simple mock
-    res.json({
-        message: 'Login successful',
-        token: 'mock-jwt-token-777',
-        user: { name: email.split('@')[0], email }
-    });
+router.post('/auth/login', async (req, res) => {
+    try {
+        const response = await fetch(`${BACKEND_API}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+        });
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Auth proxy error', error: error.message });
+    }
+});
+
+// === CART ROUTES (Proxy to Backend :5000) ===
+router.get('/cart', async (req, res) => {
+    try {
+        const response = await fetch(`${BACKEND_API}/cart`, {
+            headers: { 'Authorization': req.headers.authorization }
+        });
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Cart proxy error', error: error.message });
+    }
+});
+
+router.post('/cart/add', async (req, res) => {
+    try {
+        const response = await fetch(`${BACKEND_API}/cart/add`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': req.headers.authorization 
+            },
+            body: JSON.stringify(req.body)
+        });
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Cart proxy error', error: error.message });
+    }
 });
 
 // === PRODUCT ROUTES ===
@@ -51,8 +95,10 @@ router.get('/products', async (req, res) => {
 
 router.get('/products/search', async (req, res) => {
     try {
-        const { q, category } = req.query;
-        const products = await ProductService.searchProducts(q || '', category || 'all');
+        const { q, category, minPrice, maxPrice, color, size } = req.query;
+        const products = await ProductService.searchProducts(q || '', category || 'all', {
+            minPrice, maxPrice, color, size
+        });
         res.json(products);
     } catch (error) {
         res.status(500).json({ error: error.message });

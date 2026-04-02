@@ -17,8 +17,6 @@ const imagesPath = path.join(__dirname, '..', 'frontend', 'images');
 app.use('/uploads', express.static(uploadsPath));
 app.use('/images', express.static(imagesPath));
 
-// Static serve the frontend id.html from root folder
-// For any GET request that doesn't match an API route or file, serve id.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'id.html'));
 });
@@ -29,6 +27,19 @@ app.use('/api', require('./routes/api'));
 // Health check endpoint (matches FastAPI /health)
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
+});
+
+// Redirect any direct html requests to the main root to prevent 404s
+app.use((req, res, next) => {
+    if (req.path.endsWith('.html')) {
+        return res.redirect('/');
+    }
+    next();
+});
+
+// Fallback logic for SPA SPA SPA routing
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'id.html'));
 });
 
 const { connectDB } = require('./db');

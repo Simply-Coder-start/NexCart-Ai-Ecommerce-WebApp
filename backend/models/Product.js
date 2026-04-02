@@ -42,6 +42,10 @@ const ProductSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    sizes: {
+      type: [String],
+      default: ['S', 'M', 'L', 'XL', 'XXL'],
+    },
     isNew: {
       type: Boolean,
       default: false,
@@ -56,6 +60,18 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: 0,
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    highlights: {
+      type: [String],
+      default: [],
+    },
+    gallery: {
+      type: [String],
+      default: [],
     },
   },
   {

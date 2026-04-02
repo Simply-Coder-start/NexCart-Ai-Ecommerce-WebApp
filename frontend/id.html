@@ -1848,6 +1848,7 @@
                     Home</a>
                 <a onclick="switchPage('shop')" id="nav-shop" class="nav-link"><i class="ph ph-bag"></i> Shop</a>
                 <a onclick="switchPage('tryon')" id="nav-tryon" class="nav-link"><i class="ph ph-camera"></i> Try-On</a>
+                <a onclick="switchPage('orders')" id="nav-orders" class="nav-link"><i class="ph ph-package"></i> Orders</a>
                 <a onclick="switchPage('cart')" id="nav-cart" class="nav-link nav-cart-link">
                     <i class="ph ph-shopping-cart"></i> Cart
                     <span class="cart-badge-nav" id="cart-badge-nav" style="display: none;">0</span>
@@ -2047,6 +2048,28 @@
                 </div>
             </div>
         </section>
+
+        <!-- ─── DYNAMIC HOME DASHBOARDS ─── -->
+        <section class="container" style="padding-bottom: 80px;" id="home-dynamic-dashboard">
+            <style>
+                .dash-master-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+                .dash-card { background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 25px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; display: flex; flex-direction: column; }
+                .dash-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.1); }
+                .dash-card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 20px; color: white; }
+                .dash-inner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; flex: 1; }
+                .dash-img-slot { position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #222; }
+                .dash-img-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+                .dash-card:hover .dash-img-slot img { transform: scale(1.08); }
+                .dash-img-label { padding-top: 5px; font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+                .dash-link { color: var(--primary); font-size: 0.95rem; font-weight: 500; margin-top: auto; transition: 0.2s; }
+                .dash-card:hover .dash-link { text-decoration: underline; }
+                
+                .home-carousel { margin-top: 10px; display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; scrollbar-width: none; }
+                .home-carousel::-webkit-scrollbar { display: none; }
+            </style>
+            <!-- Generated Dynamically -->
+        </section>
+
     </div>
 
     <!-- ─── PAGE 2: SHOP ─── -->
@@ -2057,7 +2080,7 @@
                     <h2 class="section-title">Explore <span class="text-gradient">Collection</span></h2>
                     <p id="shop-product-count" style="color: var(--text-muted);">Showing all products</p>
                 </div>
-                <div style="display: flex; gap: 15px;">
+                <div style="display: flex; gap: 12px; align-items: center;">
                     <div style="position: relative;">
                         <select id="shop-sort-select"
                             style="background: #18181b; color: white; border: 1px solid var(--border-glass); padding: 10px 15px; border-radius: 8px; appearance: none; padding-right: 35px; cursor: pointer;"
@@ -2066,10 +2089,17 @@
                             <option value="price-asc">Price: Low to High</option>
                             <option value="price-desc">Price: High to Low</option>
                             <option value="newest">Newest Arrivals</option>
+                            <option value="rating-desc">Top Rated</option>
+                            <option value="reviews-desc">Most Reviewed</option>
                         </select>
                         <i class="ph ph-caret-down"
                             style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted);"></i>
                     </div>
+                    <button id="filter-toggle-btn" onclick="toggleFilterSidebar()"
+                        style="background: #18181b; color: white; border: 1px solid var(--border-glass); padding: 10px 16px; border-radius: 8px; cursor:pointer; display:flex; align-items:center; gap:8px;font-size:0.9rem;">
+                        <i class="ph ph-faders-horizontal"></i> Filters
+                        <span id="active-filter-count" style="display:none;background:var(--primary);color:white;border-radius:99px;padding:1px 7px;font-size:0.75rem;font-weight:700;">0</span>
+                    </button>
                 </div>
             </div>
 
@@ -2095,37 +2125,89 @@
                             <span>₹0</span>
                             <span>₹500+</span>
                         </div>
-                        <div class="price-range">
-                            <div class="price-fill"></div>
-                            <div class="price-knob"></div>
+                        <div class="price-range" id="price-slider-track">
+                            <div class="price-fill" id="price-slider-fill"></div>
+                            <div class="price-knob" id="price-slider-knob"></div>
                         </div>
-                        <div style="margin-top: 10px; font-size: 0.85rem;">Up to ₹300</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem;" id="price-display">Up to ₹500</div>
                     </div>
 
                     <div class="filter-group">
                         <div class="filter-title">Color</div>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <div class="color-dot active" style="background: #000;"></div>
-                            <div class="color-dot" style="background: #fff;"></div>
-                            <div class="color-dot" style="background: #ef4444;"></div>
-                            <div class="color-dot" style="background: #3b82f6;"></div>
-                            <div class="color-dot" style="background: #10b981;"></div>
-                            <div class="color-dot" style="background: #f59e0b;"></div>
-                            <div class="color-dot" style="background: #8b5cf6;"></div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="filter-colors">
+                            <div class="color-dot active" style="background: #000;" data-color="black"></div>
+                            <div class="color-dot" style="background: #fff;" data-color="white"></div>
+                            <div class="color-dot" style="background: #ef4444;" data-color="red"></div>
+                            <div class="color-dot" style="background: #3b82f6;" data-color="blue"></div>
+                            <div class="color-dot" style="background: #10b981;" data-color="green"></div>
+                            <div class="color-dot" style="background: #f59e0b;" data-color="orange"></div>
+                            <div class="color-dot" style="background: #8b5cf6;" data-color="purple"></div>
+                            <div class="color-dot" style="background: transparent; border: 1px dashed #555; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555;" data-color="all">X</div>
                         </div>
                     </div>
 
                     <div class="filter-group">
                         <div class="filter-title">Size</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                            <button class="btn-outline">XS</button>
-                            <button class="btn-outline">S</button>
-                            <button class="btn-outline" style="background: #27272a; border-color: #d946ef;">M</button>
-                            <button class="btn-outline">L</button>
-                            <button class="btn-outline">XL</button>
-                            <button class="btn-outline">XXL</button>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;" id="filter-sizes">
+                            <button class="btn-outline" data-size="XS">XS</button>
+                            <button class="btn-outline" data-size="S">S</button>
+                            <button class="btn-outline" data-size="M">M</button>
+                            <button class="btn-outline" data-size="L">L</button>
+                            <button class="btn-outline" data-size="XL">XL</button>
+                            <button class="btn-outline" data-size="XXL">XXL</button>
                         </div>
                     </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-group">
+                        <div class="filter-title">Minimum Rating</div>
+                        <div id="filter-ratings" style="display:flex;flex-direction:column;gap:8px;">
+                            <label class="checkbox-item" data-rating="4.5">
+                                <input type="radio" name="filterRating" value="4.5">
+                                <span style="color:#f59e0b;letter-spacing:1px;">★★★★★</span> <span style="font-size:0.8rem;">4.5+</span>
+                            </label>
+                            <label class="checkbox-item" data-rating="4.0">
+                                <input type="radio" name="filterRating" value="4.0">
+                                <span style="color:#f59e0b;letter-spacing:1px;">★★★★</span><span style="color:#555;">★</span> <span style="font-size:0.8rem;">4.0+</span>
+                            </label>
+                            <label class="checkbox-item" data-rating="3.0">
+                                <input type="radio" name="filterRating" value="3.0">
+                                <span style="color:#f59e0b;letter-spacing:1px;">★★★</span><span style="color:#555;">★★</span> <span style="font-size:0.8rem;">3.0+</span>
+                            </label>
+                            <label class="checkbox-item" data-rating="0">
+                                <input type="radio" name="filterRating" value="0" checked>
+                                Any Rating
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Badge / Status Filter -->
+                    <div class="filter-group">
+                        <div class="filter-title">Status</div>
+                        <div id="filter-badges" style="display:flex;flex-direction:column;gap:8px;">
+                            <label class="checkbox-item"><input type="checkbox" data-badge="hot"> <span class="badge badge-hot">HOT</span> Trending</label>
+                            <label class="checkbox-item"><input type="checkbox" data-badge="new"> <span class="badge badge-new">NEW</span> New Arrivals</label>
+                            <label class="checkbox-item"><input type="checkbox" data-badge="sale"> <span class="badge badge-sale">SALE</span> On Sale</label>
+                        </div>
+                    </div>
+
+                    <!-- Try-On Toggle -->
+                    <div class="filter-group">
+                        <div class="filter-title">AI Features</div>
+                        <label class="checkbox-item" style="gap:12px;">
+                            <div id="tryon-toggle" onclick="toggleTryOnFilter()" style="width:42px;height:22px;border-radius:99px;background:#333;position:relative;cursor:pointer;transition:0.3s;flex-shrink:0;">
+                                <div id="tryon-toggle-knob" style="width:16px;height:16px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:0.3s;"></div>
+                            </div>
+                            <span>Try-On Ready Only</span>
+                        </label>
+                    </div>
+
+                    <!-- Active Filter Tags -->
+                    <div id="active-filter-tags" style="display:none;padding-top:4px;"></div>
+
+                    <button class="btn-outline" style="width: 100%; margin-top: 4px; font-size: 0.8rem; height: 34px;" onclick="clearFilters()">
+                        <i class="ph ph-x"></i> Clear All Filters
+                    </button>
                 </aside>
 
                 <!-- Products (dynamically rendered) -->
@@ -2138,6 +2220,329 @@
                 <button class="btn-outline" style="padding: 10px 30px;" id="load-more-btn"
                     onclick="loadMoreProducts()">Load More Products</button>
             </div>
+        </div>
+    </div>
+
+    <style>
+        .pd-thumb { width: 80px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: 0.3s; }
+        .pd-thumb.active, .pd-thumb:hover { opacity: 1; border-color: var(--primary); }
+        .pd-size-btn.active { border-color: var(--primary) !important; background: rgba(168,85,247,0.1) !important; color: white !important; }
+        .original-price { font-size: 1.2rem; text-decoration: line-through; color: var(--text-muted); font-weight: 400; }
+        .discount-badge { background: rgba(239,68,68,0.15); color: #ef4444; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; font-weight: 700; border: 1px solid rgba(239,68,68,0.3); }
+        @media (max-width: 768px) { .pd-grid { grid-template-columns: 1fr !important; gap: 30px !important; } }
+        /* FBT Styles */
+        .fbt-item { border: 1px solid var(--border-glass); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; }
+        .fbt-item:hover { border-color: var(--primary); }
+        .fbt-item img { width: 60px; height: 75px; object-fit: cover; border-radius: 4px; }
+        .fbt-info { flex-grow: 1; }
+        .fbt-checkbox { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+        /* Carousel Styles */
+        .related-carousel { position: relative; display: flex; align-items: center; margin-top: 20px; }
+        .related-track { display: flex; overflow-x: auto; gap: 20px; scroll-behavior: smooth; padding-bottom: 15px; scrollbar-width: none; }
+        .related-track::-webkit-scrollbar { display: none; }
+        .related-card { flex: 0 0 250px; cursor: pointer; border: 1px solid transparent; transition: transform 0.3s ease, border-color 0.3s ease; }
+        .related-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .carousel-btn { background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; transition: 0.2s; position: absolute; z-index: 2; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .carousel-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .carousel-btn.left { left: -15px; }
+        .carousel-btn.right { right: -15px; }
+    </style>
+
+    <!-- ─── PAGE: PRODUCT DETAILS ─── -->
+    <div id="product-page" class="page-section">
+        <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+            <div class="breadcrumb" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; display: flex; gap: 8px; align-items: center;">
+                <span style="cursor:pointer; hover:text-white" onclick="switchPage('home')">Home</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
+                <span id="pd-breadcrumb-cat" style="cursor:pointer; color: var(--text-muted); text-transform: capitalize;">Category</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
+                <span id="pd-breadcrumb-subcat" style="color: var(--text-muted);">Subcategory</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
+                <span id="pd-breadcrumb-name" style="color: white; font-weight: 500;">Product Name</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 60px;" class="pd-grid">
+                <!-- Gallery -->
+                <div class="pd-gallery">
+                    <div style="background: var(--surface-light); border-radius: 16px; overflow: hidden; aspect-ratio: 4/5; margin-bottom: 15px; border: 1px solid var(--border-glass);">
+                        <img id="pd-main-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div id="pd-thumbnails" style="display:flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;"></div>
+                </div>
+
+                <!-- Info -->
+                <div class="pd-info">
+                    <div id="pd-badge" style="margin-bottom: 15px;"></div>
+                    <h1 id="pd-title" style="font-size: 2.2rem; margin-bottom: 15px;">Product Name</h1>
+                    <div id="pd-rating" style="margin-bottom: 25px;"></div>
+                    
+                    <div id="pd-price" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 30px; display: flex; align-items: center; gap: 15px;">
+                        ₹0
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Colors</h4>
+                        <div id="pd-colors" style="display:flex; gap: 10px;"></div>
+                    </div>
+
+                    <div style="margin-bottom: 35px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Size</h4>
+                            <span style="color: var(--primary); font-size: 0.85rem; cursor: pointer;"><i class="ph ph-ruler"></i> Size Guide</span>
+                        </div>
+                        <div id="pd-sizes" style="display:flex; gap: 10px; flex-wrap: wrap;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+                        <button id="pd-add-cart" class="btn-outline" style="flex: 1; padding: 15px; font-size: 1.05rem;">
+                            <i class="ph ph-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button id="pd-buy-now" class="btn-primary" style="flex: 1; padding: 15px; font-size: 1.05rem;">
+                            <i class="ph ph-lightning"></i> Buy Now
+                        </button>
+                    </div>
+
+                    <button id="pd-try-on" class="btn-outline" style="width: 100%; padding: 15px; border-color: #d946ef; color: white; background: rgba(217, 70, 239, 0.05); margin-bottom: 40px;">
+                        <i class="ph ph-camera"></i> Virtual Try-On Studio
+                    </button>
+
+                    <div class="pd-details-tabs">
+                        <div class="pd-tab-headers" style="border-bottom: 1px solid var(--border-glass); margin-bottom: 20px; display: flex; gap: 30px;">
+                            <span class="pd-tab-header active" onclick="switchProductTab('description')" data-tab="description" style="padding-bottom: 10px; border-bottom: 2px solid var(--primary); color: white; font-weight: 500; cursor: pointer;">Description</span>
+                            <span class="pd-tab-header" onclick="switchProductTab('details')" data-tab="details" style="padding-bottom: 10px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent;">Details</span>
+                            <span class="pd-tab-header" onclick="switchProductTab('reviews')" data-tab="reviews" style="padding-bottom: 10px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent;">Reviews</span>
+                        </div>
+                        
+                        <div id="pd-tab-description" class="pd-tab-content" style="display: block;">
+                            <div id="pd-desc-text" style="color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;"></div>
+                            <ul id="pd-highlights" style="color: var(--text-muted); line-height: 1.7; padding-left: 20px;"></ul>
+                        </div>
+                        
+                        <div id="pd-tab-details" class="pd-tab-content" style="display: none; color: var(--text-muted); line-height: 1.7;">
+                            <p><strong>Shipping:</strong> Free shipping directly to your doorstep. Usually arrives within 3-5 business days.</p>
+                            <p><strong>Returns:</strong> 30-day effortless return policy. Ensure items are unworn and in original condition.</p>
+                            <p><strong>Materials:</strong> Locally sourced, premium grade construction ensuring lasting durability.</p>
+                        </div>
+                        
+                        <div id="pd-tab-reviews" class="pd-tab-content" style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <h1 style="font-size: 3rem; margin: 0;">4.8</h1>
+                                <div>
+                                    <div style="color:var(--accent); font-size: 1.2rem;"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                                    <div style="color:var(--text-muted); font-size: 0.9rem;">Based on 124 reviews</div>
+                                </div>
+                            </div>
+                            <div style="border-top: 1px solid var(--border-glass); padding-top: 20px; color: var(--text-muted); line-height: 1.7;">
+                                <strong>Alex M.</strong> - <span style="color:var(--accent)"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span>
+                                <p style="margin-top: 5px;">Amazing quality! Fits exactly as expected. Highly recommend trying the virtual try-on before buying, it was super accurate!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FBT Section -->
+            <div style="border-top: 1px solid var(--border-glass); padding-top: 40px; margin-top: 20px; margin-bottom: 40px;" id="fbt-section">
+                <h3 style="font-size: 1.5rem; margin-bottom: 25px;">Frequently <span class="text-gradient">Bought Together</span></h3>
+                <div style="display: flex; gap: 30px; align-items: stretch; flex-wrap: wrap;">
+                    <div id="fbt-items-container" style="flex: 2; display: flex; flex-direction: column;">
+                        <!-- FBT Items injected here -->
+                    </div>
+                    <div style="flex: 1; background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: center;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Total Price:</p>
+                        <h2 id="fbt-total-price" style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;">₹0</h2>
+                        <button class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.05rem;" onclick="addAllFBTToCart()">
+                            <i class="ph ph-shopping-cart"></i> Add all to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Items Carousel -->
+            <div style="border-top: 1px solid var(--border-glass); padding-top: 40px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.5rem;">Related <span class="text-gradient">Items</span></h3>
+                </div>
+                <div class="related-carousel">
+                    <button class="carousel-btn left" onclick="scrollRelated(-1)"><i class="ph ph-caret-left"></i></button>
+                    <div id="related-track" class="related-track">
+                        <!-- Related Items injected here -->
+                    </div>
+                    <button class="carousel-btn right" onclick="scrollRelated(1)"><i class="ph ph-caret-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PAGE: CHECKOUT ─── -->
+    <div id="checkout-page" class="page-section">
+        <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+            <h2 class="section-title">Secure <span class="text-gradient">Checkout</span></h2>
+            <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); max-width: 600px; margin: 30px auto;">
+                <h3 style="margin-bottom: 20px;">Order Summary</h3>
+                <div style="display: flex; gap: 20px; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 20px; margin-bottom: 20px;">
+                    <img id="chk-img" src="" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <h4 id="chk-title" style="margin-bottom: 5px; font-size: 1.2rem;">Product Name</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Color: <span id="chk-color" style="color:white;">-</span></p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Size: <span id="chk-size" style="color:white;">-</span></p>
+                    </div>
+                    <div id="chk-price" style="margin-left: auto; font-size: 1.5rem; font-weight: 700; color: var(--primary);">₹0</div>
+                </div>
+                
+                <h3 style="margin-bottom: 15px;">Shipping Details</h3>
+                <input type="text" placeholder="Full Name" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 8px; color: white; margin-bottom: 10px;">
+                <input type="text" placeholder="Address" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 8px; color: white; margin-bottom: 10px;">
+                
+                <button class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 20px;" onclick="confirmCheckout()">Confirm Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── PAGE: MY ORDERS ─── -->
+    <div id="orders-page" class="page-section">
+        <style>
+            .orders-layout { display: flex; gap: 30px; margin-top: 20px; align-items: flex-start; }
+            .orders-main { flex: 3; }
+            .orders-sidebar { flex: 1; background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 20px; }
+            .order-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border-glass); margin-bottom: 20px; }
+            .order-tab { cursor: pointer; padding: 10px 0; color: var(--text-muted); border-bottom: 2px solid transparent; transition: 0.3s; }
+            .order-tab.active { color: var(--primary); border-color: var(--primary); font-weight: 500; }
+            .order-card { background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; overflow: hidden; margin-bottom: 25px; transition: transform 0.2s; }
+            .order-card:hover { border-color: var(--primary); }
+            .order-header { background: rgba(255,255,255,0.03); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); color: var(--text-muted); font-size: 0.9rem; }
+            .order-body { padding: 20px; display: flex; gap: 20px; }
+            .order-img { width: 90px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-glass); }
+            .order-info { flex: 1; }
+            .order-actions { display: flex; flex-direction: column; gap: 10px; min-width: 200px; }
+            @media (max-width: 768px) { .orders-layout { flex-direction: column; } .order-body { flex-direction: column; } .order-actions { width: 100%; } }
+        </style>
+        <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title">Your <span class="text-gradient">Orders</span></h2>
+                <div class="search-bar-container" style="max-width: 350px;">
+                    <input type="text" class="search-input" id="orders-search" placeholder="Search all orders..." oninput="filterOrders(this.value)">
+                    <button class="search-submit-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+            </div>
+            
+            <div class="orders-layout">
+                <div class="orders-main">
+                    <div class="order-tabs">
+                        <div class="order-tab active" onclick="switchOrderTab('all', this)">Orders</div>
+                        <div class="order-tab" onclick="switchOrderTab('buy-again', this)">Buy Again</div>
+                        <div class="order-tab" onclick="switchOrderTab('not-shipped', this)">Not Yet Shipped</div>
+                    </div>
+                    
+                    <div id="orders-list-container">
+                        <!-- Orders Rendered Here -->
+                    </div>
+                </div>
+                
+                <div class="orders-sidebar">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Recommended for you</h3>
+                    <div id="orders-recommendations">
+                        <!-- Recommendations Rendered Here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── TRY-ON MODAL POPUP ─── -->
+    <div id="tryon-modal" class="modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeTryOnModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i class="ph ph-x"></i></button>
+            <h3 style="margin-bottom: 20px; text-align: center;">Try On <span id="modal-tryon-title" class="text-gradient">This Item</span></h3>
+            <div style="display: flex; gap: 20px; align-items:center; margin-bottom: 20px;">
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 10px;">The Item</p>
+                    <img id="modal-tryon-img" src="" style="width: 100px; height: 120px; object-fit: cover; border-radius: 8px; margin: 0 auto;">
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 10px;">You</p>
+                    <div style="width: 100px; height: 120px; background: rgba(0,0,0,0.3); border: 1px dashed var(--border-glass); border-radius: 8px; margin: 0 auto; display: flex; align-items:center; justify-content:center;">
+                        <i class="ph ph-user" style="font-size: 3rem; color: var(--text-muted);"></i>
+                    </div>
+                </div>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; text-align: center;">For the best results and full controls, proceed to the deep Try-On Studio.</p>
+            <button class="btn-primary" style="width: 100%; padding: 15px;" onclick="switchPage('tryon'); closeTryOnModal();"><i class="ph ph-camera"></i> Open Full Studio</button>
+        </div>
+    </div>
+
+    <!-- ─── ORDERS ACTION MODALS ─── -->
+    <!-- Tracking Modal -->
+    <div id="tracking-modal" class="modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeModal('tracking-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i class="ph ph-x"></i></button>
+            <h3 style="margin-bottom: 20px; text-align: center;">Tracking <span class="text-gradient">Information</span></h3>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Order #<span id="track-order-id"></span></p>
+            
+            <div style="margin-bottom: 30px; position: relative; padding: 20px 0;">
+                <div style="position: absolute; top: 50%; left: 10%; right: 10%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; transform: translateY(-50%);"></div>
+                <!-- Interactive Progress Bar -->
+                <div id="track-progress-bar" style="position: absolute; top: 50%; left: 10%; width: 50%; height: 4px; background: var(--primary); border-radius: 2px; transform: translateY(-50%); transition: 1s;"></div>
+                
+                <div style="display: flex; justify-content: space-between; position: relative;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center;"><i class="ph-bold ph-check" style="font-size: 0.8rem; color: white;"></i></div>
+                        <span style="font-size: 0.8rem;">Ordered</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div id="track-dot-shipped" style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center;"><i class="ph-bold ph-check" style="font-size: 0.8rem; color: white;"></i></div>
+                        <span style="font-size: 0.8rem;">Shipped</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div id="track-dot-delivered" style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);"></div>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Delivered</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid var(--border-glass);">
+                <p style="font-weight: 500; margin-bottom: 5px;">Latest Update:</p>
+                <p id="track-status-text" style="color: var(--text-muted); font-size: 0.9rem;">Package has left the Amazon facility and is in transit.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return Modal -->
+    <div id="return-modal" class="modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeModal('return-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i class="ph ph-x"></i></button>
+            <h3 style="margin-bottom: 20px; text-align: center;">Return / <span class="text-gradient">Replace Item</span></h3>
+            
+            <p style="margin-bottom: 15px;">Why are you returning this?</p>
+            <select id="return-reason" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 8px; color: white; margin-bottom: 15px; font-size: 1rem;">
+                <option value="defective">Item defective or doesn't work</option>
+                <option value="wrong_item">Wrong item was sent</option>
+                <option value="no_longer_needed">No longer needed</option>
+                <option value="better_price">Found better price available</option>
+                <option value="size_issue">Size issues / Does not fit</option>
+            </select>
+
+            <textarea id="return-comments" placeholder="Additional comments (Optional)" style="width: 100%; padding: 12px; height: 100px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 8px; color: white; margin-bottom: 20px; resize: none;"></textarea>
+
+            <button class="btn-primary" style="width: 100%; padding: 15px;" onclick="submitReturn()">Initiate Return</button>
+        </div>
+    </div>
+
+    <!-- Feedback/Review Modal -->
+    <div id="feedback-modal" class="modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); max-width: 500px; width: 90%; position: relative;">
+            <button onclick="closeModal('feedback-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i class="ph ph-x"></i></button>
+            <h3 style="margin-bottom: 5px; text-align: center;" id="feedback-title">Provide <span class="text-gradient">Feedback</span></h3>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 25px;" id="feedback-subtitle">Let us know what you think</p>
+            
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; font-size: 2rem; color: var(--text-muted); cursor: pointer;" id="star-rating-container">
+                <i class="ph-fill ph-star hover-star" onclick="setRating(1)"></i>
+                <i class="ph-fill ph-star hover-star" onclick="setRating(2)"></i>
+                <i class="ph-fill ph-star hover-star" onclick="setRating(3)"></i>
+                <i class="ph-fill ph-star hover-star" onclick="setRating(4)"></i>
+                <i class="ph-fill ph-star hover-star" onclick="setRating(5)"></i>
+            </div>
+            
+            <textarea id="feedback-text" placeholder="Write your full review here..." style="width: 100%; padding: 12px; height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 8px; color: white; margin-bottom: 20px; resize: none;"></textarea>
+
+            <button class="btn-primary" style="width: 100%; padding: 15px;" onclick="submitFeedback()">Submit Review</button>
         </div>
     </div>
 
@@ -2235,24 +2640,11 @@
                             <span id="dress-label" style="font-size:0.75rem;color:#d946ef;font-weight:600;">Noir
                                 Elegance</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=300"
-                                class="wardrobe-item selected" onclick="selectDress(this,'Noir Elegance Maxi')"
-                                title="Noir Elegance Maxi">
-                            <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=300"
-                                class="wardrobe-item" onclick="selectDress(this,'Rose Petal Wrap')"
-                                title="Rose Petal Wrap">
-                            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=300"
-                                class="wardrobe-item" onclick="selectDress(this,'Lavender Dream')"
-                                title="Lavender Dream">
-                            <img src="/images/traditional_outfit.png"
-                                class="wardrobe-item" onclick="selectDress(this,'Royal Traditional Lehenga')" title="Royal Traditional Lehenga">
-                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=300"
-                                class="wardrobe-item" onclick="selectDress(this,'Summer Breeze Top')"
-                                title="Summer Breeze Top">
-                            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=300"
-                                class="wardrobe-item" onclick="selectDress(this,'Leather Rider Jacket')"
-                                title="Leather Rider Jacket">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;" id="wardrobe-container">
+                            <!-- Populated by JS from try-on eligible products -->
+                            <div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
+                                Loading wardrobe...
+                            </div>
                         </div>
                     </div>
 
@@ -2781,14 +3173,56 @@
             return products;
         }
 
-        const allProducts = generateAllProducts();
-        console.log(`🛒 NexCart: ${allProducts.length} products loaded across ${CATEGORIES.length - 1} categories`);
-
-        // ═══════════════════════════════════════════════════════════════
-        // ─── STEP 2 & 3: CATEGORY FILTER + PRODUCT RENDERING ─────────
-        // ═══════════════════════════════════════════════════════════════
+        let allProducts = [];
         let activeCategory = 'all';
-        let visibleProductCount = 12; // initial count shown
+        let activePriceLimit = 500;
+        let activeColor = 'all';
+        let activeSize = 'all';
+        let activeMinRating = 0;
+        let activeBadges = new Set();      // 'hot', 'new', 'sale'
+        let activeTryOnOnly = false;
+        let filterSidebarVisible = true;
+        let visibleProductCount = 12;
+
+        function toggleFilterSidebar() {
+            const sidebar = document.querySelector('.filter-sidebar');
+            filterSidebarVisible = !filterSidebarVisible;
+            if (filterSidebarVisible) {
+                sidebar.style.display = '';
+                document.querySelector('.shop-layout').style.gridTemplateColumns = '260px 1fr';
+            } else {
+                sidebar.style.display = 'none';
+                document.querySelector('.shop-layout').style.gridTemplateColumns = '1fr';
+            }
+        }
+
+        async function fetchProductsFromAPI() {
+            try {
+                const response = await fetch('/api/products');
+                if (!response.ok) throw new Error("Failed to fetch products");
+                allProducts = await response.json();
+                console.log(`🛒 NexCart: ${allProducts.length} live products loaded from API`);
+                
+                buildCategoryNav();
+                buildSidebarCategories();
+                initFilterInteractions();
+                renderShopProducts();
+                populateWardrobe();
+                if(typeof renderHomeDashboards === 'function') renderHomeDashboards();
+            } catch (err) {
+                console.error("API Fetch Error:", err.message);
+                console.log("⚠️ Falling back to local data generation...");
+                allProducts = generateAllProducts();
+                buildCategoryNav();
+                buildSidebarCategories();
+                initFilterInteractions();
+                renderShopProducts();
+                populateWardrobe();
+                if(typeof renderHomeDashboards === 'function') renderHomeDashboards();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchProductsFromAPI);
 
         // Category color map
         const categoryColorMap = {};
@@ -2878,14 +3312,16 @@
                 <div class="product-card" data-product-id="${product.id}" data-category="${product.category}">
                     ${getBadgeHTML(product.badge)}
                     <button class="wishlist-btn" onclick="toggleHeart(this)"><i class="ph ph-heart"></i></button>
-                    <div class="product-img"><img src="${product.image}" alt="${product.name}" loading="lazy"></div>
+                    <div class="product-img" style="cursor:pointer;" onclick="openProduct(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    </div>
                     <div class="product-info">
                         ${colorDotsHTML}
                         <div class="product-category-label">
                             <span class="cat-dot" style="background: ${catColor};"></span>
                             ${product.subcategory}
                         </div>
-                        <h3 style="font-size: 1rem; margin-bottom: 4px;">${product.name}</h3>
+                        <h3 style="font-size: 1rem; margin-bottom: 4px; cursor:pointer;" onclick="openProduct(${product.id})">${product.name}</h3>
                         ${ratingHTML}
                         <div class="price" style="font-weight: 700; font-size: 1.1rem; margin-bottom: 2px;">${priceHTML}</div>
                         <div class="product-card-actions">
@@ -2911,15 +3347,26 @@
             const countLabel = document.getElementById('shop-product-count');
 
             // Filter
-            let filtered = activeCategory === 'all'
-                ? [...allProducts]
-                : allProducts.filter(p => p.category === activeCategory);
+            let filtered = allProducts.filter(p => {
+                const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+                const matchesPrice = p.price <= activePriceLimit;
+                const matchesColor = activeColor === 'all' || (p.colors && p.colors.includes(activeColor));
+                const matchesSize = activeSize === 'all' || (p.sizes && p.sizes.includes(activeSize));
+                const matchesRating = (p.rating || 0) >= activeMinRating;
+                const matchesBadge = activeBadges.size === 0 || activeBadges.has(p.badge);
+                const matchesTryOn = !activeTryOnOnly || p.tryOnEligible;
+                return matchesCategory && matchesPrice && matchesColor && matchesSize && matchesRating && matchesBadge && matchesTryOn;
+            });
+
+            updateActiveFilterTags();
 
             // Sort
             const sortVal = sortSelect ? sortSelect.value : 'recommended';
             if (sortVal === 'price-asc') filtered.sort((a, b) => a.price - b.price);
             else if (sortVal === 'price-desc') filtered.sort((a, b) => b.price - a.price);
             else if (sortVal === 'newest') filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+            else if (sortVal === 'rating-desc') filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            else if (sortVal === 'reviews-desc') filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
 
             // Update count
             const categoryName = CATEGORIES.find(c => c.id === activeCategory)?.name || 'All';
@@ -2948,6 +3395,176 @@
             grid.innerHTML = visible.map(p => buildProductCardHTML(p)).join('');
         }
 
+        // Initialize Filter UI interactions
+        function initFilterInteractions() {
+            // Price Slider
+            const knob = document.getElementById('price-slider-knob');
+            const track = document.getElementById('price-slider-track');
+            const fill = document.getElementById('price-slider-fill');
+            const display = document.getElementById('price-display');
+
+            if (track && knob) {
+                let isDragging = false;
+
+                const updateSlider = (e) => {
+                    const rect = track.getBoundingClientRect();
+                    let x = (e.clientX || e.touches?.[0]?.clientX) - rect.left;
+                    x = Math.max(0, Math.min(x, rect.width));
+                    const percentage = x / rect.width;
+                    const price = Math.round(percentage * 500);
+                    
+                    knob.style.left = (percentage * 100) + '%';
+                    fill.style.width = (percentage * 100) + '%';
+                    display.innerText = `Up to ₹${price}`;
+                    activePriceLimit = price;
+                    renderShopProducts();
+                };
+
+                knob.onmousedown = () => { isDragging = true; };
+                window.onmousemove = (e) => { if (isDragging) updateSlider(e); };
+                window.onmouseup = () => { isDragging = false; };
+                track.onclick = (e) => updateSlider(e);
+            }
+
+            // Colors
+            document.querySelectorAll('#filter-colors .color-dot').forEach(dot => {
+                dot.onclick = () => {
+                    document.querySelectorAll('#filter-colors .color-dot').forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                    activeColor = dot.getAttribute('data-color');
+                    renderShopProducts();
+                };
+            });
+
+            // Sizes
+            document.querySelectorAll('#filter-sizes .btn-outline').forEach(btn => {
+                btn.onclick = () => {
+                    if (activeSize === btn.getAttribute('data-size')) {
+                        activeSize = 'all';
+                        btn.style.borderColor = '';
+                        btn.style.background = '';
+                    } else {
+                        document.querySelectorAll('#filter-sizes .btn-outline').forEach(b => {
+                            b.style.borderColor = '';
+                            b.style.background = '';
+                        });
+                        btn.style.borderColor = '#d946ef';
+                        btn.style.background = '#27272a';
+                        activeSize = btn.getAttribute('data-size');
+                    }
+                    renderShopProducts();
+                };
+            });
+        }
+
+        // Rating filter interaction
+        document.addEventListener('change', (e) => {
+            if (e.target.name === 'filterRating') {
+                activeMinRating = parseFloat(e.target.value);
+                renderShopProducts();
+            }
+            if (e.target.getAttribute('data-badge')) {
+                const badge = e.target.getAttribute('data-badge');
+                if (e.target.checked) activeBadges.add(badge);
+                else activeBadges.delete(badge);
+                renderShopProducts();
+            }
+        });
+
+        function toggleTryOnFilter() {
+            activeTryOnOnly = !activeTryOnOnly;
+            const toggle = document.getElementById('tryon-toggle');
+            const knob = document.getElementById('tryon-toggle-knob');
+            if (activeTryOnOnly) {
+                toggle.style.background = 'linear-gradient(135deg, #a855f7, #ec4899)';
+                knob.style.left = '23px';
+            } else {
+                toggle.style.background = '#333';
+                knob.style.left = '3px';
+            }
+            renderShopProducts();
+        }
+
+        function updateActiveFilterTags() {
+            const container = document.getElementById('active-filter-tags');
+            const countBadge = document.getElementById('active-filter-count');
+            if (!container) return;
+
+            const tags = [];
+            if (activeColor !== 'all') tags.push({ label: `Color: ${activeColor}`, clear: () => { activeColor='all'; document.querySelectorAll('#filter-colors .color-dot').forEach(d=>d.classList.remove('active')); document.querySelector('[data-color="all"]').classList.add('active'); renderShopProducts(); } });
+            if (activeSize !== 'all') tags.push({ label: `Size: ${activeSize}`, clear: () => { activeSize='all'; document.querySelectorAll('#filter-sizes .btn-outline').forEach(b=>{b.style.borderColor='';b.style.background='';}); renderShopProducts(); } });
+            if (activePriceLimit < 500) tags.push({ label: `Max ₹${activePriceLimit}`, clear: () => { activePriceLimit=500; const k=document.getElementById('price-slider-knob'),f=document.getElementById('price-slider-fill'); if(k)k.style.left='100%'; if(f)f.style.width='100%'; document.getElementById('price-display').innerText='Up to ₹500'; renderShopProducts(); } });
+            if (activeMinRating > 0) tags.push({ label: `★ ${activeMinRating}+`, clear: () => { activeMinRating=0; document.querySelector('[value="0"]').checked=true; renderShopProducts(); } });
+            if (activeTryOnOnly) tags.push({ label: 'Try-On Ready', clear: () => { toggleTryOnFilter(); } });
+            activeBadges.forEach(b => tags.push({ label: b.toUpperCase(), clear: () => { activeBadges.delete(b); document.querySelector(`[data-badge="${b}"]`).checked=false; renderShopProducts(); } }));
+
+            if (tags.length === 0) {
+                container.style.display = 'none';
+                countBadge.style.display = 'none';
+            } else {
+                container.style.display = 'block';
+                countBadge.style.display = 'inline';
+                countBadge.textContent = tags.length;
+                container.innerHTML = `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">Active Filters:</div>` +
+                    tags.map((t, i) => `<span onclick="(${t.clear.toString()})()" style="display:inline-flex;align-items:center;gap:5px;margin:3px;padding:3px 10px;border-radius:99px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);font-size:0.78rem;cursor:pointer;transition:0.2s;" onmouseover="this.style.background='rgba(168,85,247,0.3)'" onmouseout="this.style.background='rgba(168,85,247,0.15)'">${t.label} <i class='ph ph-x' style='font-size:10px;'></i></span>`).join('');
+            }
+        }
+
+        function clearFilters() {
+            activeCategory = 'all';
+            activePriceLimit = 500;
+            activeColor = 'all';
+            activeSize = 'all';
+            activeMinRating = 0;
+            activeBadges.clear();
+            if (activeTryOnOnly) toggleTryOnFilter();
+            
+            // UI Reset
+            const knob = document.getElementById('price-slider-knob');
+            const fill = document.getElementById('price-slider-fill');
+            if (knob) knob.style.left = '100%';
+            if (fill) fill.style.width = '100%';
+            document.getElementById('price-display').innerText = 'Up to ₹500';
+            
+            document.querySelectorAll('#filter-colors .color-dot').forEach(d => d.classList.remove('active'));
+            document.querySelector('[data-color="all"]').classList.add('active');
+            document.querySelectorAll('#filter-sizes .btn-outline').forEach(b => { b.style.borderColor = ''; b.style.background = ''; });
+            document.querySelectorAll('[name="filterRating"]').forEach(r => { r.checked = r.value === '0'; });
+            document.querySelectorAll('[data-badge]').forEach(cb => { cb.checked = false; });
+
+            buildCategoryNav();
+            buildSidebarCategories();
+            renderShopProducts();
+        }
+
+        function populateWardrobe() {
+            const container = document.getElementById('wardrobe-container');
+            if (!container) return;
+
+            const wearables = allProducts.filter(p => p.tryOnEligible);
+            if (wearables.length === 0) {
+                container.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">No try-on eligible products available</div>';
+                return;
+            }
+
+            container.innerHTML = wearables.map((p, idx) => `
+                <img src="${p.image}" 
+                     class="wardrobe-item${(selectedDress && selectedDress.id === p.id) || (!selectedDress && idx === 0) ? ' selected' : ''}" 
+                     onclick="selectDress(this, '${p.name.replace(/'/g, "\\'")}', '${p.id}', '${p.image}')" 
+                     title="${p.name}">
+            `).join('');
+
+            // Select the first one by default if not already selected
+            if (wearables.length > 0 && !selectedDress) {
+                selectedDress = {
+                    id: wearables[0].id,
+                    name: wearables[0].name,
+                    image: wearables[0].image
+                };
+                document.getElementById('dress-label').textContent = wearables[0].name;
+            }
+        }
+
         // Load More
         function loadMoreProducts() {
             visibleProductCount += 8;
@@ -2959,7 +3576,7 @@
         // ═══════════════════════════════════════════════════════════════
 
         // ── Add to Cart (API) ──
-        async function addToCartAPI(productId, productName, price, image) {
+        async function addToCartAPI(productId, productName, price, image, size, color) {
             // Optimistic UI update
             const badge = document.getElementById('cart-count');
             const navBadge = document.getElementById('cart-badge-nav');
@@ -2980,6 +3597,8 @@
                             price: price,
                             quantity: 1,
                             productImage: image || '',
+                            size: size || 'N/A',
+                            color: color || 'N/A'
                         }),
                     });
                     if (res.ok) {
@@ -2991,29 +3610,60 @@
                     showToast(`🛒 Added <b>${productName}</b> to cart!`);
                 } catch (e) {
                     console.log('Cart API error, saving locally', e);
-                    saveToGuestCart(productId, productName, price, image);
+                    saveToGuestCart(productId, productName, price, image, size, color);
                     showToast(`🛒 Added <b>${productName}</b> to cart!`);
                 }
             } else {
                 // Guest user: save to localStorage
-                saveToGuestCart(productId, productName, price, image);
+                saveToGuestCart(productId, productName, price, image, size, color);
                 showToast(`🛒 Added <b>${productName}</b> to cart!`);
             }
         }
 
-        function saveToGuestCart(productId, productName, price, image) {
+        async function syncCart(token) {
+            const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            if (guestCart.length === 0) return;
+
+            try {
+                for (const item of guestCart) {
+                    await fetch(`${API}/cart/add`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(item),
+                    });
+                }
+                localStorage.removeItem('guestCart');
+                console.log('✅ Synchronized guest cart with user account');
+            } catch (e) {
+                console.error('❌ Cart sync failed', e);
+            }
+        }
+
+        function saveToGuestCart(productId, productName, price, image, size, color) {
             const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
-            const existing = cart.find(item => item.productId === String(productId));
+            // For guest cart, we treat same product with different size/color as unique entries
+            const existing = cart.find(item => item.productId === String(productId) && item.size === size && item.color === color);
             if (existing) {
                 existing.quantity += 1;
             } else {
-                cart.push({ productId: String(productId), productName, productImage: image || '', price, quantity: 1 });
+                cart.push({ 
+                    productId: String(productId), 
+                    productName, 
+                    productImage: image || '', 
+                    price, 
+                    quantity: 1,
+                    size: size || 'N/A',
+                    color: color || 'N/A'
+                });
             }
             localStorage.setItem('guestCart', JSON.stringify(cart));
             const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cart-count');
             const navBadge = document.getElementById('cart-badge-nav');
-            badge.textContent = totalItems;
+            if (badge) badge.textContent = totalItems;
             if (navBadge) { navBadge.textContent = totalItems; navBadge.style.display = totalItems > 0 ? 'flex' : 'none'; }
         }
 
@@ -3583,14 +4233,18 @@
             }
         });
 
-        // ── Page Switching ──
+        // ── Page Switching & Details ──
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageId + '-page');
             if (target) target.classList.add('active');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            const activeNav = document.getElementById('nav-' + pageId);
-            if (activeNav) activeNav.classList.add('active');
+            
+            // Only manage nav if it's not a detail page
+            if (pageId !== 'product') {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                const activeNav = document.getElementById('nav-' + pageId);
+                if (activeNav) activeNav.classList.add('active');
+            }
 
             const footer = document.getElementById('site-footer');
             if (footer) {
@@ -3598,9 +4252,350 @@
             }
 
             if (pageId === 'cart') loadSpaCart();
-
+            if (pageId === 'orders') loadSpaOrders();
             window.scrollTo(0, 0);
         }
+
+        let currentProduct = null;
+        let selectedProductColor = null;
+        let selectedProductSize = null;
+
+        function openProduct(id) {
+            const product = allProducts.find(p => String(p.id) === String(id));
+            if (!product) return;
+            currentProduct = product;
+            selectedProductColor = null;
+            selectedProductSize = null;
+            
+            document.getElementById('pd-breadcrumb-cat').textContent = CATEGORIES.find(c => c.id === product.category)?.name || product.category;
+            document.getElementById('pd-breadcrumb-cat').onclick = () => { switchPage('shop'); filterByCategory(product.category); };
+            document.getElementById('pd-breadcrumb-subcat').textContent = product.subcategory;
+            document.getElementById('pd-breadcrumb-name').textContent = product.name;
+            
+            document.getElementById('pd-badge').innerHTML = getBadgeHTML(product.badge);
+            document.getElementById('pd-title').textContent = product.name;
+            document.getElementById('pd-rating').innerHTML = getStarRatingHTML(product.rating || 4.5, product.reviewCount || 120);
+            
+            const priceHtml = product.originalPrice 
+                ? `₹${product.price} <span class="original-price">₹${product.originalPrice}</span> <span class="discount-badge">${Math.round((1 - product.price/product.originalPrice)*100)}% OFF</span>`
+                : `₹${product.price}`;
+            document.getElementById('pd-price').innerHTML = priceHtml;
+            
+            document.getElementById('pd-desc-text').textContent = product.description || 'Premium product designed for ultimate comfort and style.';
+            document.getElementById('pd-highlights').innerHTML = (product.highlights || ["Premium Quality", "Durable material"]).map(h => `<li>${h}</li>`).join('');
+            
+            const gallery = product.gallery && product.gallery.length ? product.gallery : [product.image];
+            document.getElementById('pd-main-img').src = gallery[0];
+            const thumbContainer = document.getElementById('pd-thumbnails');
+            thumbContainer.innerHTML = gallery.map((img, i) => `
+                <img src="${img}" class="pd-thumb ${i===0?'active':''}" onclick="setProductMainImage(this, '${img}')">
+            `).join('');
+            
+            const colorContainer = document.getElementById('pd-colors');
+            if(product.colors && product.colors.length) {
+                colorContainer.innerHTML = product.colors.map((c, i) => `
+                    <div class="color-dot" style="background:${c}; width: 32px; height: 32px;" onclick="selectProductColor(this, '${c}')"></div>
+                `).join('');
+            } else { 
+                colorContainer.innerHTML = '<span style="color:var(--text-muted);font-size:0.9rem;">Default</span>'; 
+                selectedProductColor = 'Default';
+            }
+            
+            const sizeContainer = document.getElementById('pd-sizes');
+            if(product.sizes && product.sizes.length) {
+                sizeContainer.innerHTML = product.sizes.map((s, i) => `
+                    <button class="btn-outline pd-size-btn" style="width: 48px; height: 48px; padding: 0;" onclick="selectProductSize(this, '${s}')">${s}</button>
+                `).join('');
+            } else { 
+                sizeContainer.innerHTML = '<span style="color:var(--text-muted);font-size:0.9rem;">One Size Fits All</span>'; 
+                selectedProductSize = 'One Size Fits All';
+            }
+            
+            const pNameSafe = product.name.replace(/'/g, "\\'");
+
+            const validateSelection = () => {
+                if (!selectedProductColor) { showToast("Please select a Color.", "#ef4444"); return false; }
+                if (!selectedProductSize) { showToast("Please select a Size.", "#ef4444"); return false; }
+                return true;
+            };
+
+            document.getElementById('pd-buy-now').onclick = () => {
+                if(validateSelection()) {
+                    openCheckoutPage();
+                }
+            };
+            const tryOnBtn = document.getElementById('pd-try-on');
+            if(product.tryOnEligible) {
+                tryOnBtn.classList.remove('disabled');
+                tryOnBtn.onclick = () => openTryOnModal(product);
+            } else {
+                tryOnBtn.classList.add('disabled');
+                tryOnBtn.onclick = () => showToast("This product is not eligible for virtual try-on.", "#ef4444");
+            }
+
+            document.getElementById('pd-add-cart').onclick = () => {
+                if(validateSelection()) {
+                    addToCartAPI(product.id, pNameSafe, product.price, product.image, selectedProductSize, selectedProductColor);
+                }
+            };
+
+            generateRecommendations(product);
+            switchPage('product');
+        }
+
+        function setProductMainImage(elem, src) {
+            document.getElementById('pd-main-img').src = src;
+            document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+            elem.classList.add('active');
+        }
+        function selectProductColor(elem, c) {
+            selectedProductColor = c;
+            document.querySelectorAll('#pd-colors .color-dot').forEach(d => d.classList.remove('active'));
+            elem.classList.add('active');
+        }
+        function selectProductSize(elem, s) {
+            selectedProductSize = s;
+            document.querySelectorAll('.pd-size-btn').forEach(b => b.classList.remove('active'));
+            elem.classList.add('active');
+        }
+        function switchProductTab(tabName) {
+            document.querySelectorAll('.pd-tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.pd-tab-header').forEach(el => {
+                el.classList.remove('active');
+                el.style.color = 'var(--text-muted)';
+                el.style.borderBottomColor = 'transparent';
+            });
+            document.getElementById(`pd-tab-${tabName}`).style.display = 'block';
+            const activeHeader = document.querySelector(`.pd-tab-header[data-tab="${tabName}"]`);
+            if(activeHeader) {
+                activeHeader.classList.add('active');
+                activeHeader.style.color = 'white';
+                activeHeader.style.borderBottomColor = 'var(--primary)';
+            }
+        }
+
+        function openCheckoutPage() {
+            const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            
+            if (currentProduct) {
+                const isInCart = cart.find(item => item.productId === String(currentProduct.id) && item.size === selectedProductSize && item.color === selectedProductColor);
+                if (!isInCart) {
+                    saveToGuestCart(currentProduct.id, currentProduct.name, currentProduct.price, currentProduct.image, selectedProductSize, selectedProductColor);
+                }
+            }
+
+            const updatedCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            if (updatedCart.length === 0) {
+                showToast("Your cart is empty!", "#ef4444");
+                return;
+            }
+
+            const checkoutContainer = document.getElementById('checkout-page');
+            const subtotal = updatedCart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const shipping = subtotal >= 500 ? 0 : 50;
+            const total = subtotal + shipping;
+
+            let itemsHtml = updatedCart.map(item => `
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-glass);">
+                    <img src="${item.productImage}" style="width: 60px; height: 80px; object-fit: cover; border-radius: 8px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; font-size: 0.95rem;">${item.productName}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Size: ${item.size} | Color: ${item.color}</div>
+                        <div style="font-size: 0.85rem; margin-top: 5px;">₹${item.price} x ${item.quantity}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            checkoutContainer.innerHTML = `
+                <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+                    <h2 class="section-title">Secure <span class="text-gradient">Checkout</span></h2>
+                    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; margin-top: 30px;">
+                        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass);">
+                            <h3 style="margin-bottom: 20px;">Shipping Details</h3>
+                            <input type="text" placeholder="Full Name" value="John Doe" class="search-input" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass);">
+                            <input type="text" placeholder="Address" value="123 Fashion Street, Cyber City" class="search-input" style="width: 100%; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass);">
+                            <div style="display: flex; gap: 15px;">
+                                <input type="text" placeholder="City" value="Mumbai" class="search-input" style="flex: 1; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass);">
+                                <input type="text" placeholder="ZIP" value="400001" class="search-input" style="width: 100px; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass);">
+                            </div>
+                            <h3 style="margin-bottom: 20px; margin-top: 20px;">Payment Information</h3>
+                            <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative;">
+                                <i class="ph ph-credit-card" style="font-size: 1.5rem; vertical-align: middle; margin-right: 10px;"></i>
+                                <span>Card ending in <b>4242</b></span>
+                                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; color: var(--primary);">CHANGE</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--surface-light); padding: 30px; border-radius: 16px; border: 1px solid var(--border-glass); height: fit-content;">
+                            <h3 style="margin-bottom: 20px;">Order Summary</h3>
+                            <div style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+                                ${itemsHtml}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Subtotal</span>
+                                <span>₹${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Shipping</span>
+                                <span>${shipping === 0 ? '<span style="color: #10b981;">FREE</span>' : '₹' + shipping.toFixed(2)}</span>
+                            </div>
+                            <hr style="border: 0; border-top: 1px solid var(--border-glass); margin: 15px 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700;">
+                                <span>Order Total</span>
+                                <span class="text-gradient">₹${total.toFixed(2)}</span>
+                            </div>
+                            <button class="btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 25px;" onclick="confirmCheckout()">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            switchPage('checkout');
+        }
+
+        function confirmCheckout() {
+            const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+            if (cart.length === 0) return;
+
+            const orderId = `112-${Math.floor(1000000 + Math.random() * 9000000)}-${Math.floor(1000000 + Math.random() * 9000000)}`;
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const shipping = subtotal >= 500 ? 0 : 50;
+            const orderTotal = subtotal + shipping;
+
+            cart.forEach(item => {
+                mockOrders.unshift({
+                    id: orderId,
+                    date: dateStr,
+                    total: orderTotal,
+                    status: 'Shipped',
+                    statusMsg: `Arriving by ${new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`,
+                    product: {
+                        id: item.productId,
+                        name: item.productName,
+                        image: item.productImage
+                    }
+                });
+            });
+
+            localStorage.removeItem('guestCart');
+            updateCartBadge();
+
+            showToast("Order placed successfully! Thank you for shopping with NexCart.", "#10b981");
+            
+            setTimeout(() => { 
+                switchPage('orders');
+                loadSpaOrders();
+            }, 1000);
+        }
+
+        function openTryOnModal(product) {
+            document.getElementById('modal-tryon-title').textContent = product.name;
+            document.getElementById('modal-tryon-img').src = product.image;
+            
+            const modal = document.getElementById('tryon-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeTryOnModal() {
+            const modal = document.getElementById('tryon-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // ─── RECOMMENDATIONS LOGIC ───
+        let currentFBTItems = [];
+
+        function generateRecommendations(product) {
+            const others = allProducts.filter(p => p.id !== product.id);
+            const sameCat = others.filter(p => p.category === product.category);
+            const pool = sameCat.length >= 2 ? sameCat : others;
+            const shuffled = [...pool].sort(() => 0.5 - Math.random());
+            
+            // FBT Logic
+            currentFBTItems = [product, ...shuffled.slice(0, 2)];
+            currentFBTItems.forEach(item => item.__fbtChecked__ = true);
+            renderFBT();
+            
+            // Related Items Logic
+            const related = shuffled.slice(2, 10);
+            if(related.length < 8) {
+                related.push(...others.filter(x => !related.includes(x)).slice(0, 8 - related.length));
+            }
+            renderRelatedCarousel(related);
+        }
+
+        function renderFBT() {
+            const container = document.getElementById('fbt-items-container');
+            container.innerHTML = currentFBTItems.map((item, i) => `
+                <div class="fbt-item" onclick="toggleFBT(${i}, event)">
+                    <input type="checkbox" class="fbt-checkbox" ${item.__fbtChecked__ ? 'checked' : ''} onclick="event.stopPropagation(); toggleFBT(${i}, event)">
+                    <img src="${item.image}">
+                    <div class="fbt-info">
+                        <h4 style="font-size: 1rem; margin-bottom: 5px;">${item.name}</h4>
+                        <div style="color: var(--primary); font-weight: 600;">₹${item.price}</div>
+                    </div>
+                </div>
+                ${i < currentFBTItems.length - 1 ? '<div style="text-align: center; color: var(--border-glass); margin: 5px 0;"><i class="ph ph-plus" style="font-size: 1.2rem;"></i></div>' : ''}
+            `).join('');
+            
+            updateFBTTotal();
+        }
+
+        function toggleFBT(index, event) {
+            if (event.target.type !== 'checkbox') {
+                const checkbox = document.querySelectorAll('.fbt-checkbox')[index];
+                checkbox.checked = !checkbox.checked;
+            }
+            currentFBTItems[index].__fbtChecked__ = document.querySelectorAll('.fbt-checkbox')[index].checked;
+            updateFBTTotal();
+        }
+
+        function updateFBTTotal() {
+            const total = currentFBTItems.filter(item => item.__fbtChecked__).reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('fbt-total-price').textContent = '₹' + total.toFixed(2);
+        }
+
+        function addAllFBTToCart() {
+            const toAdd = currentFBTItems.filter(item => item.__fbtChecked__);
+            if (toAdd.length === 0) {
+                showToast("Please select at least one item.", "#ef4444");
+                return;
+            }
+            toAdd.forEach(item => {
+                const safeName = item.name.replace(/'/g, "\\\\'");
+                addToCartAPI(item.id, safeName, item.price, item.image);
+            });
+            showToast('Added ' + toAdd.length + ' items to cart!', "#10b981");
+        }
+
+        function renderRelatedCarousel(items) {
+            const track = document.getElementById('related-track');
+            track.innerHTML = items.map(p => {
+                const pNameSafe = p.name.replace(/'/g, "\\\\'");
+                return `
+                <div class="related-card product-card" onclick="openProduct('${p.id}')">
+                    <div class="product-badge">${Math.round((1 - p.price/p.originalPrice)*100)}% OFF</div>
+                    <div class="product-img-wrapper" style="height: 200px;">
+                        <img src="${p.image}" class="product-img" style="height:100%; object-fit:cover;" loading="lazy">
+                    </div>
+                    <div class="product-info" style="padding: 15px;">
+                        <h3 class="product-title" style="white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 48px;">${p.name}</h3>
+                        <div class="product-cost">
+                            <span class="product-price">₹${p.price}</span>
+                            <span class="product-original">₹${p.originalPrice}</span>
+                        </div>
+                    </div>
+                </div>
+            `;}).join('');
+        }
+
+        function scrollRelated(direction) {
+            const track = document.getElementById('related-track');
+            track.scrollBy({ left: direction * 270, behavior: 'smooth' });
+        }
+
 
         // ─── AUTH STATE ───
         let currentUser = null;
@@ -3784,6 +4779,10 @@
                 localStorage.setItem('nexcart_user', JSON.stringify(data.user));
                 currentUser = data.user;
                 updateNavForUser(data.user);
+
+                // SYNC CART
+                await syncCart(data.token);
+                updateCartBadge();
 
                 showToast(`👋 Welcome back, <b>${data.user.name}</b>!`, '#a855f7');
                 switchPage('home');
@@ -4181,12 +5180,23 @@
             'Leather Rider Jacket': { selfie: 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600', front: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=600', back: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600' },
         };
 
-        function selectDress(el, name) {
+        let selectedDress = null;
+        function selectDress(el, name, id, image) {
             document.querySelectorAll('.wardrobe-item').forEach(i => i.classList.remove('selected'));
             el.classList.add('selected');
-            selectedDressName = name;
+            selectedDress = { id, name, image };
             document.getElementById('dress-label').textContent = name;
-            activateStepPill(3);
+            
+            // Highlight the selection breadcrumb if visible
+            const pill2 = document.getElementById('step-pill-2');
+            if (pill2) {
+                pill2.classList.add('active');
+                pill2.style.background = 'rgba(217,70,239,0.15)';
+                pill2.style.borderColor = '#d946ef';
+                pill2.style.color = '#d946ef';
+            }
+            
+            showToast(`Selected ${name}`);
         }
 
         // ── TRY-ON: Body Type Selection ──
@@ -4386,8 +5396,17 @@
             });
             progressBar.style.width = '0%';
 
-            // Get dress image URL
-            const dressImageUrl = dressFullImages[selectedDressName] || dressFullImages['Noir Elegance Maxi'];
+            const human_image_id = currentUploadedUserImage;
+            const dress_image_id = selectedDress ? selectedDress.image : null;
+
+            if (!human_image_id) {
+                showToast("Please upload your photo first!", "#ef4444");
+                return;
+            }
+            if (!dress_image_id) {
+                showToast("Please select a dress from the wardrobe!", "#ef4444");
+                return;
+            }
 
             // Run animation and API call CONCURRENTLY
             const animDurations = [1200, 1000, 1500, 1200, 800];
@@ -4498,6 +5517,305 @@
                 showToast('⚠️ Generate a try-on first!', '#ef4444');
             }
         }
+
+        // ─── ORDERS LOGIC ───
+        const mockOrders = [
+            { id: "112-9843219-49324", date: "April 1, 2026", total: 49.99, status: "Delivered", statusMsg: "Delivered on April 4", productRef: 1, cancelled: false },
+            { id: "114-1928392-18239", date: "March 24, 2026", total: 119.50, status: "Delivered", statusMsg: "Handed directly to resident", productRef: 5, cancelled: false },
+            { id: "112-5839201-94820", date: "April 2, 2026", total: 29.99, status: "Shipped", statusMsg: "Arriving tomorrow by 8 PM", productRef: 12, cancelled: false },
+            { id: "113-1029384-93810", date: "February 15, 2026", total: 89.00, status: "Cancelled", statusMsg: "Cancelled by seller", productRef: 8, cancelled: true }
+        ];
+
+        let currentOrderTab = 'all';
+        let currentOrderSearch = '';
+
+        function loadSpaOrders() {
+            renderOrdersList();
+            renderOrdersRecommendations();
+        }
+
+        function switchOrderTab(tabName, el) {
+            document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+            if(el) el.classList.add('active');
+            currentOrderTab = tabName;
+            renderOrdersList();
+        }
+
+        function filterOrders(query) {
+            currentOrderSearch = query.toLowerCase();
+            renderOrdersList();
+        }
+
+        function renderOrdersList() {
+            const container = document.getElementById('orders-list-container');
+            let filtered = mockOrders;
+            
+            // Filter by Tab
+            if (currentOrderTab === 'not-shipped') {
+                filtered = filtered.filter(o => o.status !== 'Delivered' && !o.cancelled);
+            } else if (currentOrderTab === 'buy-again') {
+                filtered = filtered.filter(o => o.status === 'Delivered');
+            }
+            
+            filtered = filtered.map(o => {
+                const product = allProducts.find(p => String(p.id) === String(o.productRef));
+                return { ...o, product };
+            }).filter(o => o.product); 
+
+            if (currentOrderSearch) {
+                filtered = filtered.filter(o => 
+                    o.product.name.toLowerCase().includes(currentOrderSearch) ||
+                    o.id.includes(currentOrderSearch)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--text-muted);">No orders found matching your criteria.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(o => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div style="display: flex; gap: 30px;">
+                            <div>
+                                <div style="text-transform: uppercase; font-size: 0.75rem;">Order Placed</div>
+                                <div style="color: white; font-weight: 500;">${o.date}</div>
+                            </div>
+                            <div>
+                                <div style="text-transform: uppercase; font-size: 0.75rem;">Total</div>
+                                <div style="color: white; font-weight: 500;">₹${o.total.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="text-transform: uppercase; font-size: 0.75rem;">Order # ${o.id}</div>
+                            <div style="display: flex; gap: 10px; margin-top: 5px; justify-content: flex-end;">
+                                <a style="color: var(--primary); cursor: pointer;" onclick="showToast('Loading Secure Details...')">View order details</a> 
+                                <span>|</span> 
+                                <a style="color: var(--primary); cursor: pointer;" onclick="downloadInvoice('${o.id}')">Invoice</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-body">
+                        <img src="${o.product.image}" class="order-img" style="cursor: pointer;" onclick="openProduct('${o.product.id}')">
+                        <div class="order-info">
+                            <h3 style="font-size: 1.1rem; margin-bottom: 8px; cursor: pointer; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" onclick="openProduct('${o.product.id}')">${o.product.name}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Sold by: NexCart Official</p>
+                            
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: ${o.cancelled ? '#ef4444' : (o.status === 'Delivered' ? '#10b981' : '#f59e0b')};"></div>
+                                <span style="font-weight: 600; font-size: 1.05rem;">${o.statusMsg}</span>
+                            </div>
+                            ${!o.cancelled ? `<p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Return window closed</p>` : ''}
+                        </div>
+                        <div class="order-actions">
+                            ${!o.cancelled ? `
+                                <button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px;" onclick="openTrackingModal('${o.id}')">Track Package</button>
+                                <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="openReturnModal('${o.id}')">Return or Replace Item</button>
+                                <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="shareGiftReceipt('${o.id}')">Share Gift Receipt</button>
+                            ` : `<button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px;" onclick="openProduct('${o.product.id}')">Repurchase Item</button>`}
+                            <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="openFeedbackModal('seller', 'NexCart Official')">Leave Seller Feedback</button>
+                            <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass);" onclick="openFeedbackModal('product', '${o.product.name.replace(/'/g, "\\'")}')">Write a product review</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderOrdersRecommendations() {
+            const container = document.getElementById('orders-recommendations');
+            if(!container) return;
+            const recs = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
+            container.innerHTML = recs.map(p => {
+                const sName = p.name.replace(/'/g, "\\\\'");
+                return `
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                    <img src="${p.image}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openProduct('${p.id}')">
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.85rem; font-weight: 500; cursor: pointer; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" onclick="openProduct('${p.id}')">${p.name}</div>
+                        <div style="color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-top: 4px;">₹${p.price}</div>
+                        <button class="btn-outline" style="padding: 4px 10px; font-size: 0.75rem; border-color: var(--primary); color: var(--primary); margin-top: 8px;" onclick="addToCartAPI('${p.id}', '${sName}', ${p.price}, '${p.image}')">Add to Cart</button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        function renderHomeDashboards() {
+            const container = document.getElementById('home-dynamic-dashboard');
+            if(!container) return;
+            
+            const randomList = () => [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            const dashboards = [
+                { title: "Up to 60% Off | Clearance", items: randomList() },
+                { title: "Continue Shopping for", items: randomList() },
+                { title: "Explore Top Rated items", items: randomList() },
+                { title: "New Arrivals in Fashion", items: randomList() }
+            ];
+
+            let html = `<div class="dash-master-grid">`;
+            
+            dashboards.forEach(dash => {
+                html += `
+                    <div class="dash-card" onclick="switchPage('shop')">
+                        <h3 class="dash-card-title">${dash.title}</h3>
+                        <div class="dash-inner-grid">
+                            ${dash.items.map(item => `
+                                <div>
+                                    <div class="dash-img-slot">
+                                        <img src="${item.image}" alt="">
+                                    </div>
+                                    <div class="dash-img-label">${item.name}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="dash-link">Shop now</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            const scrollerItems = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
+            html += `
+                <div style="background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.5rem;">Based on your <span class="text-gradient">recent history</span></h3>
+                    </div>
+                    <div style="position: relative;">
+                        <!-- Custom isolated arrows specifically configured against scrollBy loops -->
+                        <button class="carousel-btn left" style="position:absolute; left:-18px; top:50%; transform:translateY(-50%); z-index:10;" onclick="document.getElementById('home-track').scrollBy({left:-300, behavior:'smooth'})"><i class="ph ph-caret-left"></i></button>
+                        
+                        <div id="home-track" class="home-carousel">
+                            ${scrollerItems.map(p => `
+                                <div class="product-card" style="min-width: 220px; flex-shrink: 0;" onclick="openProduct('${p.id}')">
+                                    <div class="product-img-wrapper" style="height: 250px;">
+                                        <img src="${p.image}" class="product-img">
+                                        <div class="product-badge">${p.badge}</div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-title" style="font-size: 0.95rem;">${p.name}</h3>
+                                        <div class="flex-between">
+                                            <div class="product-price" style="font-size: 1rem;">₹${p.price}</div>
+                                            <div class="product-rating" style="font-size: 0.85rem;"><i class="ph-fill ph-star"></i> ${p.rating}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <button class="carousel-btn right" style="position:absolute; right:-18px; top:50%; transform:translateY(-50%); z-index:10;" onclick="document.getElementById('home-track').scrollBy({left:300, behavior:'smooth'})"><i class="ph ph-caret-right"></i></button>
+                    </div>
+                </div>
+            `;
+            // Keep the style logic isolated by appending instead of pure DOM destroy overwrite
+            const targetContainer = container.querySelector('style') ? container : document.getElementById('home-dynamic-dashboard');
+            let baseStyles = targetContainer.querySelector('style') ? targetContainer.querySelector('style').outerHTML : '';
+            targetContainer.innerHTML = baseStyles + html;
+        }
+
+        document.addEventListener("DOMContentLoaded", renderHomeDashboards);
+        if (typeof allProducts !== 'undefined' && allProducts.length > 0) setTimeout(renderHomeDashboards, 200);
+
+        // ─── ACTION ORDER CLICK HANDLERS ───
+        function openTrackingModal(orderId) {
+            document.getElementById('track-order-id').innerText = orderId;
+            document.getElementById('tracking-modal').style.display = 'flex';
+            
+            const order = mockOrders.find(o => o.id === orderId);
+            const isDelivered = order && order.status === 'Delivered';
+            
+            setTimeout(() => {
+                document.getElementById('track-progress-bar').style.width = isDelivered ? '100%' : '50%';
+                
+                const deliveredDot = document.getElementById('track-dot-delivered');
+                if (isDelivered) {
+                    deliveredDot.style.background = 'var(--primary)';
+                    deliveredDot.style.border = 'none';
+                    deliveredDot.innerHTML = '<i class="ph-bold ph-check" style="font-size: 0.8rem; color: white;"></i>';
+                    document.getElementById('track-status-text').innerText = 'Package has been delivered securely to your address.';
+                } else {
+                    document.getElementById('track-progress-bar').style.width = '50%'; 
+                    deliveredDot.style.background = 'rgba(255,255,255,0.1)';
+                    deliveredDot.style.border = '2px solid rgba(255,255,255,0.2)';
+                    deliveredDot.innerHTML = '';
+                    document.getElementById('track-status-text').innerText = 'Package shipped. Arriving soon via NexCart Carrier.';
+                }
+            }, 100);
+        }
+
+        function openReturnModal(orderId) {
+            document.getElementById('return-modal').style.display = 'flex';
+        }
+        function submitReturn() {
+            closeModal('return-modal');
+            showToast('Return initiated successfully! Instructions emailed.', '#ef4444');
+            document.getElementById('return-comments').value = '';
+        }
+
+        function shareGiftReceipt(orderId) {
+            const link = `https://nexcart.ai/gift/${orderId}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('Gift Receipt link copied to clipboard!', '#d946ef');
+            }).catch(() => {
+                showToast('Failed to copy link', '#ef4444');
+            });
+        }
+
+        function downloadInvoice(orderId) {
+            const printWin = window.open('', '_blank');
+            printWin.document.write(`<html><head><title>Invoice - ${orderId}</title></head><body style="font-family:sans-serif; padding:40px;"><h2>NexCart Invoice</h2><p>Order ID: ${orderId}</p><p>Total Paid: Confirmed</p><hr><p>Thank you for shopping with NexCart V2.0</p><script>window.print();<\/script></body></html>`);
+            printWin.document.close();
+            showToast('Invoice generated securely!', '#10b981');
+        }
+
+        let currentRating = 0;
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.getElementById('star-rating-container').children;
+            for (let i = 0; i < stars.length; i++) {
+                if (i < rating) {
+                    stars[i].style.color = '#eab308'; // Gold
+                } else {
+                    stars[i].style.color = 'var(--text-muted)';
+                }
+            }
+        }
+
+        function openFeedbackModal(type, title) {
+            document.getElementById('feedback-title').innerHTML = type === 'seller' ? `Seller <span class="text-gradient">Feedback</span>` : `Product <span class="text-gradient">Review</span>`;
+            document.getElementById('feedback-subtitle').innerText = title || "Let us know your thoughts";
+            setRating(0); // Reset
+            document.getElementById('feedback-text').value = '';
+            document.getElementById('feedback-modal').style.display = 'flex';
+        }
+
+        function submitFeedback() {
+            if (currentRating === 0) {
+                showToast('Please select a star rating first!', '#ef4444');
+                return;
+            }
+            closeModal('feedback-modal');
+            showToast('Thank you! Your feedback has been verified securely.', '#10b981');
+        }
+
+        // ─── GLOBAL SECURE IMAGE FALLBACK ENGINE ───
+        // Captures all broken <img> paths dynamically and replaces them neatly with standard skeletons protecting the Amazon-UI.
+        document.addEventListener('error', function (event) {
+            const target = event.target;
+            if (target && target.tagName && target.tagName.toLowerCase() === 'img') {
+                if (!target.classList.contains('fallback-applied')) {
+                    target.classList.add('fallback-applied');
+                    target.src = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&h=600&fit=crop';
+                    target.style.objectFit = 'cover';
+                    target.style.width = '100%';
+                    target.style.background = '#111';
+                }
+            }
+        }, true);
+        
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
     </script>
 </body>
 
