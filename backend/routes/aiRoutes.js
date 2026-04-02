@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// === AI TRY-ON ROUTES ===
 
 // Get configuration
 router.get('/config', (req, res) => {

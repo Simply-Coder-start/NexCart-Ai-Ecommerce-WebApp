@@ -20,13 +20,30 @@ router.get('/', async (req, res) => {
 // Search products
 router.get('/search', async (req, res) => {
   try {
-    const { q, category } = req.query;
+    const { q, category, minPrice, maxPrice, color, size } = req.query;
     
     let query = {};
     
     // Support category filtering
     if (category && category !== 'all') {
       query.category = category;
+    }
+
+    // Price range filtering
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    // Color filtering
+    if (color) {
+      query.colors = color; // MongoDB matches if color is in the array
+    }
+
+    // Size filtering
+    if (size) {
+      query.sizes = size;
     }
 
     // Support text search or regex based on the query 'q'
@@ -38,7 +55,7 @@ router.get('/search', async (req, res) => {
         ];
     }
 
-    const products = await Product.find(query).lean();
+    const products = await Product.find(query).sort({ createdAt: -1 }).lean();
     return res.status(200).json(products.map(p => {
         p.id = p._id.toString();
         delete p._id;
