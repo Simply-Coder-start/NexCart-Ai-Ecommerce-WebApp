@@ -2060,7 +2060,7 @@
                 .dash-img-slot { position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #222; }
                 .dash-img-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
                 .dash-card:hover .dash-img-slot img { transform: scale(1.08); }
-                .dash-img-label { padding-top: 5px; font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+                .dash-img-label { padding-top: 5px; font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 1; line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
                 .dash-link { color: var(--primary); font-size: 0.95rem; font-weight: 500; margin-top: auto; transition: 0.2s; }
                 .dash-card:hover .dash-link { text-decoration: underline; }
                 
@@ -2252,7 +2252,7 @@
     <div id="product-page" class="page-section">
         <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
             <div class="breadcrumb" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; display: flex; gap: 8px; align-items: center;">
-                <span style="cursor:pointer; hover:text-white" onclick="switchPage('home')">Home</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
+                <span class="hover-text-white" style="cursor:pointer;" onclick="switchPage('home')">Home</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
                 <span id="pd-breadcrumb-cat" style="cursor:pointer; color: var(--text-muted); text-transform: capitalize;">Category</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
                 <span id="pd-breadcrumb-subcat" style="color: var(--text-muted);">Subcategory</span> <i class="ph ph-caret-right" style="font-size: 12px;"></i>
                 <span id="pd-breadcrumb-name" style="color: white; font-weight: 500;">Product Name</span>
