@@ -13,7 +13,7 @@ database.sqlite
 .gsd/
 adapters/
 docs/
-scripts/
+scripts/*
 PROJECT_RULES.md
 GSD-STYLE.md
 model_capabilities.yaml

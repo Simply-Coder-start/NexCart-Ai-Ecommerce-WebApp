@@ -1,15 +1,16 @@
-// src/routes/api.js
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const ProductService = require('../services/ProductService');
+const fs = require('fs');
 const AiService = require('../services/AiService');
 
-// Multer Config
+// Multer Config for temporary uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..', '..', 'uploads'));
+        const uploadPath = path.join(__dirname, '..', '..', 'uploads');
+        if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -18,59 +19,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// === AUTH ROUTES ===
-router.post('/auth/register', (req, res) => {
-    const { email, password, name } = req.body;
-    // Simple mock
-    res.json({
-        message: 'Registered successfully',
-        token: 'mock-jwt-token-777',
-        user: { name, email }
-    });
-});
-
-router.post('/auth/login', (req, res) => {
-    const { email, password } = req.body;
-    // Simple mock
-    res.json({
-        message: 'Login successful',
-        token: 'mock-jwt-token-777',
-        user: { name: email.split('@')[0], email }
-    });
-});
-
-// === PRODUCT ROUTES ===
-router.get('/products', async (req, res) => {
-    try {
-        const products = await ProductService.getAllProducts();
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/products/search', async (req, res) => {
-    try {
-        const { q, category } = req.query;
-        const products = await ProductService.searchProducts(q || '', category || 'all');
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/products/:id', async (req, res) => {
-    try {
-        const product = await ProductService.getProductById(req.params.id);
-        if (!product) return res.status(404).json({ error: 'Product not found' });
-        res.json(product);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
 // === AI TRY-ON ROUTES ===
-router.get('/tryon/config', (req, res) => {
+
+// Get configuration
+router.get('/config', (req, res) => {
     res.json({
         aiEnabled: true,
         providers: { "yisol/IDM-VTON": true },
@@ -78,12 +30,13 @@ router.get('/tryon/config', (req, res) => {
     });
 });
 
-// Single image upload endpoints (they just return the generated filename)
+// Upload garment image
 router.post('/upload-dress', upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     res.json({ dress_image_id: req.file.filename });
 });
 
+// Upload user photo
 router.post('/upload-user', upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     res.json({ user_image_id: req.file.filename });
@@ -92,17 +45,16 @@ router.post('/upload-user', upload.single('file'), (req, res) => {
 // Start try-on job
 router.post('/generate', async (req, res) => {
     try {
-        const { user_image_id, dress_image_id, view_mode, category } = req.body;
+        const { user_image_id, dress_image_id, category } = req.body;
         if (!user_image_id) return res.status(400).json({ error: 'user_image_id is required' });
 
         const humanPath = path.join(__dirname, '..', '..', 'uploads', user_image_id);
-
         let garmentUrl = dress_image_id;
+
         if (!dress_image_id.startsWith('http')) {
             garmentUrl = path.join(__dirname, '..', '..', 'uploads', dress_image_id);
         }
 
-        // We use category if provided. If not, default to "Dresses".
         const cat = category || 'Dresses';
         const jobId = AiService.createJob(humanPath, garmentUrl, cat);
         res.json({ job_id: jobId });
@@ -111,6 +63,7 @@ router.post('/generate', async (req, res) => {
     }
 });
 
+// Get job status
 router.get('/result/:job_id', (req, res) => {
     const result = AiService.getJobStatus(req.params.job_id);
     res.json(result);

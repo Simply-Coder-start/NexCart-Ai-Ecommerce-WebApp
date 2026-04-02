@@ -1844,11 +1844,11 @@
             </div>
 
             <div class="nav-links">
-                <a onclick="switchPage('home')" id="nav-home" class="nav-link active"><i class="ph ph-house"></i>
+                <a href="javascript:void(0)" onclick="switchPage('home')" id="nav-home" class="nav-link active"><i class="ph ph-house"></i>
                     Home</a>
-                <a onclick="switchPage('shop')" id="nav-shop" class="nav-link"><i class="ph ph-bag"></i> Shop</a>
-                <a onclick="switchPage('tryon')" id="nav-tryon" class="nav-link"><i class="ph ph-camera"></i> Try-On</a>
-                <a onclick="switchPage('cart')" id="nav-cart" class="nav-link nav-cart-link">
+                <a href="javascript:void(0)" onclick="switchPage('shop')" id="nav-shop" class="nav-link"><i class="ph ph-bag"></i> Shop</a>
+                <a href="javascript:void(0)" onclick="switchPage('tryon')" id="nav-tryon" class="nav-link"><i class="ph ph-camera"></i> Try-On</a>
+                <a href="javascript:void(0)" onclick="switchPage('cart')" id="nav-cart" class="nav-link nav-cart-link">
                     <i class="ph ph-shopping-cart"></i> Cart
                     <span class="cart-badge-nav" id="cart-badge-nav" style="display: none;">0</span>
                 </a>
@@ -1883,7 +1883,7 @@
                     <div class="search-dropdown" id="search-dropdown"></div>
                 </div>
                 <div class="search-overlay" id="search-overlay" onclick="closeSearchDropdown()"></div>
-                <a href="./cart.html" class="cart-icon-wrapper" style="cursor: pointer; text-decoration: none;">
+                <a href="javascript:void(0)" onclick="switchPage('cart')" class="cart-icon-wrapper" style="cursor: pointer; text-decoration: none;">
                     <button class="btn-outline" style="width: 42px; height: 42px; padding: 0; border-radius: 50%;"><i
                             class="ph ph-shopping-cart" style="font-size: 1.2rem;"></i></button>
                     <span class="cart-badge" id="cart-count">0</span>
@@ -4302,7 +4302,7 @@
 
             const dressData = new FormData();
             dressData.append('file', dressFile);
-            const resDressUpload = await fetch(`${API}/upload-dress`, { method: 'POST', body: dressData });
+            const resDressUpload = await fetch(`${API}/tryon/upload-dress`, { method: 'POST', body: dressData });
             const dressJson = await resDressUpload.json();
             const dress_image_id = dressJson.dress_image_id;
             console.log('✅ Uploaded dress image ->', dress_image_id);
@@ -4310,7 +4310,7 @@
             // 2. Upload User Image
             const userData = new FormData();
             userData.append('file', fileInput.files[0]);
-            const resUserUpload = await fetch(`${API}/upload-user`, { method: 'POST', body: userData });
+            const resUserUpload = await fetch(`${API}/tryon/upload-user`, { method: 'POST', body: userData });
             const userJson = await resUserUpload.json();
             const user_image_id = userJson.user_image_id;
             console.log('✅ Uploaded user image ->', user_image_id);
@@ -4321,7 +4321,7 @@
             if (selectedDressName.toLowerCase().includes('pant') || selectedDressName.toLowerCase().includes('skirt')) category = "Bottoms";
 
             // 3. Start Generation Job
-            const resGen = await fetch(`${API}/generate`, {
+            const resGen = await fetch(`${API}/tryon/generate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -4340,7 +4340,7 @@
             // 4. Poll for Result
             let pollResult = null;
             while (true) {
-                const resPoll = await fetch(`${API}/result/${job_id}`);
+                const resPoll = await fetch(`${API}/tryon/result/${job_id}`);
                 pollResult = await resPoll.json();
 
                 if (pollResult.status === 'completed' || pollResult.status === 'failed' || pollResult.status === 'not_found') {

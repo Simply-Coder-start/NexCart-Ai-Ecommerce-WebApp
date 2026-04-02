@@ -23,10 +23,13 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://accounts.google.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com", "https://cdn.jsdelivr.net", "https://accounts.google.com"],
+      styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com", "https://cdn.jsdelivr.net", "https://accounts.google.com"],
       imgSrc: ["'self'", "data:", "https://images.unsplash.com"],
       connectSrc: ["'self'", "https://unpkg.com", "https://accounts.google.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://unpkg.com"],
+      frameSrc: ["'self'", "https://accounts.google.com"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
     },
@@ -41,6 +44,14 @@ app.use((req, _res, next) => {
   if (req.body) req.body = mongoSanitize.sanitize(req.body);
   next();
 });
+
+// === API ROUTES ===
+app.use('/api/auth', authRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/order', orderRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/tryon', aiRoutes);
 
 // === STATIC SERVING ===
 const uploadsPath = path.join(__dirname, '..', 'uploads');

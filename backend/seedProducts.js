@@ -14,17 +14,7 @@ if (!MONGODB_URI) {
 }
 
 // Ensure the frontend products can be loaded
-const ProductServicePath = path.join(__dirname, '..', 'src', 'services', 'ProductService.js');
-let ProductService;
-
-try {
-  ProductService = require(ProductServicePath);
-} catch (error) {
-  console.error(`❌ Could not load ProductService from ${ProductServicePath}`);
-  console.error(error.message);
-  process.exit(1);
-}
-
+const ProductService = require('./services/ProductService');
 const productsToSeed = ProductService.ALL_PRODUCTS;
 
 if (!productsToSeed || productsToSeed.length === 0) {
