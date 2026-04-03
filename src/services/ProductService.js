@@ -12,11 +12,14 @@ const parseProduct = (row) => {
 };
 
 const UNSPLASH_IMAGES = {
-    "fashion": [
-        "photo-1515886657613-9f3515b0c78f", "photo-1539008835657-9e8e9680c956", "photo-1549298916-b41d501d3772", "photo-1550614000-4b95dd2449bb",
-        "photo-1469334031218-e382a71b716b", "photo-1483985988355-763728e1935b", "photo-1502716115624-b565e098456f", "photo-1485230895905-efd5bf22fa26",
-        "photo-1520975954732-57dd22299614", "photo-1512436991641-6745cdb1723f", "photo-1527719327859-c6ce80353573", "photo-1550639525-c97d455acf70"
-    ],
+    // ── Fashion: Local professional product images (no models) ──
+    "fashion": {
+        "Dresses": ["/images/products/dress-1.jpg", "/images/products/dress-2.jpg", "/images/products/dress-3.jpg"],
+        "Tops": ["/images/products/top-1.jpg", "/images/products/top-2.jpg", "/images/products/top-3.jpg"],
+        "Suits": ["/images/products/suit-1.jpg", "/images/products/suit-2.jpg", "/images/products/suit-3.jpg"],
+        "Outerwear": ["/images/products/outerwear-1.jpg", "/images/products/outerwear-2.jpg", "/images/products/outerwear-3.jpg"],
+        "Accessories": ["/images/products/accessories-1.jpg", "/images/products/accessories-2.jpg"],
+    },
     "electronics": [
         "photo-1498049794561-7780e7231661", "photo-1505740420928-5e560c06d30e", "photo-1523206489230-c012c64b2b48", "photo-1546868871-af0de0ae72be",
         "photo-1583394838336-acd977736f90", "photo-1608043152269-423dbba4e7e1", "photo-1517404215738-15263e9f9178", "photo-1588508065123-287b28e0131b",
@@ -87,10 +90,10 @@ const WEARABLE_CATEGORIES = new Set(["fashion", "sports"]);
 const WEARABLE_SUBCATEGORIES = new Set(["Dresses", "Tops", "Suits", "Outerwear", "Accessories", "Footwear", "Apparel"]);
 
 function _unsplash_url(photo_id) {
-    return `https://images.unsplash.com/${photo_id}?q=80&w=800&auto=format&fit=crop`;
+    return `https://images.unsplash.com/${photo_id}?q=85&w=600&h=750&auto=format&fit=crop&crop=top`;
 }
 function _unsplash_thumb(photo_id) {
-    return `https://images.unsplash.com/${photo_id}?q=60&w=200&auto=format&fit=crop`;
+    return `https://images.unsplash.com/${photo_id}?q=60&w=200&h=250&auto=format&fit=crop&crop=top`;
 }
 
 const COLORS_POOL = ["black", "white", "red", "blue", "green", "orange", "purple"];
@@ -126,15 +129,26 @@ function generate_products() {
                 let rating = parseFloat((Math.random() * (5.0 - 3.8) + 3.8).toFixed(1));
                 let review_count = Math.floor(Math.random() * 500) + 10;
 
-                const img_id = images[product_id % images.length];
-                const image = _unsplash_url(img_id);
-                
-                // Construct a little gallery
-                const gallery = [
-                    _unsplash_url(images[product_id % images.length]), 
-                    _unsplash_url(images[(product_id + 1) % images.length]),
-                    _unsplash_url(images[(product_id + 2) % images.length])
-                ];
+                let image = "";
+                let gallery = [];
+
+                if (category === "fashion") {
+                    const subImgs = UNSPLASH_IMAGES.fashion[subcategory] || UNSPLASH_IMAGES.fashion["Dresses"];
+                    image = subImgs[product_id % subImgs.length];
+                    gallery = [
+                        subImgs[product_id % subImgs.length],
+                        subImgs[(product_id + 1) % subImgs.length],
+                        subImgs[(product_id + 2) % subImgs.length]
+                    ].filter(Boolean);
+                } else {
+                    const img_id = images[product_id % images.length];
+                    image = _unsplash_url(img_id);
+                    gallery = [
+                        _unsplash_url(images[product_id % images.length]), 
+                        _unsplash_url(images[(product_id + 1) % images.length]),
+                        _unsplash_url(images[(product_id + 2) % images.length])
+                    ];
+                }
 
                 // Pick 1-3 random colors
                 const colors = [];
