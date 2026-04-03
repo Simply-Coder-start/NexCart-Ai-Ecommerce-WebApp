@@ -4,9 +4,13 @@ const User = require('../models/User');
 async function authMiddleware(req, res, next) {
   try {
     const authHeader = req.headers.authorization || '';
-    const [scheme, token] = authHeader.split(' ');
+    let token = authHeader.split(' ')[1];
+    
+    if (!token && req.query.token) {
+      token = req.query.token;
+    }
 
-    if (scheme !== 'Bearer' || !token) {
+    if (!token) {
       return res.status(401).json({ message: 'Unauthorized: token missing' });
     }
 

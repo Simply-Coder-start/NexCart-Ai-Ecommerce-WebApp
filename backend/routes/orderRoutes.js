@@ -33,8 +33,8 @@ router.post('/create', authMiddleware, async (req, res) => {
         const tax = subtotal * 0.18;
         const totalPrice = subtotal + tax; // Should also handle discounts if any
 
-        // Generate a random Order ID
-        const orderId = 'NC' + Date.now().toString().slice(-8);
+        // Generate a random Tracking ID
+        const trackingId = 'TRK' + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const newOrder = new Order({
             orderId,
@@ -47,7 +47,9 @@ router.post('/create', authMiddleware, async (req, res) => {
                 quantity: i.quantity
             })),
             totalPrice,
-            status: 'Pending',
+            status: 'Placed',
+            trackingId,
+            paymentMethod: req.body.paymentMethod || 'UPI',
             expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
             shippingAddress: {
                 street: defaultAddress.street || '',
@@ -63,7 +65,7 @@ router.post('/create', authMiddleware, async (req, res) => {
         cart.items = [];
         await cart.save();
 
-        res.status(201).json({ message: 'Order created successfully', order: newOrder });
+        res.status(201).json({ message: 'Order placed successfully', order: newOrder });
     } catch (err) {
         console.error('Checkout error:', err);
         res.status(500).json({ message: 'Internal server error', error: err.message });
@@ -80,12 +82,54 @@ router.get('/my-orders', authMiddleware, async (req, res) => {
     }
 });
 
-// GET /api/orders/:orderId
-router.get('/:orderId', authMiddleware, async (req, res) => {
+// GET /api/orders/:orderId/track
+router.get('/:orderId/track', authMiddleware, async (req, res) => {
     try {
         const order = await Order.findOne({ orderId: req.params.orderId, userId: req.user.id });
         if (!order) return res.status(404).json({ message: 'Order not found' });
-        res.json({ order });
+
+        // Mock tracking milestones
+        const milestones = [
+            { status: 'Placed', date: order.createdAt, message: 'Order placed successfully' },
+            { status: 'Processing', date: new Date(order.createdAt.getTime() + 12 * 3600000), message: 'Order is being processed' },
+        ];
+
+        if (['Shipped', 'Delivered'].includes(order.status)) {
+            milestones.push({ status: 'Shipped', date: new Date(order.createdAt.getTime() + 24 * 3600000), message: 'Order has been shipped' });
+        }
+        
+        if (order.status === 'Delivered') {
+            milestones.push({ status: 'Delivered', date: order.deliveryDate || new Date(order.createdAt.getTime() + 48 * 3600000), message: 'Order delivered' });
+        }
+
+        res.json({ status: order.status, trackingId: order.trackingId, milestones });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+// POST /api/orders/:orderId/return
+router.post('/:orderId/return', authMiddleware, async (req, res) => {
+    try {
+        const order = await Order.findOne({ orderId: req.params.orderId, userId: req.user.id });
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        if (order.status !== 'Delivered') {
+            return res.status(400).json({ message: 'Only delivered items can be returned' });
+        }
+
+        // Return Eligibility check: 7 days window
+        const deliveryDate = order.deliveryDate || order.expectedDeliveryDate;
+        const diffDays = Math.ceil(Math.abs(Date.now() - deliveryDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 7) {
+            return res.status(400).json({ message: 'Return window closed (items can be returned within 7 days of delivery)' });
+        }
+
+        order.status = 'Returned';
+        await order.save();
+
+        res.json({ message: 'Return initiated successfully', status: 'Returned' });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
@@ -105,7 +149,7 @@ router.get('/invoice/:orderId', authMiddleware, async (req, res) => {
         generateInvoicePDF(order, user, res);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error', error: err.message });
+        res.status(500).json({ message: 'Invoice generation failed', error: err.message });
     }
 });
 

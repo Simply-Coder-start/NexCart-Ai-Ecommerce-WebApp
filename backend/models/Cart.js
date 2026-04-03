@@ -24,6 +24,14 @@ const CartItemSchema = new mongoose.Schema({
     min: 1,
     default: 1,
   },
+  selected: {
+    type: Boolean,
+    default: true,
+  },
+  saveForLater: {
+    type: Boolean,
+    default: false,
+  },
 }, { _id: false });
 
 const CartSchema = new mongoose.Schema({
@@ -48,9 +56,14 @@ CartSchema.methods.getTotalItems = function() {
   return this.items.reduce((total, item) => total + item.quantity, 0);
 };
 
-// Method to calculate total price
+// Method to calculate total price (only selected active items)
 CartSchema.methods.getTotalPrice = function() {
-  return this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  return this.items.reduce((total, item) => {
+    if (item.selected && !item.saveForLater) {
+      return total + (item.price * item.quantity);
+    }
+    return total;
+  }, 0);
 };
 
 // Transform to clean JSON

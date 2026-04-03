@@ -113,36 +113,17 @@ router.put('/update', authMiddleware, [
   body('quantity').isInt({ min: 0 }).withMessage('Quantity must be 0 or more'),
 ], async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
-    }
-
     const { productId, quantity } = req.body;
     const userId = req.user.id;
-
     let cart = await Cart.findOne({ userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
-    }
-
+    if (!cart) return res.status(404).json({ message: 'Cart not found' });
     const itemIndex = cart.items.findIndex(item => item.productId === productId);
+    if (itemIndex === -1) return res.status(404).json({ message: 'Product not found in cart' });
 
-    if (itemIndex === -1) {
-      return res.status(404).json({ message: 'Product not found in cart' });
-    }
-
-    if (quantity === 0) {
-      // Remove item if quantity is 0
-      cart.items.splice(itemIndex, 1);
-    } else {
-      // Update quantity
-      cart.items[itemIndex].quantity = quantity;
-    }
+    if (quantity === 0) cart.items.splice(itemIndex, 1);
+    else cart.items[itemIndex].quantity = quantity;
 
     await cart.save();
-
     return res.status(200).json({
       message: 'Cart updated',
       cart: {
@@ -152,10 +133,77 @@ router.put('/update', authMiddleware, [
         totalPrice: cart.getTotalPrice(),
       }
     });
-
   } catch (error) {
     console.error('Update cart error:', error);
-    return res.status(500).json({ message: 'Server error while updating cart' });
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// PUT /api/cart/toggle-select - Toggle item selection
+router.put('/toggle-select', authMiddleware, [
+  body('productId').trim().notEmpty().withMessage('Product ID is required'),
+  body('selected').isBoolean().withMessage('Selected must be a boolean'),
+], async (req, res) => {
+  try {
+    const { productId, selected } = req.body;
+    const userId = req.user.id;
+    let cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: 'Cart not found' });
+
+    const itemIndex = cart.items.findIndex(item => item.productId === productId);
+    if (itemIndex === -1) return res.status(404).json({ message: 'Product not found in cart' });
+
+    cart.items[itemIndex].selected = selected;
+    await cart.save();
+
+    return res.status(200).json({
+      message: 'Selection updated',
+      cart: {
+        id: cart.id,
+        items: cart.items,
+        totalItems: cart.getTotalItems(),
+        totalPrice: cart.getTotalPrice(),
+      }
+    });
+  } catch (error) {
+    console.error('Toggle selection error:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// PUT /api/cart/toggle-save-later - Move item between active and saved later
+router.put('/toggle-save-later', authMiddleware, [
+  body('productId').trim().notEmpty().withMessage('Product ID is required'),
+  body('saveForLater').isBoolean().withMessage('saveForLater must be a boolean'),
+], async (req, res) => {
+  try {
+    const { productId, saveForLater } = req.body;
+    const userId = req.user.id;
+    let cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: 'Cart not found' });
+
+    const itemIndex = cart.items.findIndex(item => item.productId === productId);
+    if (itemIndex === -1) return res.status(404).json({ message: 'Product not found in cart' });
+
+    cart.items[itemIndex].saveForLater = saveForLater;
+    // If moving to saved later, deselect it just in case
+    if (saveForLater) cart.items[itemIndex].selected = false;
+    else cart.items[itemIndex].selected = true; // Auto-select when moving back to cart
+
+    await cart.save();
+
+    return res.status(200).json({
+      message: saveForLater ? 'Moved to Save for Later' : 'Moved back to Cart',
+      cart: {
+        id: cart.id,
+        items: cart.items,
+        totalItems: cart.getTotalItems(),
+        totalPrice: cart.getTotalPrice(),
+      }
+    });
+  } catch (error) {
+    console.error('Toggle save for later error:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 });
 
