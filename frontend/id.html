@@ -555,12 +555,17 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* ─── TRY ON ─── */
         .tryon-grid {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 1fr; /* Full width for smaller screens */
             gap: 30px;
             margin-top: 40px;
+        }
+
+        @media (min-width: 900px) {
+            .tryon-grid {
+                grid-template-columns: 350px 1fr; /* Two columns split on desktop */
+            }
         }
 
         .upload-zone {
@@ -664,6 +669,7 @@
             align-items: center;
             justify-content: center;
             flex: 1;
+            width: 100%;
         }
 
         /* AI Generation Animation */
@@ -868,6 +874,16 @@
                 margin-bottom: 20px;
                 position: relative;
                 top: 0;
+            }
+
+            .gen-btn-desktop {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .gen-btn-mobile {
+                display: none !important;
             }
         }
 
@@ -2640,17 +2656,17 @@
                             <span id="dress-label" style="font-size:0.75rem;color:#d946ef;font-weight:600;">Noir
                                 Elegance</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;" id="wardrobe-container">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;" id="wardrobe-container">
                             <!-- Populated by JS from try-on eligible products -->
-                            <div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
                                 Loading wardrobe...
                             </div>
                         </div>
                     </div>
 
                     <!-- Generate Button (mobile visible here) -->
-                    <button class="btn btn-primary" id="gen-btn-mobile" onclick="generateTryon()"
-                        style="display:none;width:100%;justify-content:center;padding:14px;font-size:1rem;">
+                    <button class="btn btn-primary gen-btn-mobile" id="gen-btn-mobile" onclick="generateTryon()"
+                        style="width:100%;justify-content:center;padding:14px;font-size:1rem;">
                         <i class="ph-fill ph-sparkle"></i> Generate Try-On
                     </button>
                 </div>
@@ -2735,7 +2751,7 @@
                             <div style="position:relative;display:inline-block;">
                                 <img id="result-selfie-img"
                                     src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600&auto=format&fit=crop"
-                                    style="max-height:420px;border-radius:16px;box-shadow:0 0 40px rgba(168,85,247,0.2);">
+                                    style="max-height:420px;max-width:100%;border-radius:16px;box-shadow:0 0 40px rgba(168,85,247,0.2);object-fit:contain;">
                                 <div
                                     style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.1);">
                                     <div style="font-size:0.8rem;font-weight:700;" id="selfie-dress-name">Noir Elegance
@@ -2748,22 +2764,24 @@
 
 
                         <!-- Size Recommendation -->
-                        <div
-                            style="margin-top:16px;padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:flex;align-items:center;gap:12px;">
-                            <i class="ph-fill ph-check-circle" style="color:#10b981;font-size:1.4rem;"></i>
-                            <div>
-                                <div style="font-weight:700;font-size:0.9rem;">AI Size Recommendation</div>
-                                <div style="color:var(--text-muted);font-size:0.8rem;margin-top:2px;">Best fit: <strong
-                                        style="color:white;">Size M</strong> • Chest: 86cm • Waist: 68cm • Hip: 92cm
+                        <div class="tryon-size-rec"
+                            style="margin-top:16px;padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap: 12px; flex: 1; min-width: 200px;">
+                                <i class="ph-fill ph-check-circle" style="color:#10b981;font-size:1.4rem;"></i>
+                                <div>
+                                    <div style="font-weight:700;font-size:0.9rem;">AI Size Recommendation</div>
+                                    <div style="color:var(--text-muted);font-size:0.8rem;margin-top:2px;">Best fit: <strong
+                                            style="color:white;">Size M</strong> • Chest: 86cm • Waist: 68cm • Hip: 92cm
+                                    </div>
                                 </div>
                             </div>
                             <button class="btn btn-primary" onclick="addToCartFromTryon()"
-                                style="margin-left:auto;padding:8px 16px;font-size:0.8rem;">Add to Cart</button>
+                                style="white-space: nowrap; padding:8px 16px;font-size:0.8rem;">Add to Cart</button>
                         </div>
                     </div>
 
                     <!-- Generate Button -->
-                    <button class="btn btn-primary" id="gen-btn" onclick="generateTryon()"
+                    <button class="btn btn-primary gen-btn-desktop" id="gen-btn" onclick="generateTryon()"
                         style="width:100%;margin-top:20px;justify-content:center;padding:15px;font-size:1rem;">
                         <i class="ph-fill ph-sparkle"></i> Generate Try-On
                     </button>
@@ -3541,7 +3559,15 @@
             const container = document.getElementById('wardrobe-container');
             if (!container) return;
 
-            const wearables = allProducts.filter(p => p.tryOnEligible);
+            const wearables = [
+                { id: 'tryon-1', name: 'Midnight Elegance Gown', image: '/images/female_model_evening_gown_1775233217023.png' },
+                { id: 'tryon-2', name: 'Floral Summer Sunset', image: '/images/female_model_summer_dress_1775233181030.png' },
+                { id: 'tryon-3', name: 'Royal Heritage Lehenga', image: '/images/female_model_traditional_lehenga_1775233276331.png' },
+                { id: 'tryon-4', name: 'Modern Business Casual Suit', image: '/images/male_model_business_casual_1775233198638.png' },
+                { id: 'tryon-5', name: 'Urban Streetwear Fit', image: '/images/male_model_streetwear_1775233236134.png' },
+                { id: 'tryon-6', name: 'Classic Winter Trench', image: '/images/male_model_winter_coat_1775233293444.png' }
+            ];
+
             if (wearables.length === 0) {
                 container.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">No try-on eligible products available</div>';
                 return;
@@ -5170,16 +5196,6 @@
         }
 
         // ── TRY-ON: Dress Selection ──
-        let selectedDressName = 'Noir Elegance Maxi';
-        const dressTryonImages = {
-            'Noir Elegance Maxi': { selfie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/File-Portrait_of_a_woman.jpg/600px-File-Portrait_of_a_woman.jpg', front: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg/600px-Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg', back: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg/600px-Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg' },
-            'Rose Petal Wrap': { selfie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/File-Portrait_of_a_woman.jpg/600px-File-Portrait_of_a_woman.jpg', front: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tartan_Dress_%285868843232%29.jpg/600px-Tartan_Dress_%285868843232%29.jpg', back: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tartan_Dress_%285868843232%29.jpg/600px-Tartan_Dress_%285868843232%29.jpg' },
-            'Lavender Dream': { selfie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/File-Portrait_of_a_woman.jpg/600px-File-Portrait_of_a_woman.jpg', front: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Dress_%281900%29.jpg/600px-Dress_%281900%29.jpg', back: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Dress_%281900%29.jpg/600px-Dress_%281900%29.jpg' },
-            'Royal Traditional Lehenga': { selfie: '/images/traditional_outfit.png', front: '/images/traditional_outfit.png', back: '/images/traditional_outfit.png' },
-            'Summer Breeze Top': { selfie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/File-Portrait_of_a_woman.jpg/600px-File-Portrait_of_a_woman.jpg', front: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Woman%27s_Dress_-_Google_Art_Project.jpg/600px-Woman%27s_Dress_-_Google_Art_Project.jpg', back: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Woman%27s_Dress_-_Google_Art_Project.jpg/600px-Woman%27s_Dress_-_Google_Art_Project.jpg' },
-            'Leather Rider Jacket': { selfie: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/File-Portrait_of_a_woman.jpg/600px-File-Portrait_of_a_woman.jpg', front: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Dress_of_the_1820s.jpg/600px-Dress_of_the_1820s.jpg', back: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Dress_of_the_1820s.jpg/600px-Dress_of_the_1820s.jpg' },
-        };
-
         let selectedDress = null;
         function selectDress(el, name, id, image) {
             document.querySelectorAll('.wardrobe-item').forEach(i => i.classList.remove('selected'));
@@ -5237,18 +5253,9 @@
 
         // ── TRY-ON: Generate Animation + API Call ──
         let tryonGenerated = false;
+        // ── Map dress names to their full-size image URLs ──
         let generatedResultImage = null;
         let aiMethod = '';
-
-        // Map dress names to their full-size image URLs
-        const dressFullImages = {
-            'Noir Elegance Maxi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg/600px-Gown_%28France%29%2C_c._1780_%28CH_18113645%29.jpg',
-            'Rose Petal Wrap': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tartan_Dress_%285868843232%29.jpg/600px-Tartan_Dress_%285868843232%29.jpg',
-            'Lavender Dream': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Dress_%281900%29.jpg/600px-Dress_%281900%29.jpg',
-            'Royal Traditional Lehenga': '/images/traditional_outfit.png',
-            'Summer Breeze Top': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Woman%27s_Dress_-_Google_Art_Project.jpg/600px-Woman%27s_Dress_-_Google_Art_Project.jpg',
-            'Leather Rider Jacket': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Dress_of_the_1820s.jpg/600px-Dress_of_the_1820s.jpg',
-        };
 
         // NOTE: Client-side canvas compositing (face overlay) has been REMOVED.
         // The old approach was pasting the user's face onto a dress image — that looked fake.
@@ -5327,8 +5334,8 @@
 
             // Map dress name to category
             let category = "Dresses";
-            if (selectedDressName.toLowerCase().includes('top') || selectedDressName.toLowerCase().includes('jacket')) category = "Tops";
-            if (selectedDressName.toLowerCase().includes('pant') || selectedDressName.toLowerCase().includes('skirt')) category = "Bottoms";
+            if (selectedDress.name.toLowerCase().includes('top') || selectedDress.name.toLowerCase().includes('jacket')) category = "Tops";
+            if (selectedDress.name.toLowerCase().includes('pant') || selectedDress.name.toLowerCase().includes('skirt')) category = "Bottoms";
 
             // 3. Start Generation Job
             const resGen = await fetch(`${API}/tryon/generate`, {
@@ -5396,13 +5403,8 @@
             });
             progressBar.style.width = '0%';
 
-            const human_image_id = currentUploadedUserImage;
             const dress_image_id = selectedDress ? selectedDress.image : null;
 
-            if (!human_image_id) {
-                showToast("Please upload your photo first!", "#ef4444");
-                return;
-            }
             if (!dress_image_id) {
                 showToast("Please select a dress from the wardrobe!", "#ef4444");
                 return;
@@ -5415,11 +5417,11 @@
             let resultImageSrc = null;
             aiMethod = '';
 
-            // ── Send to backend AI pipeline (IDM-VTON → Gemini → composite) ──
+            // ── Send to backend AI pipeline (RMBG -> IDM-VTON → Gemini → composite) ──
             // NO client-side compositing/overlay — all processing is server-side
             const apiPromise = (async () => {
                 try {
-                    const result = await callTryOnAPI(fileInput, dressImageUrl);
+                    const result = await callTryOnAPI(fileInput, dress_image_id);
                     resultImageSrc = result.image;
                     aiMethod = result.method;
                     console.log(`✅ Try-on complete via: ${aiMethod}`);
@@ -5464,7 +5466,7 @@
 
             // Show the REAL AI-generated image (no fake overlays)
             document.getElementById('result-selfie-img').src = generatedResultImage;
-            document.getElementById('selfie-dress-name').textContent = selectedDressName;
+            document.getElementById('selfie-dress-name').textContent = selectedDress.name;
 
             // Determine the method label
             let statusLabel, methodIcon;
@@ -5489,7 +5491,7 @@
             activateStepPill(3);
             tryonGenerated = true;
 
-            showToast(`${methodIcon} Try-on for <b>${selectedDressName}</b> generated! (${statusLabel})`, '#a855f7');
+            showToast(`${methodIcon} Try-on for <b>${selectedDress.name}</b> generated! (${statusLabel})`, '#a855f7');
         }
 
         // ── TRY-ON: View Tabs ──

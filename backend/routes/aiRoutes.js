@@ -5,6 +5,31 @@ const path = require('path');
 const fs = require('fs');
 const AiService = require('../services/AiService');
 
+// === IMAGE PROXY ROUTE ===
+// Bypasses browser CORS and CSP issues when fetching external images for the AI model
+router.get('/proxy-image', async (req, res) => {
+    try {
+        const imageUrl = req.query.url;
+        if (!imageUrl) return res.status(400).json({ error: 'Missing url parameter' });
+        
+        // Dynamic import for node-fetch is safer in CJS, but global.fetch is usually available in Node 18+
+        const fetchFn = global.fetch || (await import('node-fetch')).default;
+        
+        const response = await fetchFn(imageUrl);
+        if (!response.ok) throw new Error(`External server responded with ${response.status}`);
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        
+        res.set('Content-Type', response.headers.get('content-type') || 'image/jpeg');
+        res.set('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+        res.send(buffer);
+    } catch (error) {
+        console.error('Proxy Image Error:', error);
+        res.status(500).json({ error: "Failed to proxy external image" });
+    }
+});
+
 // Multer Config for temporary uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

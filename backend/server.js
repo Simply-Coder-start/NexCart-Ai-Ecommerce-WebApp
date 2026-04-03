@@ -19,21 +19,7 @@ const aiRoutes = require('./routes/aiRoutes');
 const app = express();
 
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://accounts.google.com"],
-      scriptSrcAttr: ["'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com", "https://cdn.jsdelivr.net", "https://accounts.google.com"],
-      styleSrcElem: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com", "https://cdn.jsdelivr.net", "https://accounts.google.com"],
-      imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://upload.wikimedia.org"],
-      connectSrc: ["'self'", "https://unpkg.com", "https://accounts.google.com", "https://images.unsplash.com", "https://upload.wikimedia.org"],
-      fontSrc: ["'self'", "data:", "https://fonts.gstatic.com", "https://unpkg.com"],
-      frameSrc: ["'self'", "https://accounts.google.com"],
-      objectSrc: ["'none'"],
-      upgradeInsecureRequests: [],
-    },
-  },
+  contentSecurityPolicy: false,
 }));
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*', credentials: false }));
 app.use(express.json({ limit: '1mb' }));
