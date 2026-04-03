@@ -6,6 +6,9 @@ const path = require('path');
 const ProductService = require('../services/ProductService');
 const AiService = require('../services/AiService');
 
+// ─── Allowed MIME types for product images ───
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
+
 // Multer Config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -16,7 +19,24 @@ const storage = multer.diskStorage({
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
 });
-const upload = multer({ storage });
+
+// File filter: only allow image types, reject everything else
+const imageFileFilter = (req, file, cb) => {
+    if (ALLOWED_IMAGE_TYPES.has(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error(`Invalid file type: ${file.mimetype}. Only JPEG, PNG, and WebP images are allowed.`), false);
+    }
+};
+
+const upload = multer({
+    storage,
+    fileFilter: imageFileFilter,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB max
+        files: 1
+    }
+});
 
 const BACKEND_API = 'http://localhost:5000/api';
 // Use native fetch (Node 18+) or fallback to commonjs compatible node-fetch if available
@@ -125,14 +145,22 @@ router.get('/tryon/config', (req, res) => {
 });
 
 // Single image upload endpoints (they just return the generated filename)
-router.post('/upload-dress', upload.single('file'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    res.json({ dress_image_id: req.file.filename });
+// Upload dress image — strict image-only validation is enforced by multer fileFilter
+router.post('/upload-dress', (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+        if (err) return res.status(400).json({ error: err.message });
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded. Please provide a JPEG, PNG, or WebP image.' });
+        res.json({ dress_image_id: req.file.filename });
+    });
 });
 
-router.post('/upload-user', upload.single('file'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    res.json({ user_image_id: req.file.filename });
+// Upload user photo — same validation rules
+router.post('/upload-user', (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+        if (err) return res.status(400).json({ error: err.message });
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded. Please provide a JPEG, PNG, or WebP image.' });
+        res.json({ user_image_id: req.file.filename });
+    });
 });
 
 // Start try-on job

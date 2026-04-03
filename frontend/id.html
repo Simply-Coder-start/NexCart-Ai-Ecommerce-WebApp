@@ -402,17 +402,34 @@
         .product-img {
             position: relative;
             overflow: hidden;
+            background: #1a1a1f;
         }
 
         .product-img img {
             width: 100%;
-            height: 340px;
+            height: 320px;
             object-fit: cover;
-            transition: 0.5s;
+            object-position: top center;
+            transition: transform 0.5s ease;
+            display: block;
+            background: #1a1a1f;
+        }
+
+        /* Bottom gradient overlay — blends image into card info smoothly */
+        .product-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: linear-gradient(to top, rgba(15, 15, 17, 0.9) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
         }
 
         .product-card:hover .product-img img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
 
         .card-badges {
@@ -484,6 +501,136 @@
             grid-template-columns: 260px 1fr;
             gap: 40px;
             margin-top: 40px;
+        }
+
+        /* ─── CART LAYOUT ─── */
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+
+        .cart-items-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cart-item-card {
+            display: flex;
+            align-items: center;
+            padding: 24px;
+            gap: 24px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-glass);
+            transition: 0.3s;
+        }
+
+        .cart-item-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .cart-item-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .cart-item-img-wrap {
+            width: 120px;
+            height: 150px;
+            background: #1a1a1f;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 5px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .cart-item-action-link {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cart-item-action-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .cart-qty-stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #18181b;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .cart-qty-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .cart-qty-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .cart-qty-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .saved-later-divider {
+            margin: 50px 0 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .saved-later-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-glass);
         }
 
         .filter-sidebar {
@@ -1949,11 +2096,11 @@
                     </div>
                 </div>
                 <div class="hero-image-wrapper">
-                    <img src="/images/traditional_outfit.png"
+                    <img src="/images/products/dress-2.jpg"
                         alt="Royal Traditional Lehenga" style="height: 600px; width: 100%; object-fit: cover;">
                     <div
                         style="position: absolute; bottom: 30px; left: 30px; right: 30px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px;">
-                        <img src="/images/traditional_outfit.png"
+                        <img src="/images/products/dress-2.jpg"
                             style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
                         <div>
                             <div style="font-size: 0.9rem; font-weight: 600;">Royal Traditional Lehenga</div>
@@ -2052,20 +2199,282 @@
         <!-- ─── DYNAMIC HOME DASHBOARDS ─── -->
         <section class="container" style="padding-bottom: 80px;" id="home-dynamic-dashboard">
             <style>
-                .dash-master-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
-                .dash-card { background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 25px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; display: flex; flex-direction: column; }
-                .dash-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.1); }
-                .dash-card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 20px; color: white; }
-                .dash-inner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; flex: 1; }
-                .dash-img-slot { position: relative; width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #222; }
-                .dash-img-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+                /* ─── HOMEPAGE AMAZON-STYLE SECTIONS ─── */
+
+                /* Section wrapper */
+                .amz-section {
+                    margin-bottom: 48px;
+                }
+                .amz-section-header {
+                    display: flex;
+                    align-items: baseline;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                    gap: 16px;
+                }
+                .amz-section-header h2 {
+                    font-family: var(--font-display);
+                    font-size: 1.55rem;
+                    font-weight: 700;
+                    color: white;
+                    white-space: nowrap;
+                }
+                .amz-see-all {
+                    font-size: 0.85rem;
+                    color: var(--primary);
+                    font-weight: 600;
+                    cursor: pointer;
+                    white-space: nowrap;
+                    transition: 0.2s;
+                    flex-shrink: 0;
+                }
+                .amz-see-all:hover { color: white; text-decoration: underline; }
+
+                /* 4-grid card ("Keep shopping for" style) */
+                .dash-master-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 20px;
+                }
+                @media (max-width: 1024px) { .dash-master-grid { grid-template-columns: repeat(2, 1fr); } }
+                @media (max-width: 640px)  { .dash-master-grid { grid-template-columns: 1fr; } }
+
+                .dash-card {
+                    background: #121218;
+                    border: 1px solid var(--border-glass);
+                    border-radius: 16px;
+                    padding: 22px;
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+                }
+                .dash-card:hover {
+                    border-color: rgba(168, 85, 247, 0.45);
+                    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.5);
+                    transform: translateY(-4px);
+                }
+                .dash-card-title {
+                    font-size: 1rem;
+                    font-weight: 700;
+                    margin-bottom: 16px;
+                    color: white;
+                    line-height: 1.3;
+                }
+                .dash-inner-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                    flex: 1;
+                    margin-bottom: 16px;
+                }
+                /* FIXED UNIFORM IMAGE SLOT — no distortion ever */
+                .dash-img-slot {
+                    width: 100%;
+                    aspect-ratio: 1 / 1;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    background: #1c1c24;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid rgba(255,255,255,0.04);
+                }
+                .dash-img-slot img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center top;
+                    transition: transform 0.45s ease;
+                }
                 .dash-card:hover .dash-img-slot img { transform: scale(1.08); }
-                .dash-img-label { padding-top: 5px; font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-                .dash-link { color: var(--primary); font-size: 0.95rem; font-weight: 500; margin-top: auto; transition: 0.2s; }
-                .dash-card:hover .dash-link { text-decoration: underline; }
-                
-                .home-carousel { margin-top: 10px; display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; scrollbar-width: none; }
-                .home-carousel::-webkit-scrollbar { display: none; }
+                .dash-img-label {
+                    margin-top: 6px;
+                    font-size: 0.75rem;
+                    color: var(--text-muted);
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    font-weight: 500;
+                }
+                .dash-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    margin-top: auto;
+                    color: #a78bfa;
+                    font-size: 0.88rem;
+                    font-weight: 600;
+                    transition: 0.2s;
+                }
+                .dash-card:hover .dash-link { color: white; gap: 9px; }
+
+                /* ─── CAROUSEL (horizontal scrollable row) ─── */
+                .amz-carousel-wrap {
+                    position: relative;
+                }
+                /* fade-edge masks */
+                .amz-carousel-wrap::after {
+                    content: '';
+                    position: absolute;
+                    right: 0; top: 0; bottom: 0;
+                    width: 60px;
+                    background: linear-gradient(to left, var(--bg-body), transparent);
+                    pointer-events: none;
+                    z-index: 2;
+                }
+                .amz-track {
+                    display: flex;
+                    gap: 16px;
+                    overflow-x: auto;
+                    scroll-behavior: smooth;
+                    padding: 8px 4px 20px;
+                    scrollbar-width: none;
+                    scroll-snap-type: x mandatory;
+                }
+                .amz-track::-webkit-scrollbar { display: none; }
+
+                /* Arrow buttons */
+                .amz-arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-60%);
+                    z-index: 10;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background: rgba(18,18,26,0.92);
+                    border: 1px solid rgba(255,255,255,0.12);
+                    color: white;
+                    font-size: 1.1rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+                }
+                .amz-arrow:hover {
+                    background: rgba(168,85,247,0.25);
+                    border-color: rgba(168,85,247,0.5);
+                    box-shadow: 0 4px 20px rgba(168,85,247,0.25);
+                    transform: translateY(-60%) scale(1.1);
+                }
+                .amz-arrow.prev { left: -20px; }
+                .amz-arrow.next { right: -20px; }
+
+                /* ─── UNIFORM PRODUCT CARD (carousel items) ─── */
+                .amz-card {
+                    flex-shrink: 0;
+                    width: 200px;
+                    background: #0f0f15;
+                    border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 14px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+                    scroll-snap-align: start;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .amz-card:hover {
+                    border-color: rgba(168, 85, 247, 0.4);
+                    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5);
+                    transform: translateY(-4px);
+                }
+                /* CRITICAL: locked image container — prevents ANY distortion */
+                .amz-img-box {
+                    width: 100%;
+                    aspect-ratio: 1 / 1;
+                    background: #1a1a24;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    flex-shrink: 0;
+                }
+                .amz-img-box img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;   /* contain = no cropping */
+                    object-position: center;
+                    transition: transform 0.4s ease;
+                    padding: 8px;
+                }
+                .amz-card:hover .amz-img-box img { transform: scale(1.07); }
+                .amz-card-body {
+                    padding: 12px 13px 14px;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+                .amz-card-title {
+                    font-size: 0.84rem;
+                    font-weight: 500;
+                    color: #e4e4e7;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    line-height: 1.35;
+                }
+                .amz-card-price {
+                    font-size: 1rem;
+                    font-weight: 700;
+                    color: #a78bfa;
+                    margin-top: 2px;
+                }
+                .amz-card-rating {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    font-size: 0.78rem;
+                    color: #f59e0b;
+                    font-weight: 600;
+                }
+                .amz-card-rating span { color: var(--text-muted); font-weight: 400; }
+
+                /* Quick-add on hover */
+                .amz-quick-add {
+                    position: absolute;
+                    bottom: 0; left: 0; right: 0;
+                    padding: 10px;
+                    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+                    opacity: 0;
+                    transition: opacity 0.25s;
+                    display: flex;
+                }
+                .amz-card:hover .amz-quick-add { opacity: 1; }
+                .amz-quick-add button {
+                    flex: 1;
+                    padding: 8px;
+                    font-size: 0.78rem;
+                    font-weight: 600;
+                    border-radius: 8px;
+                    background: var(--primary-gradient);
+                    color: white;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                /* ─── SECTION: Compact "Keep shopping" grid card ─── */
+                .amz-section-bg {
+                    background: #0b0b12;
+                    border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 20px;
+                    padding: 28px 28px 22px;
+                    margin-bottom: 48px;
+                }
+
+                /* Responsive carousel cards */
+                @media (max-width: 768px) {
+                    .amz-card { width: 160px; }
+                    .amz-arrow { display: none; }
+                    .amz-section-header h2 { font-size: 1.2rem; }
+                }
             </style>
             <!-- Generated Dynamically -->
         </section>
@@ -3051,6 +3460,40 @@
             };
         }
 
+        // ── LOCAL PROFESSIONAL FASHION POOL (No Models) ──
+        const LOCAL_FASHION_POOL = {
+            'Dresses': ['/images/products/dress-1.jpg', '/images/products/dress-2.jpg', '/images/products/dress-3.jpg'],
+            'Tops': ['/images/products/top-1.jpg', '/images/products/top-2.jpg', '/images/products/top-3.jpg'],
+            'Suits': ['/images/products/suit-1.jpg', '/images/products/suit-2.jpg', '/images/products/suit-3.jpg'],
+            'Outerwear': ['/images/products/outerwear-1.jpg', '/images/products/outerwear-2.jpg', '/images/products/outerwear-3.jpg'],
+            'Accessories': ['/images/products/accessories-1.jpg', '/images/products/accessories-2.jpg'],
+        };
+
+        function getProfessionalFashionImage(subcategory, productId) {
+            const cleanSub = (subcategory || 'Dresses').trim();
+            const pool = LOCAL_FASHION_POOL[cleanSub] || LOCAL_FASHION_POOL['Dresses'];
+            return pool[productId % pool.length];
+        }
+
+        // --- GLOBAL IMAGE SANITIZER ---
+        // Forces all fashion category items to use ONLY professional local shots.
+        function getSafeImg(p) {
+            if (!p) return '/images/placeholder.svg';
+            if (p.category === 'fashion' || p.category === 'fashion-trending') {
+                return getProfessionalFashionImage(p.subcategory, p.id);
+            }
+            return p.image;
+        }
+
+        function sanitizeProduct(p) {
+            if (p.category === 'fashion' || p.category === 'fashion-trending') {
+                p.image = getSafeImg(p);
+                // Also purge gallery to ensure no models in detail view
+                p.gallery = [p.image, p.image, p.image];
+            }
+            return p;
+        }
+
         // ── Data Seeder Function ──
         function generateAllProducts() {
             const rng = seededRandom(42);
@@ -3058,7 +3501,7 @@
             const rndInt = (min, max) => Math.floor(min + rng() * (max - min + 1));
             const pick = arr => arr[Math.floor(rng() * arr.length)];
 
-            const UNSPLASH = (id) => `https://images.unsplash.com/${id}?q=80&w=800&auto=format&fit=crop`;
+            const UNSPLASH = (id) => `https://images.unsplash.com/${id}?q=85&w=600&h=750&auto=format&fit=crop&crop=top`;
 
             const PRODUCT_NAMES = {
                 fashion: {
@@ -3106,7 +3549,14 @@
             };
 
             const IMAGES = {
-                fashion: ['photo-1595777457583-95e059d581b8', 'photo-1572804013309-59a88b7e92f1', 'photo-1541099649105-f69ad21f3246', 'photo-1617114919297-3c8ddb01f599', 'photo-1515886657613-9f3515b0c78f', 'photo-1509631179647-0177331693ae', 'photo-1566174053879-31528523f8ae', 'photo-1551028719-00167b16eac5', 'photo-1496747611176-843222e1e57c', 'photo-1539008835657-9e8e9680c956', 'photo-1485462537746-965f33f7f6a7', 'photo-1591047139829-d91aecb6caea', 'photo-1534528741775-53994a69daeb', 'photo-1469334031218-e382a71b716b', 'photo-1490481651871-ab68de25d43d', 'photo-1492707892479-7bc8d5a4ee93', 'photo-1549062572-544a64fb0c56'],
+                // ── Fashion: Local professional product images (no models) ──
+                fashion: {
+                    'Dresses': ['/images/products/dress-1.jpg', '/images/products/dress-2.jpg', '/images/products/dress-3.jpg'],
+                    'Tops': ['/images/products/top-1.jpg', '/images/products/top-2.jpg', '/images/products/top-3.jpg'],
+                    'Suits': ['/images/products/suit-1.jpg', '/images/products/suit-2.jpg', '/images/products/suit-3.jpg'],
+                    'Outerwear': ['/images/products/outerwear-1.jpg', '/images/products/outerwear-2.jpg', '/images/products/outerwear-3.jpg'],
+                    'Accessories': ['/images/products/accessories-1.jpg', '/images/products/accessories-2.jpg'],
+                },
                 electronics: ['photo-1590658268037-6bf12f032f55', 'photo-1546868871-af0de0ae72be', 'photo-1608043152269-423dbba4e7e1', 'photo-1583394838336-acd977736f90', 'photo-1618384887929-16ec33fab9ef', 'photo-1505740420928-5e560c06d30e', 'photo-1593642702821-c8da6771f0c6', 'photo-1588872657578-7efd1f1555ed', 'photo-1572569511254-d8f925fe2cda', 'photo-1517336714731-489689fd1ca8', 'photo-1526738549149-8e07eca6c147', 'photo-1601524909162-ae8725290836', 'photo-1606220945770-b5b6c2c55bf1', 'photo-1544244015-0df4b3ffc6b0'],
                 home: ['photo-1485955900006-10f4d324d411', 'photo-1507473885765-e6ed057ab6fe', 'photo-1594226801341-41427b4e5c22', 'photo-1602028915047-37269d1a73f7', 'photo-1556909114-f6e7ad7d3136', 'photo-1524758631624-e2822e304c36', 'photo-1540574163026-643ea20ade25', 'photo-1556909172-54557c7e4fb7', 'photo-1513694203232-719a280e022f', 'photo-1555041469-a586c61ea9bc', 'photo-1540518614846-7eded433c457', 'photo-1618220179428-22790b461013', 'photo-1600607687939-ce8a6c25118c'],
                 books: ['photo-1544947950-fa07a98d237f', 'photo-1532012197267-da84d127e765', 'photo-1512820790803-83ca734da794', 'photo-1497633762265-9d179a990aa6', 'photo-1524578271613-d550eacf6090', 'photo-1543002588-bfa74002ed7e', 'photo-1519682337058-a94d519337bc', 'photo-1495446815901-a7297e633e8d', 'photo-1507842217343-583bb7270b66', 'photo-1516979187457-637abb4f9353', 'photo-1526243741027-444d633d7365', 'photo-1506880018603-83d5b814b5a6'],
@@ -3151,6 +3601,14 @@
                         if (rating >= 4.5) reviewCount = rndInt(500, 8500);
                         else if (rating >= 4.0) reviewCount = rndInt(100, 4000);
 
+                        let productImage = '';
+                        if (category === 'fashion') {
+                            const subImgs = IMAGES.fashion[subcategory] || IMAGES.fashion['Dresses'];
+                            productImage = subImgs[id % subImgs.length];
+                        } else {
+                            productImage = imgs.length ? UNSPLASH(imgs[id % imgs.length]) : UNSPLASH('photo-1544947950-fa07a98d237f');
+                        }
+
                         products.push({
                             id: id,
                             name: name,
@@ -3160,7 +3618,7 @@
                             originalPrice: originalPrice,
                             badge: badge,
                             tryOnEligible: WEARABLE_CATS.has(category) && WEARABLE_SUBS.has(subcategory),
-                            image: imgs.length ? UNSPLASH(imgs[id % imgs.length]) : UNSPLASH('photo-1544947950-fa07a98d237f'),
+                            image: productImage,
                             colors: colorsPool.length ? colorsPool[id % colorsPool.length] : [],
                             isNew: badge === 'new',
                             rating: rating,
@@ -3200,8 +3658,12 @@
             try {
                 const response = await fetch('/api/products');
                 if (!response.ok) throw new Error("Failed to fetch products");
-                allProducts = await response.json();
-                console.log(`🛒 NexCart: ${allProducts.length} live products loaded from API`);
+                const data = await response.json();
+                
+                // --- STRICT MODEL PURGE OVERRIDE ---
+                allProducts = data.map(p => sanitizeProduct(p));
+
+                console.log(`🛒 NexCart: ${allProducts.length} live products loaded (Strict Model-Free Curation Active)`);
                 
                 buildCategoryNav();
                 buildSidebarCategories();
@@ -3212,7 +3674,7 @@
             } catch (err) {
                 console.error("API Fetch Error:", err.message);
                 console.log("⚠️ Falling back to local data generation...");
-                allProducts = generateAllProducts();
+                allProducts = generateAllProducts().map(p => sanitizeProduct(p));
                 buildCategoryNav();
                 buildSidebarCategories();
                 initFilterInteractions();
@@ -3313,7 +3775,8 @@
                     ${getBadgeHTML(product.badge)}
                     <button class="wishlist-btn" onclick="toggleHeart(this)"><i class="ph ph-heart"></i></button>
                     <div class="product-img" style="cursor:pointer;" onclick="openProduct(${product.id})">
-                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                        <img src="${getSafeImg(product)}" alt="${product.name}" loading="lazy"
+                             onerror="this.onerror=null; this.src=getProfessionalFashionImage('${product.subcategory.replace(/'/g, "\\'")}', ${product.id}); this.style.objectFit='cover';">
                     </div>
                     <div class="product-info">
                         ${colorDotsHTML}
@@ -3548,9 +4011,9 @@
             }
 
             container.innerHTML = wearables.map((p, idx) => `
-                <img src="${p.image}" 
+                <img src="${getSafeImg(p)}" 
                      class="wardrobe-item${(selectedDress && selectedDress.id === p.id) || (!selectedDress && idx === 0) ? ' selected' : ''}" 
-                     onclick="selectDress(this, '${p.name.replace(/'/g, "\\'")}', '${p.id}', '${p.image}')" 
+                     onclick="selectDress(this, '${p.name.replace(/'/g, "\\'")}', '${p.id}', '${getSafeImg(p)}')" 
                      title="${p.name}">
             `).join('');
 
@@ -3559,7 +4022,7 @@
                 selectedDress = {
                     id: wearables[0].id,
                     name: wearables[0].name,
-                    image: wearables[0].image
+                    image: getSafeImg(wearables[0])
                 };
                 document.getElementById('dress-label').textContent = wearables[0].name;
             }
@@ -4284,7 +4747,7 @@
             document.getElementById('pd-desc-text').textContent = product.description || 'Premium product designed for ultimate comfort and style.';
             document.getElementById('pd-highlights').innerHTML = (product.highlights || ["Premium Quality", "Durable material"]).map(h => `<li>${h}</li>`).join('');
             
-            const gallery = product.gallery && product.gallery.length ? product.gallery : [product.image];
+            const gallery = product.gallery && product.gallery.length ? product.gallery.map(img => (product.category === 'fashion' ? getSafeImg(product) : img)) : [getSafeImg(product)];
             document.getElementById('pd-main-img').src = gallery[0];
             const thumbContainer = document.getElementById('pd-thumbnails');
             thumbContainer.innerHTML = gallery.map((img, i) => `
@@ -4453,42 +4916,46 @@
             switchPage('checkout');
         }
 
-        function confirmCheckout() {
-            const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
-            if (cart.length === 0) return;
+        async function confirmCheckout() {
+            const token = localStorage.getItem('nexcart_token');
+            if (!token) {
+                showToast("Please sign in to place an order.", "#f59e0b");
+                switchPage('login');
+                return;
+            }
 
-            const orderId = `112-${Math.floor(1000000 + Math.random() * 9000000)}-${Math.floor(1000000 + Math.random() * 9000000)}`;
-            const today = new Date();
-            const dateStr = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            
-            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-            const shipping = subtotal >= 500 ? 0 : 50;
-            const orderTotal = subtotal + shipping;
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ph ph-spinner spinning"></i> Processing Order...';
 
-            cart.forEach(item => {
-                mockOrders.unshift({
-                    id: orderId,
-                    date: dateStr,
-                    total: orderTotal,
-                    status: 'Shipped',
-                    statusMsg: `Arriving by ${new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`,
-                    product: {
-                        id: item.productId,
-                        name: item.productName,
-                        image: item.productImage
-                    }
+            try {
+                const res = await fetch(`${API}/orders/create`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-            });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.message || 'Checkout failed');
 
-            localStorage.removeItem('guestCart');
-            updateCartBadge();
+                localStorage.removeItem('guestCart');
+                updateCartBadge();
 
-            showToast("Order placed successfully! Thank you for shopping with NexCart.", "#10b981");
-            
-            setTimeout(() => { 
-                switchPage('orders');
-                loadSpaOrders();
-            }, 1000);
+                showToast("🎉 Order placed successfully! Thank you for shopping with NexCart.", "#10b981");
+                
+                setTimeout(() => { 
+                    switchPage('orders');
+                    loadSpaOrders();
+                }, 1000);
+            } catch (err) {
+                showToast(err.message, "#ef4444");
+                if (err.message.includes('address')) {
+                    // Quick fix: if no address, we'd normally redirect to profile, but here we just toast.
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
         }
 
         function openTryOnModal(product) {
@@ -4578,7 +5045,7 @@
                 <div class="related-card product-card" onclick="openProduct('${p.id}')">
                     <div class="product-badge">${Math.round((1 - p.price/p.originalPrice)*100)}% OFF</div>
                     <div class="product-img-wrapper" style="height: 200px;">
-                        <img src="${p.image}" class="product-img" style="height:100%; object-fit:cover;" loading="lazy">
+                        <img src="${getSafeImg(p)}" class="product-img" style="height:100%; object-fit:cover;" loading="lazy">
                     </div>
                     <div class="product-info" style="padding: 15px;">
                         <h3 class="product-title" style="white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 48px;">${p.name}</h3>
@@ -4938,98 +5405,159 @@
                 return;
             }
 
-            const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
-            const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const activeItems = items.filter(i => !i.saveForLater);
+            const savedItems = items.filter(i => i.saveForLater);
+
+            // Calculate totals ONLY for selected active items
+            const selectedItems = activeItems.filter(i => i.selected);
+            const subtotal = selectedItems.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const shipping = (subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
             const total = subtotal + shipping;
             const toFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
 
-            const itemsHTML = items.map(item => `
-                <div class="card" style="display:flex;align-items:center;padding:20px;gap:20px;" data-pid="${item.productId}">
-                    ${item.productImage
-                        ? `<img src="${item.productImage}" style="width:90px;height:110px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
-                        : `<div style="width:90px;height:110px;border-radius:8px;background:#27272a;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;">📦</div>`}
-                    <div style="flex:1;min-width:0;">
-                        <div class="flex-between" style="align-items:flex-start;">
-                            <h3 style="font-size:1rem;margin-bottom:4px;">${item.productName}</h3>
-                            <button onclick="spaRemoveItem('${item.productId}')"
-                                style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;flex-shrink:0;padding:4px;">
-                                <i class="ph ph-x"></i>
-                            </button>
-                        </div>
-                        <div class="flex-between" style="margin-top:16px;align-items:center;">
-                            <div style="display:flex;align-items:center;gap:8px;background:#27272a;padding:5px 10px;border-radius:8px;">
-                                <button onclick="spaChangeQty('${item.productId}', ${item.quantity - 1})"
-                                    style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;width:24px;"
-                                    ${item.quantity <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>−</button>
-                                <span style="min-width:24px;text-align:center;font-weight:600;">${item.quantity}</span>
-                                <button onclick="spaChangeQty('${item.productId}', ${item.quantity + 1})"
-                                    style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;width:24px;">+</button>
-                            </div>
-                            <div class="price" style="font-size:1rem;">₹${(item.price * item.quantity).toFixed(2)}</div>
+            const renderItem = (item, isSaved = false) => `
+                <div class="cart-item-card" data-pid="${item.productId}">
+                    ${!isSaved ? `<input type="checkbox" class="cart-item-checkbox" ${item.selected ? 'checked' : ''} 
+                        onclick="toggleSpaSelection('${item.productId}', ${item.selected})">` : ''}
+                    <div class="cart-item-img-wrap">
+                        ${item.productImage 
+                            ? `<img src="${item.productImage}" alt="${item.productName}">` 
+                            : `<i class="ph ph-package" style="font-size:2rem;color:#3f3f46;"></i>`}
+                    </div>
+                    <div class="cart-item-info">
+                        <h3 style="font-size:1.1rem;margin-bottom:6px;">${item.productName}</h3>
+                        <div style="color:var(--primary);font-weight:700;font-size:1.1rem;">₹${item.price.toFixed(2)}</div>
+                        
+                        <div class="cart-item-actions">
+                            ${!isSaved ? `
+                                <div class="cart-qty-stepper">
+                                    <button class="cart-qty-btn" onclick="spaChangeQty('${item.productId}', ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                                    <span style="min-width:20px;text-align:center;font-weight:600;">${item.quantity}</span>
+                                    <button class="cart-qty-btn" onclick="spaChangeQty('${item.productId}', ${item.quantity + 1})">+</button>
+                                </div>
+                                <span style="color:var(--border-glass)">|</span>
+                            ` : ''}
+                            <span class="cart-item-action-link" onclick="spaRemoveItem('${item.productId}')">Delete</span>
+                            <span style="color:var(--border-glass)">|</span>
+                            <span class="cart-item-action-link" onclick="toggleSpaSaveLater('${item.productId}', ${isSaved})">
+                                ${isSaved ? 'Move to Cart' : 'Save for later'}
+                            </span>
                         </div>
                     </div>
-                </div>`).join('');
+                </div>`;
+
+            const activeHTML = activeItems.length > 0 
+                ? activeItems.map(i => renderItem(i)).join('')
+                : '<p style="color:var(--text-muted);padding:20px;">No active items in cart.</p>';
+
+            const savedHTML = savedItems.length > 0
+                ? `<div class="saved-later-divider">Saved for later (${savedItems.length} items)</div>
+                   <div class="cart-items-section">${savedItems.map(i => renderItem(i, true)).join('')}</div>`
+                : '';
 
             root.innerHTML = `
                 <div class="cart-layout">
-                    <div style="display:flex;flex-direction:column;gap:16px;">
-                        ${toFreeShipping > 0
-                            ? `<div style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.3);padding:12px 20px;border-radius:8px;color:#e9d5ff;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
-                                <i class="ph-fill ph-truck"></i> You are ₹${toFreeShipping.toFixed(2)} away from Free Express Shipping!
+                    <div class="cart-items-section">
+                        ${subtotal > 0 && toFreeShipping > 0
+                            ? `<div style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.3);padding:12px 20px;border-radius:12px;color:#e9d5ff;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
+                                <i class="ph-fill ph-truck" style="color:var(--primary)"></i> You are ₹${toFreeShipping.toFixed(2)} away from <b>Free Express Shipping!</b>
                                </div>`
-                            : `<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:12px 20px;border-radius:8px;color:#6ee7b7;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
-                                <i class="ph-fill ph-truck"></i> 🎉 You qualify for Free Express Shipping!
-                               </div>`}
-                        ${itemsHTML}
+                            : (subtotal >= FREE_SHIPPING_THRESHOLD ? `<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:12px 20px;border-radius:12px;color:#6ee7b7;font-size:0.9rem;display:flex;align-items:center;gap:10px;">
+                                <i class="ph-fill ph-check-circle" style="color:#10b981"></i> 🎉 Your order qualifies for <b>Free Express Shipping!</b>
+                               </div>` : '')}
+                        ${activeHTML}
+                        ${savedHTML}
                     </div>
 
-                    <div class="card" style="padding:30px;height:fit-content;position:sticky;top:80px;">
-                        <h3 style="margin-bottom:25px;">Order Summary</h3>
+                    <div class="card" style="padding:32px;position:sticky;top:100px;">
+                        <h3 style="margin-bottom:24px;font-size:1.3rem;">Order Summary</h3>
+                        
+                        <div class="flex-between" style="margin-bottom:14px;color:var(--text-muted);">
+                            <span>Items (${selectedItems.length}):</span>
+                            <span>₹${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="flex-between" style="margin-bottom:20px;color:var(--text-muted);">
+                            <span>Shipping:</span>
+                            <span>${shipping === 0 ? '<span style="color:#10b981;font-weight:600;">FREE</span>' : '₹' + shipping.toFixed(2)}</span>
+                        </div>
 
-                        <div style="margin-bottom:20px;">
-                            <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:8px;">Promo Code</label>
-                            <div style="display:flex;gap:10px;">
-                                <input type="text" id="promo-input" placeholder="Enter code"
-                                    style="width:100%;background:#1f1f22;border:1px solid var(--border-glass);padding:10px;border-radius:8px;color:white;">
-                                <button class="btn-outline" onclick="applyPromo()">Apply</button>
+                        <div style="margin-bottom:24px;padding:20px 0;border-top:1px solid var(--border-glass);border-bottom:1px solid var(--border-glass);">
+                            <div class="flex-between" style="font-size:1.4rem;font-weight:800;">
+                                <span>Total:</span>
+                                <span class="text-gradient">₹${total.toFixed(2)}</span>
                             </div>
-                            <div id="promo-msg" style="font-size:0.8rem;margin-top:6px;display:none;"></div>
                         </div>
 
-                        <div class="flex-between" style="margin-bottom:12px;color:var(--text-muted);font-size:0.95rem;">
-                            <span>Subtotal</span><span>₹${subtotal.toFixed(2)}</span>
-                        </div>
-                        <div class="flex-between" style="margin-bottom:12px;color:var(--text-muted);font-size:0.95rem;">
-                            <span>Shipping</span>
-                            <span>${shipping === 0 ? '<span style="color:#10b981;">FREE</span>' : '₹' + shipping.toFixed(2)}</span>
-                        </div>
-                        <div class="flex-between" id="spa-discount-row" style="margin-bottom:12px;color:#10b981;font-size:0.95rem;display:none;">
-                            <span>Discount</span><span id="spa-discount-val">-₹0.00</span>
-                        </div>
-
-                        <div class="flex-between" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border-glass);font-weight:700;font-size:1.3rem;">
-                            <span>Total</span>
-                            <span class="text-gradient" id="spa-total">₹${total.toFixed(2)}</span>
+                        <div style="margin-bottom:24px;">
+                            <label style="font-size:0.8rem;color:var(--text-muted);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Promo Code</label>
+                            <div style="display:flex;gap:10px;">
+                                <input type="text" id="promo-input" placeholder="Enter code" 
+                                    style="flex:1;background:#18181b;border:1px solid var(--border-glass);padding:12px;border-radius:10px;color:white;">
+                                <button class="btn btn-outline" style="padding:0 15px;" onclick="applyPromo()">Apply</button>
+                            </div>
+                            <div id="promo-msg" style="font-size:0.8rem;margin-top:8px;display:none;"></div>
                         </div>
 
-                        <button class="btn-primary" onclick="spaCheckout()"
-                            style="width:100%;margin-top:25px;justify-content:center;padding:14px;">
+                        <button class="btn btn-primary" onclick="spaCheckout()" 
+                            style="width:100%;padding:16px;justify-content:center;font-size:1rem;box-shadow:0 10px 20px -5px rgba(168,85,247,0.4);"
+                            ${selectedItems.length === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
                             Proceed to Checkout <i class="ph-bold ph-arrow-right"></i>
                         </button>
-                        <button class="btn-outline" onclick="switchPage('shop')"
-                            style="width:100%;margin-top:12px;justify-content:center;padding:12px;">
-                            <i class="ph ph-bag"></i> Continue Shopping
-                        </button>
-
-                        <div style="display:flex;justify-content:center;gap:15px;margin-top:25px;opacity:0.5;">
-                            <i class="ph ph-credit-card" style="font-size:24px;"></i>
-                            <i class="ph ph-paypal-logo" style="font-size:24px;"></i>
-                            <i class="ph ph-google-logo" style="font-size:24px;"></i>
+                        
+                        <div style="margin-top:20px;text-align:center;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:6px;">
+                            <i class="ph ph-lock-key"></i> Secure SSL Encrypted Checkout
                         </div>
                     </div>
                 </div>`;
 
             updateCartBadge();
+        }
+
+        async function toggleSpaSelection(productId, currentSelected) {
+            const token = localStorage.getItem('nexcart_token');
+            const newSelected = !currentSelected;
+            
+            if (token) {
+                try {
+                    await fetch(`${API}/cart/toggle-select`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ productId, selected: newSelected })
+                    });
+                } catch (e) { console.error('Selection sync failed', e); }
+            } else {
+                const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                const idx = cart.findIndex(i => i.productId === String(productId));
+                if (idx > -1) { 
+                    cart[idx].selected = newSelected; 
+                    localStorage.setItem('guestCart', JSON.stringify(cart)); 
+                }
+            }
+            await loadSpaCart();
+        }
+
+        async function toggleSpaSaveLater(productId, wasSaved) {
+            const token = localStorage.getItem('nexcart_token');
+            const newSaveLater = !wasSaved;
+            
+            if (token) {
+                try {
+                    await fetch(`${API}/cart/toggle-save-later`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ productId, saveForLater: newSaveLater })
+                    });
+                } catch (e) { console.error('Save later sync failed', e); }
+            } else {
+                const cart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                const idx = cart.findIndex(i => i.productId === String(productId));
+                if (idx > -1) { 
+                    cart[idx].saveForLater = newSaveLater;
+                    cart[idx].selected = !newSaveLater; // Auto-select if moving back to cart
+                    localStorage.setItem('guestCart', JSON.stringify(cart)); 
+                }
+            }
+            await loadSpaCart();
         }
 
         async function spaChangeQty(productId, newQty) {
@@ -5519,19 +6047,42 @@
         }
 
         // ─── ORDERS LOGIC ───
-        const mockOrders = [
-            { id: "112-9843219-49324", date: "April 1, 2026", total: 49.99, status: "Delivered", statusMsg: "Delivered on April 4", productRef: 1, cancelled: false },
-            { id: "114-1928392-18239", date: "March 24, 2026", total: 119.50, status: "Delivered", statusMsg: "Handed directly to resident", productRef: 5, cancelled: false },
-            { id: "112-5839201-94820", date: "April 2, 2026", total: 29.99, status: "Shipped", statusMsg: "Arriving tomorrow by 8 PM", productRef: 12, cancelled: false },
-            { id: "113-1029384-93810", date: "February 15, 2026", total: 89.00, status: "Cancelled", statusMsg: "Cancelled by seller", productRef: 8, cancelled: true }
-        ];
-
+        let spaOrders = [];
         let currentOrderTab = 'all';
         let currentOrderSearch = '';
 
-        function loadSpaOrders() {
-            renderOrdersList();
-            renderOrdersRecommendations();
+        async function loadSpaOrders() {
+            const container = document.getElementById('orders-list-container');
+            const token = localStorage.getItem('nexcart_token');
+            
+            if (!token) {
+                container.innerHTML = `
+                    <div style="padding: 60px 20px; text-align: center; background: var(--surface-light); border-radius: 16px; border: 1px dashed var(--border-glass);">
+                        <i class="ph ph-lock-key" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px; display: block;"></i>
+                        <h3 style="margin-bottom: 10px;">Sign in to view your orders</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 25px;">Track your packages, manage returns, and download invoices.</p>
+                        <button class="btn-primary" style="padding: 12px 30px;" onclick="switchPage('login')">Sign In Now</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '<div style="padding: 40px; text-align: center;"><i class="ph ph-spinner spinning" style="font-size: 2rem;"></i><p style="margin-top:10px;">Fetching your orders...</p></div>';
+
+            try {
+                const res = await fetch(`${API}/orders/my-orders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.message || 'Failed to load orders');
+                
+                spaOrders = data.orders || [];
+                renderOrdersList();
+                renderOrdersRecommendations();
+            } catch (err) {
+                container.innerHTML = `<div style="padding: 40px; text-align: center; color: #ef4444;">${err.message}</div>`;
+            }
         }
 
         function switchOrderTab(tabName, el) {
@@ -5548,223 +6099,334 @@
 
         function renderOrdersList() {
             const container = document.getElementById('orders-list-container');
-            let filtered = mockOrders;
+            let filtered = [...spaOrders];
             
             // Filter by Tab
             if (currentOrderTab === 'not-shipped') {
-                filtered = filtered.filter(o => o.status !== 'Delivered' && !o.cancelled);
+                filtered = filtered.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled' && o.status !== 'Returned');
             } else if (currentOrderTab === 'buy-again') {
                 filtered = filtered.filter(o => o.status === 'Delivered');
             }
             
-            filtered = filtered.map(o => {
-                const product = allProducts.find(p => String(p.id) === String(o.productRef));
-                return { ...o, product };
-            }).filter(o => o.product); 
-
             if (currentOrderSearch) {
                 filtered = filtered.filter(o => 
-                    o.product.name.toLowerCase().includes(currentOrderSearch) ||
-                    o.id.includes(currentOrderSearch)
+                    o.orderId.includes(currentOrderSearch) ||
+                    o.items.some(item => item.productName.toLowerCase().includes(currentOrderSearch))
                 );
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--text-muted);">No orders found matching your criteria.</div>`;
+                container.innerHTML = `
+                    <div style="padding: 60px 20px; text-align: center; background: var(--surface-light); border-radius: 16px; border: 1px solid var(--border-glass);">
+                        <i class="ph ph-shopping-bag-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 20px; display: block;"></i>
+                        <h3 style="margin-bottom: 10px;">No orders found</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 25px;">Looks like you haven't placed any orders matching this filter.</p>
+                        <button class="btn-primary" style="padding: 10px 25px;" onclick="switchPage('shop')">Start Shopping</button>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = filtered.map(o => `
+            container.innerHTML = filtered.map(o => {
+                const date = new Date(o.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                const mainItem = o.items[0]; // For display
+                const otherItemsCount = o.items.length - 1;
+                
+                const statusColor = o.status === 'Cancelled' || o.status === 'Returned' ? '#ef4444' : (o.status === 'Delivered' ? '#10b981' : '#f59e0b');
+                let statusMsg = o.status;
+                if (o.status === 'Placed') statusMsg = 'Order Placed - Preparing';
+                if (o.status === 'Delivered' && o.deliveryDate) statusMsg = `Delivered on ${new Date(o.deliveryDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+                else if (o.status !== 'Cancelled' && o.status !== 'Returned') statusMsg = `${o.status} - Arriving by ${new Date(o.expectedDeliveryDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+
+                return `
                 <div class="order-card">
-                    <div class="order-header">
-                        <div style="display: flex; gap: 30px;">
+                    <div class="order-header" style="flex-wrap: wrap; gap: 15px;">
+                        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
                             <div>
-                                <div style="text-transform: uppercase; font-size: 0.75rem;">Order Placed</div>
-                                <div style="color: white; font-weight: 500;">${o.date}</div>
+                                <div style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted);">Order Placed</div>
+                                <div style="color: white; font-weight: 500;">${date}</div>
                             </div>
                             <div>
-                                <div style="text-transform: uppercase; font-size: 0.75rem;">Total</div>
-                                <div style="color: white; font-weight: 500;">₹${o.total.toFixed(2)}</div>
+                                <div style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted);">Total</div>
+                                <div style="color: white; font-weight: 500;">₹${o.totalPrice.toFixed(2)}</div>
+                            </div>
+                            <div>
+                                <div style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted);">Ship To</div>
+                                <div style="color: var(--primary); cursor: pointer;" title="${o.shippingAddress.street}">${o.shippingAddress.city}</div>
                             </div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="text-transform: uppercase; font-size: 0.75rem;">Order # ${o.id}</div>
-                            <div style="display: flex; gap: 10px; margin-top: 5px; justify-content: flex-end;">
-                                <a style="color: var(--primary); cursor: pointer;" onclick="showToast('Loading Secure Details...')">View order details</a> 
-                                <span>|</span> 
-                                <a style="color: var(--primary); cursor: pointer;" onclick="downloadInvoice('${o.id}')">Invoice</a>
+                        <div style="flex: 1; text-align: right; min-width: 200px;">
+                            <div style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted);">Order # ${o.orderId}</div>
+                            <div style="display: flex; gap: 10px; margin-top: 5px; justify-content: flex-end; font-size: 0.9rem;">
+                                <a style="color: var(--primary); cursor: pointer;" onclick="showToast('Secure Detail View Coming Soon...')">View order details</a> 
+                                <span style="color: var(--border-glass);">|</span> 
+                                <a style="color: var(--primary); cursor: pointer;" onclick="downloadInvoice('${o.orderId}')">Invoice</a>
                             </div>
                         </div>
                     </div>
-                    <div class="order-body">
-                        <img src="${o.product.image}" class="order-img" style="cursor: pointer;" onclick="openProduct('${o.product.id}')">
-                        <div class="order-info">
-                            <h3 style="font-size: 1.1rem; margin-bottom: 8px; cursor: pointer; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" onclick="openProduct('${o.product.id}')">${o.product.name}</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Sold by: NexCart Official</p>
+                    <div class="order-body" style="padding: 20px;">
+                        <img src="${mainItem.productImage}" class="order-img" style="cursor: pointer; width: 100px; height: 130px; object-fit: cover; border-radius: 8px;" onclick="openProduct('${mainItem.productId}')">
+                        <div class="order-info" style="flex: 1; padding: 0 20px;">
+                            <h3 style="font-size: 1.1rem; margin-bottom: 5px; cursor: pointer;" onclick="openProduct('${mainItem.productId}')">${mainItem.productName}</h3>
+                            ${otherItemsCount > 0 ? `<p style="color: var(--primary); font-size: 0.85rem; margin-bottom: 10px; font-weight: 500;">+ ${otherItemsCount} other item${otherItemsCount > 1 ? 's' : ''}</p>` : ''}
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Status: <span style="color: ${statusColor}; font-weight: 600;">${statusMsg}</span></p>
                             
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                                <div style="width: 10px; height: 10px; border-radius: 50%; background: ${o.cancelled ? '#ef4444' : (o.status === 'Delivered' ? '#10b981' : '#f59e0b')};"></div>
-                                <span style="font-weight: 600; font-size: 1.05rem;">${o.statusMsg}</span>
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: ${statusColor};"></div>
+                                <span style="font-weight: 600; font-size: 1rem;">Tracking ID: ${o.trackingId}</span>
                             </div>
-                            ${!o.cancelled ? `<p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Return window closed</p>` : ''}
                         </div>
-                        <div class="order-actions">
-                            ${!o.cancelled ? `
-                                <button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px;" onclick="openTrackingModal('${o.id}')">Track Package</button>
-                                <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="openReturnModal('${o.id}')">Return or Replace Item</button>
-                                <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="shareGiftReceipt('${o.id}')">Share Gift Receipt</button>
-                            ` : `<button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 8px;" onclick="openProduct('${o.product.id}')">Repurchase Item</button>`}
-                            <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass); margin-bottom: 8px;" onclick="openFeedbackModal('seller', 'NexCart Official')">Leave Seller Feedback</button>
-                            <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass);" onclick="openFeedbackModal('product', '${o.product.name.replace(/'/g, "\\'")}')">Write a product review</button>
+                        <div class="order-actions" style="width: 240px; display: flex; flex-direction: column; gap: 10px;">
+                            ${o.status !== 'Cancelled' && o.status !== 'Returned' ? `
+                                <button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%;" onclick="openTrackingModal('${o.orderId}')">Track Package</button>
+                                <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass);" 
+                                    ${o.status !== 'Delivered' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : `onclick="openReturnModal('${o.orderId}')"`}>
+                                    Return or Replace Item
+                                </button>
+                            ` : `<button class="btn-primary" style="padding: 10px; border-radius: 8px; width: 100%;" onclick="openProduct('${mainItem.productId}')">Buy it again</button>`}
+                            <button class="btn-outline" style="padding: 10px; border-radius: 8px; width: 100%; border-color: var(--border-glass);" onclick="openFeedbackModal('product', '${mainItem.productName.replace(/'/g, "\\'")}')">Write a product review</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function renderOrdersRecommendations() {
             const container = document.getElementById('orders-recommendations');
-            if(!container) return;
+            if (!container) return;
             const recs = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
             container.innerHTML = recs.map(p => {
-                const sName = p.name.replace(/'/g, "\\\\'");
+                const sName = (p.name || '').replace(/'/g, "\\'");
                 return `
                 <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
                     <img src="${p.image}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openProduct('${p.id}')">
                     <div style="flex: 1;">
                         <div style="font-size: 0.85rem; font-weight: 500; cursor: pointer; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" onclick="openProduct('${p.id}')">${p.name}</div>
-                        <div style="color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-top: 4px;">₹${p.price}</div>
+                        <div style="color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-top: 4px;">&#8377;${p.price}</div>
                         <button class="btn-outline" style="padding: 4px 10px; font-size: 0.75rem; border-color: var(--primary); color: var(--primary); margin-top: 8px;" onclick="addToCartAPI('${p.id}', '${sName}', ${p.price}, '${p.image}')">Add to Cart</button>
                     </div>
                 </div>
             `}).join('');
         }
+
+        /* ─── Helper: build a carousel card ─── */
+        function amzCard(p) {
+            const safeName = (p.name || '').replace(/'/g, "\\'");
+            const img = getSafeImg(p);
+            return `
+                <div class="amz-card" onclick="openProduct('${p.id}')">
+                    <div class="amz-img-box">
+                        <img src="${img}" alt="${p.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+                        <div class="amz-quick-add">
+                            <button onclick="event.stopPropagation(); addToCartAPI('${p.id}','${safeName}',${p.price},'${img}')">
+                                <i class="ph ph-shopping-cart-simple"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    <div class="amz-card-body">
+                        <div class="amz-card-title">${p.name || ''}</div>
+                        <div class="amz-card-price">&#8377;${p.price}</div>
+                        <div class="amz-card-rating">
+                            <i class="ph-fill ph-star"></i> ${p.rating || ''}
+                            <span>(${p.reviews || Math.floor(Math.random()*900+50)})</span>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        /* ─── Helper: build a full carousel section ─── */
+        function amzCarouselSection(sectionId, title, items, badge) {
+            const cards = items.map(amzCard).join('');
+            const badgeHtml = badge ? `<span style="background:rgba(168,85,247,.15);color:#c084fc;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.5px;">${badge}</span>` : '';
+            return `
+                <div class="amz-section">
+                    <div class="amz-section-header">
+                        <h2>${title} ${badgeHtml}</h2>
+                        <span class="amz-see-all" onclick="switchPage('shop')">See all &rarr;</span>
+                    </div>
+                    <div class="amz-carousel-wrap">
+                        <button class="amz-arrow prev" onclick="document.getElementById('${sectionId}').scrollBy({left:-640,behavior:'smooth'})">
+                            <i class="ph ph-caret-left"></i>
+                        </button>
+                        <div class="amz-track" id="${sectionId}">${cards}</div>
+                        <button class="amz-arrow next" onclick="document.getElementById('${sectionId}').scrollBy({left:640,behavior:'smooth'})">
+                            <i class="ph ph-caret-right"></i>
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        /* ─── Main render ─── */
         function renderHomeDashboards() {
             const container = document.getElementById('home-dynamic-dashboard');
-            if(!container) return;
-            
-            const randomList = () => [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 4);
+            if (!container || !allProducts || allProducts.length === 0) return;
 
-            const dashboards = [
-                { title: "Up to 60% Off | Clearance", items: randomList() },
-                { title: "Continue Shopping for", items: randomList() },
-                { title: "Explore Top Rated items", items: randomList() },
-                { title: "New Arrivals in Fashion", items: randomList() }
+            /* ── utility samplers ── */
+            const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+            const pick    = (arr, n) => shuffle(arr).slice(0, n);
+            const byFilter = (fn, n=14) => { const f=allProducts.filter(fn); return f.length>=n ? pick(f,n) : pick(allProducts,n); };
+
+            /* ── data buckets ── */
+            const bestSellers   = byFilter(p => (p.rating||0) >= 4.4);
+            const newArrivals   = byFilter(p => p.badge && p.badge.toLowerCase().includes('new'));
+            const onSale        = byFilter(p => p.badge && (p.badge.toLowerCase().includes('sale')||p.badge.toLowerCase().includes('hot')));
+            const topRated      = byFilter(p => (p.rating||0) >= 4.7);
+            const forYou        = pick(allProducts, 14);
+            const basedOnCart   = pick(allProducts, 14);
+            const keepShopping  = pick(allProducts, 16);
+
+            /* ── 4-bucket grid ("Keep shopping") ── */
+            const gridGroups = [
+                { title: "Up to 60% Off",          items: pick(onSale, 4) },
+                { title: "Top Rated for You",       items: pick(topRated, 4) },
+                { title: "New Arrivals",             items: pick(newArrivals, 4) },
+                { title: "Trending Now",             items: pick(forYou, 4) }
             ];
 
-            let html = `<div class="dash-master-grid">`;
-            
-            dashboards.forEach(dash => {
-                html += `
-                    <div class="dash-card" onclick="switchPage('shop')">
-                        <h3 class="dash-card-title">${dash.title}</h3>
-                        <div class="dash-inner-grid">
-                            ${dash.items.map(item => `
-                                <div>
-                                    <div class="dash-img-slot">
-                                        <img src="${item.image}" alt="">
-                                    </div>
-                                    <div class="dash-img-label">${item.name}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="dash-link">Shop now</div>
+            const gridHTML = `
+                <div class="amz-section">
+                    <div class="amz-section-header">
+                        <h2>Keep shopping for</h2>
+                        <span class="amz-see-all" onclick="switchPage('shop')">See all &rarr;</span>
                     </div>
-                `;
-            });
-            html += `</div>`;
-
-            const scrollerItems = [...allProducts].sort(() => 0.5 - Math.random()).slice(0, 10);
-            html += `
-                <div style="background: var(--surface-light); border: 1px solid var(--border-glass); border-radius: 12px; padding: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="font-size: 1.5rem;">Based on your <span class="text-gradient">recent history</span></h3>
-                    </div>
-                    <div style="position: relative;">
-                        <!-- Custom isolated arrows specifically configured against scrollBy loops -->
-                        <button class="carousel-btn left" style="position:absolute; left:-18px; top:50%; transform:translateY(-50%); z-index:10;" onclick="document.getElementById('home-track').scrollBy({left:-300, behavior:'smooth'})"><i class="ph ph-caret-left"></i></button>
-                        
-                        <div id="home-track" class="home-carousel">
-                            ${scrollerItems.map(p => `
-                                <div class="product-card" style="min-width: 220px; flex-shrink: 0;" onclick="openProduct('${p.id}')">
-                                    <div class="product-img-wrapper" style="height: 250px;">
-                                        <img src="${p.image}" class="product-img">
-                                        <div class="product-badge">${p.badge}</div>
-                                    </div>
-                                    <div class="product-info">
-                                        <h3 class="product-title" style="font-size: 0.95rem;">${p.name}</h3>
-                                        <div class="flex-between">
-                                            <div class="product-price" style="font-size: 1rem;">₹${p.price}</div>
-                                            <div class="product-rating" style="font-size: 0.85rem;"><i class="ph-fill ph-star"></i> ${p.rating}</div>
+                    <div class="dash-master-grid">
+                        ${gridGroups.map(g => `
+                            <div class="dash-card" onclick="switchPage('shop')">
+                                <div class="dash-card-title">${g.title}</div>
+                                <div class="dash-inner-grid">
+                                    ${g.items.map(item => `
+                                        <div>
+                                            <div class="dash-img-slot">
+                                                <img src="${getSafeImg(item)}" alt="${item.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+                                            </div>
+                                            <div class="dash-img-label">${item.name || ''}</div>
                                         </div>
-                                    </div>
+                                    `).join('')}
                                 </div>
-                            `).join('')}
-                        </div>
-
-                        <button class="carousel-btn right" style="position:absolute; right:-18px; top:50%; transform:translateY(-50%); z-index:10;" onclick="document.getElementById('home-track').scrollBy({left:300, behavior:'smooth'})"><i class="ph ph-caret-right"></i></button>
+                                <div class="dash-link">Shop now <i class="ph ph-arrow-right"></i></div>
+                            </div>
+                        `).join('')}
                     </div>
-                </div>
-            `;
-            // Keep the style logic isolated by appending instead of pure DOM destroy overwrite
-            const targetContainer = container.querySelector('style') ? container : document.getElementById('home-dynamic-dashboard');
-            let baseStyles = targetContainer.querySelector('style') ? targetContainer.querySelector('style').outerHTML : '';
-            targetContainer.innerHTML = baseStyles + html;
+                </div>`;
+
+            /* \u2500\u2500 Carousel sections \u2500\u2500 */
+            const bestSellersSection = amzCarouselSection('track-bestsellers', 'Best Sellers', bestSellers, 'HOT');
+            const recentHistSection  = amzCarouselSection('track-history', 'Based on your <span class="text-gradient">recent history</span>', keepShopping, '');
+            const basedOnCartSection = amzCarouselSection('track-cart', 'Based on your cart', basedOnCart, '');
+            const newArrivalsSection = amzCarouselSection('track-new', 'New Arrivals', newArrivals, 'NEW');
+            const pickUpSection      = amzCarouselSection('track-pickup', 'Pick up where you left off', forYou, '');
+
+            /* \u2500\u2500 Assemble \u2500\u2500 */
+            const html = gridHTML + bestSellersSection + recentHistSection + basedOnCartSection + newArrivalsSection + pickUpSection;
+
+            /* write \u2192 preserve the <style> block */
+            const existingStyle = container.querySelector('style');
+            const styleMarkup   = existingStyle ? existingStyle.outerHTML : '';
+            container.innerHTML = styleMarkup + html;
         }
 
         document.addEventListener("DOMContentLoaded", renderHomeDashboards);
         if (typeof allProducts !== 'undefined' && allProducts.length > 0) setTimeout(renderHomeDashboards, 200);
 
         // ─── ACTION ORDER CLICK HANDLERS ───
-        function openTrackingModal(orderId) {
-            document.getElementById('track-order-id').innerText = orderId;
-            document.getElementById('tracking-modal').style.display = 'flex';
+        async function openTrackingModal(orderId) {
+            const modal = document.getElementById('tracking-modal');
+            const trackIdEl = document.getElementById('track-order-id');
+            const statusTextEl = document.getElementById('track-status-text');
+            const progressBar = document.getElementById('track-progress-bar');
             
-            const order = mockOrders.find(o => o.id === orderId);
-            const isDelivered = order && order.status === 'Delivered';
-            
-            setTimeout(() => {
-                document.getElementById('track-progress-bar').style.width = isDelivered ? '100%' : '50%';
+            trackIdEl.innerText = 'NC-TRK-' + orderId.slice(-6).toUpperCase();
+            modal.style.display = 'flex';
+            statusTextEl.innerText = 'Fetching latest tracking updates...';
+            progressBar.style.width = '0%';
+
+            try {
+                const token = localStorage.getItem('nexcart_token');
+                const res = await fetch(`${API}/orders/${orderId}/track`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
                 
-                const deliveredDot = document.getElementById('track-dot-delivered');
-                if (isDelivered) {
-                    deliveredDot.style.background = 'var(--primary)';
-                    deliveredDot.style.border = 'none';
-                    deliveredDot.innerHTML = '<i class="ph-bold ph-check" style="font-size: 0.8rem; color: white;"></i>';
-                    document.getElementById('track-status-text').innerText = 'Package has been delivered securely to your address.';
-                } else {
-                    document.getElementById('track-progress-bar').style.width = '50%'; 
-                    deliveredDot.style.background = 'rgba(255,255,255,0.1)';
-                    deliveredDot.style.border = '2px solid rgba(255,255,255,0.2)';
-                    deliveredDot.innerHTML = '';
-                    document.getElementById('track-status-text').innerText = 'Package shipped. Arriving soon via NexCart Carrier.';
-                }
-            }, 100);
+                if (!res.ok) throw new Error(data.message);
+
+                setTimeout(() => {
+                    const status = data.status;
+                    let width = '25%';
+                    if (status === 'Processing') width = '40%';
+                    if (status === 'Shipped') width = '70%';
+                    if (status === 'Delivered') width = '100%';
+                    
+                    progressBar.style.width = width;
+                    statusTextEl.innerText = data.milestones[data.milestones.length - 1].message;
+                    
+                    const deliveredDot = document.getElementById('track-dot-delivered');
+                    if (status === 'Delivered') {
+                        deliveredDot.style.background = 'var(--primary)';
+                        deliveredDot.style.border = 'none';
+                        deliveredDot.innerHTML = '<i class="ph-bold ph-check" style="font-size: 0.8rem; color: white;"></i>';
+                    } else {
+                        deliveredDot.style.background = 'rgba(255,255,255,0.1)';
+                        deliveredDot.style.border = '2px solid rgba(255,255,255,0.2)';
+                        deliveredDot.innerHTML = '';
+                    }
+                }, 400);
+            } catch (err) {
+                statusTextEl.innerText = 'Tracking unavailable: ' + err.message;
+            }
         }
 
+        let pendingReturnOrderId = null;
         function openReturnModal(orderId) {
+            pendingReturnOrderId = orderId;
             document.getElementById('return-modal').style.display = 'flex';
         }
-        function submitReturn() {
-            closeModal('return-modal');
-            showToast('Return initiated successfully! Instructions emailed.', '#ef4444');
-            document.getElementById('return-comments').value = '';
-        }
 
-        function shareGiftReceipt(orderId) {
-            const link = `https://nexcart.ai/gift/${orderId}`;
-            navigator.clipboard.writeText(link).then(() => {
-                showToast('Gift Receipt link copied to clipboard!', '#d946ef');
-            }).catch(() => {
-                showToast('Failed to copy link', '#ef4444');
-            });
+        async function submitReturn() {
+            if (!pendingReturnOrderId) return;
+            const comments = document.getElementById('return-comments').value;
+            const btn = document.querySelector('#return-modal .btn-primary');
+            
+            btn.disabled = true;
+            btn.innerText = 'Processing...';
+
+            try {
+                const token = localStorage.getItem('nexcart_token');
+                const res = await fetch(`${API}/orders/${pendingReturnOrderId}/return`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ reason: comments })
+                });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.message);
+
+                showToast('Return initiated successfully! Our carrier will contact you.', '#10b981');
+                closeModal('return-modal');
+                loadSpaOrders(); // Refresh
+            } catch (err) {
+                showToast(err.message, '#ef4444');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Submit Return Request';
+                document.getElementById('return-comments').value = '';
+            }
         }
 
         function downloadInvoice(orderId) {
-            const printWin = window.open('', '_blank');
-            printWin.document.write(`<html><head><title>Invoice - ${orderId}</title></head><body style="font-family:sans-serif; padding:40px;"><h2>NexCart Invoice</h2><p>Order ID: ${orderId}</p><p>Total Paid: Confirmed</p><hr><p>Thank you for shopping with NexCart V2.0</p><script>window.print();<\/script></body></html>`);
-            printWin.document.close();
-            showToast('Invoice generated securely!', '#10b981');
+            const token = localStorage.getItem('nexcart_token');
+            if (!token) {
+                showToast('Please sign in to download invoice', '#ef4444');
+                return;
+            }
+            
+            showToast('Generating secure PDF...', '#10b981');
+            // Redirect to the API endpoint which returns a PDF stream
+            const url = `${API}/orders/invoice/${orderId}?token=${token}`;
+            window.open(url, '_blank');
         }
 
         let currentRating = 0;
@@ -5804,7 +6466,15 @@
             if (target && target.tagName && target.tagName.toLowerCase() === 'img') {
                 if (!target.classList.contains('fallback-applied')) {
                     target.classList.add('fallback-applied');
-                    target.src = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&h=600&fit=crop';
+                    
+                    // Use a professional local product image as fallback instead of Unsplash models
+                    const fallbacks = [
+                        '/images/products/dress-1.jpg',
+                        '/images/products/dress-2.jpg',
+                        '/images/products/top-1.jpg',
+                        '/images/products/suit-1.jpg'
+                    ];
+                    target.src = fallbacks[Math.floor(Math.random() * fallbacks.length)];
                     target.style.objectFit = 'cover';
                     target.style.width = '100%';
                     target.style.background = '#111';

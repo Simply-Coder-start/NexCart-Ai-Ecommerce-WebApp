@@ -27,11 +27,27 @@ const OrderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
-        default: 'Pending'
+        enum: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned'],
+        default: 'Placed'
+    },
+    paymentMethod: {
+        type: String,
+        default: 'UPI'
+    },
+    trackingId: {
+        type: String,
+        unique: true,
+        required: true
     },
     expectedDeliveryDate: {
         type: Date
+    },
+    deliveryDate: {
+        type: Date
+    },
+    returnEligible: {
+        type: Boolean,
+        default: false
     },
     shippingAddress: {
         street: String,
