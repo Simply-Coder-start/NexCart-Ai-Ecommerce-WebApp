@@ -14,7 +14,6 @@ const cartRoutes = require('./routes/cartRoutes');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const productRoutes = require('./routes/productRoutes');
-const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -37,7 +36,6 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/tryon', aiRoutes);
 
 // === STATIC SERVING ===
 const uploadsPath = path.join(__dirname, '..', 'uploads');
@@ -51,13 +49,12 @@ app.use('/uploads', express.static(uploadsPath));
 app.use('/images', express.static(imagesPath));
 app.use(express.static(frontendPath));
 
-// === API ROUTES ===
+// === API ROUTES (deduplicated) ===
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/ai', aiRoutes);
 
 // Root route serves the main frontend page
 app.get('/', (req, res) => {

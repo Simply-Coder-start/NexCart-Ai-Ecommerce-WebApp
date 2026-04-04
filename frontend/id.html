@@ -2010,7 +2010,6 @@
                 <a href="javascript:void(0)" onclick="switchPage('home')" id="nav-home" class="nav-link active"><i class="ph ph-house"></i>
                     Home</a>
                 <a href="javascript:void(0)" onclick="switchPage('shop')" id="nav-shop" class="nav-link"><i class="ph ph-bag"></i> Shop</a>
-                <a href="javascript:void(0)" onclick="switchPage('tryon')" id="nav-tryon" class="nav-link"><i class="ph ph-camera"></i> Try-On</a>
                 <a href="javascript:void(0)" onclick="switchPage('orders')" id="nav-orders" class="nav-link"><i class="ph ph-package"></i> Orders</a>
                 <a href="javascript:void(0)" onclick="switchPage('cart')" id="nav-cart" class="nav-link nav-cart-link">
                     <i class="ph ph-shopping-cart"></i> Cart
@@ -2304,202 +2303,12 @@
                     transition: transform 0.45s ease;
                 }
                 .dash-card:hover .dash-img-slot img { transform: scale(1.08); }
-<<<<<<< HEAD
                 .dash-img-label { padding-top: 5px; font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 1; line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
                 .dash-link { color: var(--primary); font-size: 0.95rem; font-weight: 500; margin-top: auto; transition: 0.2s; }
                 .dash-card:hover .dash-link { text-decoration: underline; }
                 
                 .home-carousel { margin-top: 10px; display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; scrollbar-width: none; }
                 .home-carousel::-webkit-scrollbar { display: none; }
-=======
-                .dash-img-label {
-                    margin-top: 6px;
-                    font-size: 0.75rem;
-                    color: var(--text-muted);
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    font-weight: 500;
-                }
-                .dash-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    margin-top: auto;
-                    color: #a78bfa;
-                    font-size: 0.88rem;
-                    font-weight: 600;
-                    transition: 0.2s;
-                }
-                .dash-card:hover .dash-link { color: white; gap: 9px; }
-
-                /* ─── CAROUSEL (horizontal scrollable row) ─── */
-                .amz-carousel-wrap {
-                    position: relative;
-                }
-                /* fade-edge masks */
-                .amz-carousel-wrap::after {
-                    content: '';
-                    position: absolute;
-                    right: 0; top: 0; bottom: 0;
-                    width: 60px;
-                    background: linear-gradient(to left, var(--bg-body), transparent);
-                    pointer-events: none;
-                    z-index: 2;
-                }
-                .amz-track {
-                    display: flex;
-                    gap: 16px;
-                    overflow-x: auto;
-                    scroll-behavior: smooth;
-                    padding: 8px 4px 20px;
-                    scrollbar-width: none;
-                    scroll-snap-type: x mandatory;
-                }
-                .amz-track::-webkit-scrollbar { display: none; }
-
-                /* Arrow buttons */
-                .amz-arrow {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-60%);
-                    z-index: 10;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    background: rgba(18,18,26,0.92);
-                    border: 1px solid rgba(255,255,255,0.12);
-                    color: white;
-                    font-size: 1.1rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-                    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-                }
-                .amz-arrow:hover {
-                    background: rgba(168,85,247,0.25);
-                    border-color: rgba(168,85,247,0.5);
-                    box-shadow: 0 4px 20px rgba(168,85,247,0.25);
-                    transform: translateY(-60%) scale(1.1);
-                }
-                .amz-arrow.prev { left: -20px; }
-                .amz-arrow.next { right: -20px; }
-
-                /* ─── UNIFORM PRODUCT CARD (carousel items) ─── */
-                .amz-card {
-                    flex-shrink: 0;
-                    width: 200px;
-                    background: #0f0f15;
-                    border: 1px solid rgba(255,255,255,0.06);
-                    border-radius: 14px;
-                    overflow: hidden;
-                    cursor: pointer;
-                    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-                    scroll-snap-align: start;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .amz-card:hover {
-                    border-color: rgba(168, 85, 247, 0.4);
-                    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5);
-                    transform: translateY(-4px);
-                }
-                /* CRITICAL: locked image container — prevents ANY distortion */
-                .amz-img-box {
-                    width: 100%;
-                    aspect-ratio: 1 / 1;
-                    background: #1a1a24;
-                    overflow: hidden;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    position: relative;
-                    flex-shrink: 0;
-                }
-                .amz-img-box img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;   /* contain = no cropping */
-                    object-position: center;
-                    transition: transform 0.4s ease;
-                    padding: 8px;
-                }
-                .amz-card:hover .amz-img-box img { transform: scale(1.07); }
-                .amz-card-body {
-                    padding: 12px 13px 14px;
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-                .amz-card-title {
-                    font-size: 0.84rem;
-                    font-weight: 500;
-                    color: #e4e4e7;
-                    overflow: hidden;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    line-height: 1.35;
-                }
-                .amz-card-price {
-                    font-size: 1rem;
-                    font-weight: 700;
-                    color: #a78bfa;
-                    margin-top: 2px;
-                }
-                .amz-card-rating {
-                    display: flex;
-                    align-items: center;
-                    gap: 4px;
-                    font-size: 0.78rem;
-                    color: #f59e0b;
-                    font-weight: 600;
-                }
-                .amz-card-rating span { color: var(--text-muted); font-weight: 400; }
-
-                /* Quick-add on hover */
-                .amz-quick-add {
-                    position: absolute;
-                    bottom: 0; left: 0; right: 0;
-                    padding: 10px;
-                    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-                    opacity: 0;
-                    transition: opacity 0.25s;
-                    display: flex;
-                }
-                .amz-card:hover .amz-quick-add { opacity: 1; }
-                .amz-quick-add button {
-                    flex: 1;
-                    padding: 8px;
-                    font-size: 0.78rem;
-                    font-weight: 600;
-                    border-radius: 8px;
-                    background: var(--primary-gradient);
-                    color: white;
-                    border: none;
-                    cursor: pointer;
-                }
-
-                /* ─── SECTION: Compact "Keep shopping" grid card ─── */
-                .amz-section-bg {
-                    background: #0b0b12;
-                    border: 1px solid rgba(255,255,255,0.06);
-                    border-radius: 20px;
-                    padding: 28px 28px 22px;
-                    margin-bottom: 48px;
-                }
-
-                /* Responsive carousel cards */
-                @media (max-width: 768px) {
-                    .amz-card { width: 160px; }
-                    .amz-arrow { display: none; }
-                    .amz-section-header h2 { font-size: 1.2rem; }
-                }
->>>>>>> update-ecommerce-features
             </style>
             <!-- Generated Dynamically -->
         </section>
@@ -2980,256 +2789,6 @@
         </div>
     </div>
 
-    <!-- ─── PAGE 3: VIRTUAL TRY-ON ─── -->
-    <div id="tryon-page" class="page-section">
-        <div class="container" style="padding-bottom: 60px;">
-            <!-- Header -->
-            <div style="text-align: center; margin-top: 40px; margin-bottom: 36px;">
-                <div
-                    style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(147, 51, 234, 0.2); color: #d8b4fe; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px;">
-                    BETA V2.0</div>
-                <h2 class="section-title">Virtual Try-On <span class="text-gradient">Studio</span></h2>
-                <p style="color: var(--text-muted); margin-top: 8px;">Upload your photo, pick a dress, and watch AI
-                    generate how it looks on you</p>
-
-                <!-- Progress Steps -->
-                <div id="tryon-steps"
-                    style="display: flex; justify-content: center; align-items: center; gap: 0; margin-top: 28px;">
-                    <div class="tryon-step-pill active" id="step-pill-1"
-                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:99px 0 0 99px;background:rgba(217,70,239,0.15);border:1px solid #d946ef;color:#d946ef;font-weight:700;font-size:0.85rem;">
-                        <span
-                            style="border:1px solid #d946ef;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">1</span>
-                        Upload Photo
-                    </div>
-                    <div class="tryon-step-pill" id="step-pill-2"
-                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:0;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-left:none;color:var(--text-muted);font-weight:600;font-size:0.85rem;">
-                        <span
-                            style="border:1px solid #555;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">2</span>
-                        Select Dress
-                    </div>
-                    <div class="tryon-step-pill" id="step-pill-3"
-                        style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:0 99px 99px 0;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-left:none;color:var(--text-muted);font-weight:600;font-size:0.85rem;">
-                        <span
-                            style="border:1px solid #555;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">3</span>
-                        Generate Result
-                    </div>
-                </div>
-            </div>
-
-            <div class="tryon-grid">
-                <!-- LEFT PANEL -->
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-
-                    <!-- 1. Upload Zone -->
-                    <div class="card" style="padding: 24px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-                            <h3 style="font-size: 1.05rem;">📸 Your Photo</h3>
-                            <span id="upload-status" style="font-size:0.75rem;color:var(--text-muted);">No file
-                                selected</span>
-                        </div>
-                        <input type="file" id="photo-input" accept="image/*" style="display:none;"
-                            onchange="previewPhoto(event)">
-                        <div class="upload-zone" id="upload-zone"
-                            onclick="document.getElementById('photo-input').click()">
-                            <i class="ph ph-user-focus" id="upload-icon"
-                                style="font-size: 44px; color: #d946ef; margin-bottom: 12px;"></i>
-                            <p id="upload-text" style="font-weight: 600; font-size: 0.9rem;">Click to upload your photo
-                            </p>
-                            <small id="upload-subtext" style="color: var(--text-muted); margin-top: 5px;">JPG or PNG,
-                                Max 10MB</small>
-                            <div class="upload-overlay" id="upload-overlay" style="display:none;">
-                                <i class="ph ph-arrow-clockwise" style="font-size:28px;color:white;"></i>
-                                <span style="font-size:0.85rem;color:white;margin-top:6px;">Change photo</span>
-                            </div>
-                        </div>
-
-                        <!-- Height Slider -->
-                        <div style="margin-top: 18px;">
-                            <div class="flex-between" style="font-size: 0.85rem; margin-bottom: 8px;">
-                                <span style="color:var(--text-muted);">Height</span>
-                                <span id="height-label" style="color: var(--primary); font-weight:600;">170 cm</span>
-                            </div>
-                            <input type="range" min="150" max="195" value="170" id="height-range"
-                                style="width: 100%; accent-color: var(--primary);"
-                                oninput="document.getElementById('height-label').textContent=this.value+' cm'">
-
-                            <!-- Body Type -->
-                            <div style="font-size:0.85rem;color:var(--text-muted);margin-top:14px;margin-bottom:8px;">
-                                Body Type</div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn-outline body-btn active-body" onclick="selectBody(this)"
-                                    style="flex:1;font-size:0.75rem;border-color:var(--primary);background:rgba(147,51,234,0.1);color:white;">Hourglass</button>
-                                <button class="btn-outline body-btn" onclick="selectBody(this)"
-                                    style="flex:1;font-size:0.75rem;">Pear</button>
-                                <button class="btn-outline body-btn" onclick="selectBody(this)"
-                                    style="flex:1;font-size:0.75rem;">Rectangle</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Digital Wardrobe -->
-                    <div class="card" style="padding: 24px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-                            <h3 style="font-size: 1.05rem;">👗 Select Dress</h3>
-                            <span id="dress-label" style="font-size:0.75rem;color:#d946ef;font-weight:600;">Noir
-                                Elegance</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;" id="wardrobe-container">
-                            <!-- Populated by JS from try-on eligible products -->
-                            <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
-                                Loading wardrobe...
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Generate Button (mobile visible here) -->
-                    <button class="btn btn-primary gen-btn-mobile" id="gen-btn-mobile" onclick="generateTryon()"
-                        style="width:100%;justify-content:center;padding:14px;font-size:1rem;">
-                        <i class="ph-fill ph-sparkle"></i> Generate Try-On
-                    </button>
-                </div>
-
-                <!-- RIGHT PANEL: Result Preview -->
-                <div class="card" id="result-panel"
-                    style="padding: 24px; display: flex; flex-direction: column; position: relative; background: radial-gradient(ellipse at 30% 20%, #1a0d2e 0%, #0a0a0a 70%); min-height: 580px;">
-
-                    <!-- AI Generation Overlay -->
-                    <div class="ai-gen-overlay hidden" id="ai-gen-overlay">
-                        <div style="text-align:center;">
-                            <i class="ph-fill ph-sparkle"
-                                style="font-size:3rem;background:var(--primary-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;"></i>
-                            <div
-                                style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-top:10px;">
-                                AI Processing...</div>
-                            <div style="color:var(--text-muted);font-size:0.85rem;margin-top:5px;">Generating your
-                                try-on images</div>
-                        </div>
-                        <div class="gen-progress">
-                            <div class="gen-progress-bar" id="gen-progress-bar"></div>
-                        </div>
-                        <div class="gen-steps" id="gen-steps">
-                            <div class="gen-step" id="gstep-1"><i class="ph ph-circle"></i> Analyzing body proportions
-                            </div>
-                            <div class="gen-step" id="gstep-2"><i class="ph ph-circle"></i> Creating 3D mesh mapping
-                            </div>
-                            <div class="gen-step" id="gstep-3"><i class="ph ph-circle"></i> Draping fabric texture</div>
-                            <div class="gen-step" id="gstep-4"><i class="ph ph-circle"></i> Rendering lighting & shadows
-                            </div>
-                            <div class="gen-step" id="gstep-5"><i class="ph ph-circle"></i> Generating 3 view angles
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Idle State -->
-                    <div id="idle-state"
-                        style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
-                        <div style="position:relative;">
-                            <div
-                                style="width:120px;height:120px;border-radius:50%;background:rgba(147,51,234,0.1);display:flex;align-items:center;justify-content:center;border:2px dashed rgba(147,51,234,0.3);">
-                                <i class="ph ph-magic-wand" style="font-size:48px;color:rgba(147,51,234,0.6);"></i>
-                            </div>
-                            <div
-                                style="position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,#d946ef,transparent);top:50%;animation:scan 3s ease-in-out infinite;">
-                            </div>
-                        </div>
-                        <div style="text-align:center;">
-                            <div
-                                style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:8px;">
-                                Ready to Generate</div>
-                            <div style="color:var(--text-muted);font-size:0.85rem;line-height:1.5;">Upload your photo &
-                                select a dress,<br>then click Generate.</div>
-                        </div>
-                        <div
-                            style="font-family:monospace;font-size:0.75rem;color:#00cc66;opacity:0.7;text-align:left;line-height:1.8;">
-                            &gt; AI_MODEL: v2.0 LOADED<br>
-                            &gt; MESH_MAPPING: READY<br>
-                            &gt; RENDER_ENGINE: STANDBY
-                        </div>
-                    </div>
-
-                    <!-- Results State (hidden until generated) -->
-                    <div id="results-state" style="display:none;flex-direction:column;height:100%;">
-                        <!-- View Tabs -->
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                            <div class="result-tabs">
-                                <button class="result-tab active" onclick="switchView('selfie',this)">🪞 Front</button>
-                            </div>
-                            <div style="display:flex;gap:8px;">
-                                <button class="btn-outline" onclick="downloadResult()"
-                                    style="padding:6px 12px;font-size:0.8rem;"><i class="ph ph-download-simple"></i>
-                                    Save</button>
-                                <button class="btn-outline" onclick="addToCartFromTryon()"
-                                    style="padding:6px 12px;font-size:0.8rem;border-color:#d946ef;color:#d946ef;"><i
-                                        class="ph ph-shopping-cart"></i> Add</button>
-                            </div>
-                        </div>
-
-                        <!-- Selfie View -->
-                        <div class="result-view active" id="view-selfie" style="flex:1;">
-                            <div style="position:relative;display:inline-block;">
-                                <img id="result-selfie-img"
-                                    src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=600&auto=format&fit=crop"
-                                    style="max-height:420px;max-width:100%;border-radius:16px;box-shadow:0 0 40px rgba(168,85,247,0.2);object-fit:contain;">
-                                <div
-                                    style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.1);">
-                                    <div style="font-size:0.8rem;font-weight:700;" id="selfie-dress-name">Noir Elegance
-                                        Maxi</div>
-                                    <div style="font-size:0.75rem;color:#a855f7;margin-top:2px;">✓ Best Match: Size M —
-                                        98% Fit Score</div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Size Recommendation -->
-                        <div class="tryon-size-rec"
-                            style="margin-top:16px;padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                            <div style="display:flex; align-items:center; gap: 12px; flex: 1; min-width: 200px;">
-                                <i class="ph-fill ph-check-circle" style="color:#10b981;font-size:1.4rem;"></i>
-                                <div>
-                                    <div style="font-weight:700;font-size:0.9rem;">AI Size Recommendation</div>
-                                    <div style="color:var(--text-muted);font-size:0.8rem;margin-top:2px;">Best fit: <strong
-                                            style="color:white;">Size M</strong> • Chest: 86cm • Waist: 68cm • Hip: 92cm
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" onclick="addToCartFromTryon()"
-                                style="white-space: nowrap; padding:8px 16px;font-size:0.8rem;">Add to Cart</button>
-                        </div>
-                    </div>
-
-                    <!-- Generate Button -->
-                    <button class="btn btn-primary gen-btn-desktop" id="gen-btn" onclick="generateTryon()"
-                        style="width:100%;margin-top:20px;justify-content:center;padding:15px;font-size:1rem;">
-                        <i class="ph-fill ph-sparkle"></i> Generate Try-On
-                    </button>
-
-                    <style>
-                        @keyframes scan {
-                            0% {
-                                top: 10%;
-                                opacity: 0;
-                            }
-
-                            10% {
-                                opacity: 1;
-                            }
-
-                            90% {
-                                opacity: 1;
-                            }
-
-                            100% {
-                                top: 90%;
-                                opacity: 0;
-                            }
-                        }
-                    </style>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ─── PAGE 4: CART ─── -->
     <div id="cart-page" class="page-section">
         <div class="container">
@@ -3266,8 +2825,7 @@
                         <li><a onclick="switchPage('shop')">New Arrivals</a></li>
                         <li><a onclick="switchPage('shop')">Best Sellers</a></li>
                         <li><a onclick="switchPage('shop')">Trending</a></li>
-                        <li><a onclick="switchPage('tryon')">AI Try-On</a></li>
-                    </ul>
+                        </ul>
                 </div>
                 <div>
                     <h4 style="margin-bottom: 20px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px;">
@@ -3329,30 +2887,27 @@
                         <span id="login-error-msg">Invalid credentials.</span>
                     </div>
 
+                    <form onsubmit="event.preventDefault(); handleLogin();">
                     <div class="auth-field">
                         <label>Email Address or Phone Number</label>
                         <i class="ph ph-user-circle auth-icon"></i>
-                        <input type="text" id="login-identifier" class="auth-input"
-                            placeholder="you@example.com or +911234567890" autocomplete="username">
+                        <input type="text" id="login-identifier" class="auth-input" placeholder="you@example.com or +911234567890" autocomplete="username">
                     </div>
-
                     <div class="auth-field">
                         <label>Password</label>
                         <i class="ph ph-lock auth-icon"></i>
-                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••">
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••" autocomplete="current-password">
                         <button class="auth-eye" onclick="togglePass('login-password',this)" type="button">
                             <i class="ph ph-eye"></i>
                         </button>
                     </div>
-
                     <div style="text-align:right;margin-bottom:22px;">
-                        <a style="color:#a855f7;font-size:0.84rem;cursor:pointer;"
-                            onclick="showToast('Password reset link sent! (demo)', '#a855f7')">Forgot password?</a>
+                        <a style="color:#a855f7;font-size:0.84rem;cursor:pointer;" onclick="showToast('Password reset link sent! (demo)', '#a855f7')">Forgot password?</a>
                     </div>
-
-                    <button class="auth-submit-btn" id="login-btn" onclick="handleLogin()">
+                    <button class="auth-submit-btn" id="login-btn" type="submit">
                         <i class="ph ph-sign-in"></i> Sign In to NexCart
                     </button>
+                    </form>
 
                     <div class="auth-divider"><span>or continue with</span></div>
                     <div class="oauth-row">
@@ -3394,31 +2949,26 @@
                         <span>Account created! Signing you in…</span>
                     </div>
 
+                    <form onsubmit="event.preventDefault(); handleRegister();">
                     <div class="auth-field">
                         <label>Full Name</label>
                         <i class="ph ph-user auth-icon"></i>
-                        <input type="text" id="reg-name" class="auth-input" placeholder="Jane Doe">
+                        <input type="text" id="reg-name" class="auth-input" placeholder="Jane Doe" autocomplete="name">
                     </div>
-
                     <div class="auth-field">
                         <label>Email Address</label>
                         <i class="ph ph-envelope auth-icon"></i>
-                        <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com"
-                            autocomplete="email">
+                        <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com" autocomplete="email">
                     </div>
-
                     <div class="auth-field">
                         <label>Phone Number</label>
                         <i class="ph ph-phone auth-icon"></i>
-                        <input type="tel" id="reg-phone" class="auth-input" placeholder="+911234567890"
-                            autocomplete="tel">
+                        <input type="tel" id="reg-phone" class="auth-input" placeholder="+911234567890" autocomplete="tel">
                     </div>
-
                     <div class="auth-field">
                         <label>Password</label>
                         <i class="ph ph-lock auth-icon"></i>
-                        <input type="password" id="reg-password" class="auth-input" placeholder="Min. 8 characters"
-                            oninput="checkStrength(this.value)">
+                        <input type="password" id="reg-password" class="auth-input" placeholder="Min. 8 characters" oninput="checkStrength(this.value)" autocomplete="new-password">
                         <button class="auth-eye" onclick="togglePass('reg-password',this)" type="button">
                             <i class="ph ph-eye"></i>
                         </button>
@@ -3429,20 +2979,18 @@
                             <div class="strength-seg" id="seg4"></div>
                         </div>
                     </div>
-
                     <div class="auth-field">
                         <label>Confirm Password</label>
                         <i class="ph ph-lock-key auth-icon"></i>
-                        <input type="password" id="reg-confirm-password" class="auth-input"
-                            placeholder="Re-enter password">
+                        <input type="password" id="reg-confirm-password" class="auth-input" placeholder="Re-enter password" autocomplete="new-password">
                         <button class="auth-eye" onclick="togglePass('reg-confirm-password',this)" type="button">
                             <i class="ph ph-eye"></i>
                         </button>
                     </div>
-
-                    <button class="auth-submit-btn" id="register-btn" onclick="handleRegister()">
+                    <button class="auth-submit-btn" id="register-btn" type="submit">
                         <i class="ph ph-sparkle"></i> Create My Account
                     </button>
+                    </form>
 
                     <p class="auth-footer-link" style="margin-top:20px;">Already have an account? <a
                             onclick="switchAuthTab('login')">← Sign in</a></p>
@@ -3519,6 +3067,13 @@
                 p.gallery = [p.image, p.image, p.image];
             }
             return p;
+        }
+
+        // --- GOOGLE SIGN-IN HANDLER ---
+        function handleGoogleLogin(response) {
+            console.log("Google Auth Response", response);
+            showToast("Google Login Success! (Backend sync pending...)", "#a855f7");
+            switchAuthTab('login');
         }
 
         // ── Data Seeder Function ──
@@ -3644,7 +3199,7 @@
                             price: price,
                             originalPrice: originalPrice,
                             badge: badge,
-                            tryOnEligible: WEARABLE_CATS.has(category) && WEARABLE_SUBS.has(subcategory),
+                            
                             image: productImage,
                             colors: colorsPool.length ? colorsPool[id % colorsPool.length] : [],
                             isNew: badge === 'new',
@@ -3665,7 +3220,7 @@
         let activeSize = 'all';
         let activeMinRating = 0;
         let activeBadges = new Set();      // 'hot', 'new', 'sale'
-        let activeTryOnOnly = false;
+        
         let filterSidebarVisible = true;
         let visibleProductCount = 12;
 
@@ -3696,7 +3251,7 @@
                 buildSidebarCategories();
                 initFilterInteractions();
                 renderShopProducts();
-                populateWardrobe();
+
                 if(typeof renderHomeDashboards === 'function') renderHomeDashboards();
             } catch (err) {
                 console.error("API Fetch Error:", err.message);
@@ -3706,7 +3261,7 @@
                 buildSidebarCategories();
                 initFilterInteractions();
                 renderShopProducts();
-                populateWardrobe();
+
                 if(typeof renderHomeDashboards === 'function') renderHomeDashboards();
             }
         }
@@ -3794,7 +3349,7 @@
 
             const ratingHTML = getStarRatingHTML(product.rating || 4.0, product.reviewCount || 0);
 
-            const tryOnClass = product.tryOnEligible ? 'tryon-btn' : 'tryon-btn disabled';
+            
             const pNameSafe = product.name.replace(/'/g, "\\'");
 
             return `
@@ -3821,8 +3376,11 @@
                             <button class="card-action-btn add-cart-btn" onclick="addToCartAPI(${product.id}, '${pNameSafe}', ${product.price}, '${product.image}')">
                                 <i class="ph ph-shopping-cart"></i> Add to Cart
                             </button>
-                            <button class="card-action-btn ${tryOnClass}" onclick="tryOnAPI(${product.id}, '${pNameSafe}', '${product.category}')">
-                                <i class="ph ph-camera"></i> Try On
+                            <button class="card-action-btn compare-btn ${typeof window.isInCompareList === 'function' && window.isInCompareList(product.id) ? 'active' : ''}" 
+                                onclick="handleToggleCompare('${product.id}', this)"
+                                data-product-id="${product.id}"
+                                style="margin-top:6px; width:100%; border:1px solid var(--border-glass); background:rgba(255,255,255,0.05); color:white; border-radius:8px; padding:10px; font-weight:600; cursor:pointer; transition:0.2s;">
+                                <i class="ph ph-scales"></i> <span class="compare-btn-text">${typeof window.isInCompareList === 'function' && window.isInCompareList(product.id) ? 'Comparing' : 'Compare'}</span>
                             </button>
                         </div>
                     </div>
@@ -3844,8 +3402,8 @@
                 const matchesSize = activeSize === 'all' || (p.sizes && p.sizes.includes(activeSize));
                 const matchesRating = (p.rating || 0) >= activeMinRating;
                 const matchesBadge = activeBadges.size === 0 || activeBadges.has(p.badge);
-                const matchesTryOn = !activeTryOnOnly || p.tryOnEligible;
-                return matchesCategory && matchesPrice && matchesColor && matchesSize && matchesRating && matchesBadge && matchesTryOn;
+                
+                return matchesCategory && matchesPrice && matchesColor && matchesSize && matchesRating && matchesBadge;
             });
 
             updateActiveFilterTags();
@@ -3961,31 +3519,22 @@
             }
         });
 
-        function toggleTryOnFilter() {
-            activeTryOnOnly = !activeTryOnOnly;
-            const toggle = document.getElementById('tryon-toggle');
-            const knob = document.getElementById('tryon-toggle-knob');
-            if (activeTryOnOnly) {
-                toggle.style.background = 'linear-gradient(135deg, #a855f7, #ec4899)';
-                knob.style.left = '23px';
-            } else {
-                toggle.style.background = '#333';
-                knob.style.left = '3px';
-            }
-            renderShopProducts();
-        }
-
         function updateActiveFilterTags() {
-            const container = document.getElementById('active-filter-tags');
-            const countBadge = document.getElementById('active-filter-count');
-            if (!container) return;
+            const container = document.getElementById('active-filters');
+            const countBadge = document.getElementById('filter-count-badge');
+            if (!container || !countBadge) return;
 
             const tags = [];
-            if (activeColor !== 'all') tags.push({ label: `Color: ${activeColor}`, clear: () => { activeColor='all'; document.querySelectorAll('#filter-colors .color-dot').forEach(d=>d.classList.remove('active')); document.querySelector('[data-color="all"]').classList.add('active'); renderShopProducts(); } });
+            
+            if (activeCategory !== 'all') {
+                const cat = CATEGORIES.find(c => c.id === activeCategory);
+                if (cat) tags.push({ label: cat.name, clear: () => { filterByCategory('all'); } });
+            }
+            if (activeColor !== 'all') tags.push({ label: `Color: ${activeColor.charAt(0).toUpperCase() + activeColor.slice(1)}`, clear: () => { activeColor='all'; document.querySelectorAll('#filter-colors .color-dot').forEach(d=>d.classList.remove('active')); document.querySelector('[data-color="all"]').classList.add('active'); renderShopProducts(); } });
             if (activeSize !== 'all') tags.push({ label: `Size: ${activeSize}`, clear: () => { activeSize='all'; document.querySelectorAll('#filter-sizes .btn-outline').forEach(b=>{b.style.borderColor='';b.style.background='';}); renderShopProducts(); } });
             if (activePriceLimit < 500) tags.push({ label: `Max ₹${activePriceLimit}`, clear: () => { activePriceLimit=500; const k=document.getElementById('price-slider-knob'),f=document.getElementById('price-slider-fill'); if(k)k.style.left='100%'; if(f)f.style.width='100%'; document.getElementById('price-display').innerText='Up to ₹500'; renderShopProducts(); } });
             if (activeMinRating > 0) tags.push({ label: `★ ${activeMinRating}+`, clear: () => { activeMinRating=0; document.querySelector('[value="0"]').checked=true; renderShopProducts(); } });
-            if (activeTryOnOnly) tags.push({ label: 'Try-On Ready', clear: () => { toggleTryOnFilter(); } });
+            
             activeBadges.forEach(b => tags.push({ label: b.toUpperCase(), clear: () => { activeBadges.delete(b); document.querySelector(`[data-badge="${b}"]`).checked=false; renderShopProducts(); } }));
 
             if (tags.length === 0) {
@@ -4007,7 +3556,7 @@
             activeSize = 'all';
             activeMinRating = 0;
             activeBadges.clear();
-            if (activeTryOnOnly) toggleTryOnFilter();
+            
             
             // UI Reset
             const knob = document.getElementById('price-slider-knob');
@@ -4027,41 +3576,7 @@
             renderShopProducts();
         }
 
-        function populateWardrobe() {
-            const container = document.getElementById('wardrobe-container');
-            if (!container) return;
-
-            const wearables = [
-                { id: 'tryon-1', name: 'Midnight Elegance Gown', image: '/images/female_model_evening_gown_1775233217023.png' },
-                { id: 'tryon-2', name: 'Floral Summer Sunset', image: '/images/female_model_summer_dress_1775233181030.png' },
-                { id: 'tryon-3', name: 'Royal Heritage Lehenga', image: '/images/female_model_traditional_lehenga_1775233276331.png' },
-                { id: 'tryon-4', name: 'Modern Business Casual Suit', image: '/images/male_model_business_casual_1775233198638.png' },
-                { id: 'tryon-5', name: 'Urban Streetwear Fit', image: '/images/male_model_streetwear_1775233236134.png' },
-                { id: 'tryon-6', name: 'Classic Winter Trench', image: '/images/male_model_winter_coat_1775233293444.png' }
-            ];
-
-            if (wearables.length === 0) {
-                container.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">No try-on eligible products available</div>';
-                return;
-            }
-
-            container.innerHTML = wearables.map((p, idx) => `
-                <img src="${getSafeImg(p)}" 
-                     class="wardrobe-item${(selectedDress && selectedDress.id === p.id) || (!selectedDress && idx === 0) ? ' selected' : ''}" 
-                     onclick="selectDress(this, '${p.name.replace(/'/g, "\\'")}', '${p.id}', '${getSafeImg(p)}')" 
-                     title="${p.name}">
-            `).join('');
-
-            // Select the first one by default if not already selected
-            if (wearables.length > 0 && !selectedDress) {
-                selectedDress = {
-                    id: wearables[0].id,
-                    name: wearables[0].name,
-                    image: getSafeImg(wearables[0])
-                };
-                document.getElementById('dress-label').textContent = wearables[0].name;
-            }
-        }
+        
 
         // Load More
         function loadMoreProducts() {
@@ -4194,43 +3709,9 @@
         }
 
         // ── Try On Validation (API) ──
-        async function tryOnAPI(productId, productName, category) {
-            try {
-                const res = await fetch(`${API}/try-on/validate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        product_id: productId,
-                        product_name: productName,
-                        category: category,
-                    }),
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.eligible) {
-                        showToast(`👗 Opening Try-On for <b>${productName}</b>...`, '#d946ef');
-                        switchPage('tryon');
-                    } else {
-                        showToast(`⚠️ ${data.message}`, '#f59e0b');
-                    }
-                } else {
-                    tryOnFallback(productName, category);
-                }
-            } catch (e) {
-                // Fallback if backend is down
-                tryOnFallback(productName, category);
-            }
-        }
+        
 
-        function tryOnFallback(productName, category) {
-            const wearableCats = new Set(['fashion', 'sports']);
-            if (wearableCats.has(category)) {
-                showToast(`👗 Opening Try-On for <b>${productName}</b>...`, '#d946ef');
-                switchPage('tryon');
-            } else {
-                showToast(`⚠️ Try On is not available for ${category} products.`, '#f59e0b');
-            }
-        }
+        
 
         // Legacy fallback wrappers (keep existing onclick handlers working)
         function addToCart(productName) {
@@ -5001,10 +4482,7 @@
             if (modal) modal.style.display = 'flex';
         }
 
-        function closeTryOnModal() {
-            const modal = document.getElementById('tryon-modal');
-            if (modal) modal.style.display = 'none';
-        }
+        
 
         // ─── RECOMMENDATIONS LOGIC ───
         let currentFBTItems = [];
@@ -5830,165 +5308,11 @@
         let aiConfigChecked = false;
         let aiIsEnabled = false;
 
-        // Check AI status on page load
-        (async () => {
-            try {
-                const res = await fetch(`${API}/tryon/config`);
-                const config = await res.json();
-                aiIsEnabled = config.aiEnabled;
-                aiConfigChecked = true;
-                if (config.aiEnabled) {
-                    const providers = Object.entries(config.providers).filter(([k, v]) => v).map(([k]) => k);
-                    console.log(`🤖 AI Try-On enabled via: ${providers.join(', ')}`);
-                } else {
-                    console.log('📸 AI Try-On: Using client-side compositing (no API key configured)');
-                }
-            } catch (e) {
-                console.log('📸 Server not available — will use client-side compositing');
-            }
-        })();
 
-        async function callTryOnAPI(fileInput, dressImageUrl) {
-            // 1. Download dress image and upload it
-            const dressRes = await fetch(dressImageUrl);
-            const dressBlob = await dressRes.blob();
-            const dressFile = new File([dressBlob], 'dress.jpg', { type: 'image/jpeg' });
 
-            const dressData = new FormData();
-            dressData.append('file', dressFile);
-            const resDressUpload = await fetch(`${API}/tryon/upload-dress`, { method: 'POST', body: dressData });
-            const dressJson = await resDressUpload.json();
-            const dress_image_id = dressJson.dress_image_id;
-            console.log('✅ Uploaded dress image ->', dress_image_id);
 
-            // 2. Upload User Image
-            const userData = new FormData();
-            userData.append('file', fileInput.files[0]);
-            const resUserUpload = await fetch(`${API}/tryon/upload-user`, { method: 'POST', body: userData });
-            const userJson = await resUserUpload.json();
-            const user_image_id = userJson.user_image_id;
-            console.log('✅ Uploaded user image ->', user_image_id);
 
-            // Map dress name to category
-            let category = "Dresses";
-            if (selectedDress.name.toLowerCase().includes('top') || selectedDress.name.toLowerCase().includes('jacket')) category = "Tops";
-            if (selectedDress.name.toLowerCase().includes('pant') || selectedDress.name.toLowerCase().includes('skirt')) category = "Bottoms";
-
-            // 3. Start Generation Job
-            const resGen = await fetch(`${API}/tryon/generate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_image_id: user_image_id,
-                    dress_image_id: dress_image_id,
-                    view_mode: 'front',
-                    height: 165.0,
-                    body_type: "average",
-                    category: category
-                })
-            });
-            const genJson = await resGen.json();
-            const job_id = genJson.job_id;
-            console.log('✅ Started Generation Job ->', job_id);
-
-            // 4. Poll for Result
-            let pollResult = null;
-            while (true) {
-                const resPoll = await fetch(`${API}/tryon/result/${job_id}`);
-                pollResult = await resPoll.json();
-
-                if (pollResult.status === 'completed' || pollResult.status === 'failed' || pollResult.status === 'not_found') {
-                    break;
-                }
-
-                console.log(`...polling job ${job_id} (${pollResult.status})`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-
-            if (pollResult.status !== 'completed') {
-                throw new Error("AI Generation failed: " + (pollResult.error || 'Unknown error'));
-            }
-
-            // Return the AI-generated image and the method used by the backend
-            const method = pollResult.method || 'ai-generated';
-            return { image: `http://localhost:5000${pollResult.result_url}`, method: `ai-${method}` };
-        }
-
-        async function generateTryon() {
-            const fileInput = document.getElementById('photo-input');
-            const overlay = document.getElementById('ai-gen-overlay');
-            const progressBar = document.getElementById('gen-progress-bar');
-            const steps = ['gstep-1', 'gstep-2', 'gstep-3', 'gstep-4', 'gstep-5'];
-
-            // Validate: user must upload a photo
-            if (!fileInput.files || !fileInput.files[0]) {
-                showToast('⚠️ Please upload your photo first!', '#ef4444');
-                return;
-            }
-
-            // Show overlay, hide idle/results
-            document.getElementById('idle-state').style.display = 'none';
-            document.getElementById('results-state').style.display = 'none';
-            document.getElementById('gen-btn').style.display = 'none';
-            overlay.classList.remove('hidden');
-
-            // Reset steps
-            steps.forEach(s => {
-                const el = document.getElementById(s);
-                el.classList.remove('done', 'active');
-                el.querySelector('i').className = 'ph ph-circle';
-            });
-            progressBar.style.width = '0%';
-
-            const dress_image_id = selectedDress ? selectedDress.image : null;
-
-            if (!dress_image_id) {
-                showToast("Please select a dress from the wardrobe!", "#ef4444");
-                return;
-            }
-
-            // Run animation and API call CONCURRENTLY
-            const animDurations = [1200, 1000, 1500, 1200, 800];
-            const animPromise = runStepAnimation(steps, animDurations, progressBar);
-
-            let resultImageSrc = null;
-            aiMethod = '';
-
-            // ── Send to backend AI pipeline (RMBG -> IDM-VTON → Gemini → composite) ──
-            // NO client-side compositing/overlay — all processing is server-side
-            const apiPromise = (async () => {
-                try {
-                    const result = await callTryOnAPI(fileInput, dress_image_id);
-                    resultImageSrc = result.image;
-                    aiMethod = result.method;
-                    console.log(`✅ Try-on complete via: ${aiMethod}`);
-                } catch (apiErr) {
-                    console.error('❌ AI Try-On API failed:', apiErr.message);
-                    // Show error to user instead of fake overlay
-                    resultImageSrc = null;
-                    aiMethod = 'error';
-                }
-            })();
-
-            // Wait for both animation and API to complete
-            await Promise.all([animPromise, apiPromise]);
-
-            generatedResultImage = resultImageSrc;
-
-            // Complete the remaining animation steps
-            const lastStep = document.getElementById(steps[steps.length - 1]);
-            lastStep.classList.remove('active');
-            lastStep.classList.add('done');
-            lastStep.querySelector('i').className = 'ph-fill ph-check-circle';
-            progressBar.style.width = '100%';
-
-            setTimeout(() => {
-                requestAnimationFrame(() => {
-                    overlay.classList.add('hidden');
-                    showResults();
-                });
-            }, 500);
-        }
+        
 
         function showResults() {
             if (aiMethod === 'error' || !generatedResultImage) {
@@ -6040,9 +5364,7 @@
         }
 
         // ── TRY-ON: Add to Cart from Try-On ──
-        function addToCartFromTryon() {
-            addToCart(selectedDressName);
-        }
+        
 
         // ── TRY-ON: Download (real) ──
         function downloadResult() {
@@ -6228,7 +5550,7 @@
             return `
                 <div class="amz-card" onclick="openProduct('${p.id}')">
                     <div class="amz-img-box">
-                        <img src="${img}" alt="${p.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+                        <img src="${img}" alt="${p.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.svg'">
                         <div class="amz-quick-add">
                             <button onclick="event.stopPropagation(); addToCartAPI('${p.id}','${safeName}',${p.price},'${img}')">
                                 <i class="ph ph-shopping-cart-simple"></i> Add to Cart
@@ -6309,7 +5631,7 @@
                                     ${g.items.map(item => `
                                         <div>
                                             <div class="dash-img-slot">
-                                                <img src="${getSafeImg(item)}" alt="${item.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.jpg'">
+                                                <img src="${getSafeImg(item)}" alt="${item.name || ''}" loading="lazy" onerror="this.src='/images/placeholder.svg'">
                                             </div>
                                             <div class="dash-img-label">${item.name || ''}</div>
                                         </div>
@@ -6497,6 +5819,207 @@
             document.getElementById(id).style.display = 'none';
         }
 
+    </script>
+
+    <!-- Compare Feature Integration -->
+    <style>
+        .compare-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 26, 0.95); z-index: 2000;
+            display: none; flex-direction: column; overflow-y: auto;
+            backdrop-filter: blur(8px); padding: 40px 20px;
+        }
+        .compare-modal-close {
+            position: absolute; top: 20px; right: 30px;
+            background: rgba(255, 255, 255, 0.1); border: none; color: white;
+            font-size: 24px; width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .compare-modal-close:hover { background: #e94560; transform: scale(1.1); }
+        .compare-modal-content { max-width: 1200px; width: 100%; margin: 0 auto; color: white; }
+        .compare-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .clear-all-btn { background: transparent; border: 1px solid #e94560; color: #e94560; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .clear-all-btn:hover { background: #e94560; color: #fff; }
+        .compare-grid { display: grid; grid-template-columns: repeat(var(--compare-cols, 2), 1fr); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; }
+        .compare-cell { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); border-right: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #111122; position: relative; }
+        .compare-cell:nth-child(even) { background: #15152a; }
+        .compare-product-image { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .compare-product-image img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+        .compare-badge { padding: 4px 8px; background: rgba(168,85,247,0.2); color: #d8b4fe; border-radius: 4px; font-size: 0.75rem; margin-bottom: 6px;}
+        .compare-price { font-size: 1.2rem; font-weight: bold; color: #a855f7; }
+        .compare-remove-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.1); border: none; color: #aaa; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .compare-remove-btn:hover { background: #e94560; color: #fff; }
+
+        .compare-tray {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f15);
+            color: #fff;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease-out;
+            border-top: 1px solid rgba(168,85,247,0.3);
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .compare-tray-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .compare-tray-content button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.15s;
+        }
+        .compare-tray-content button:hover { transform: scale(1.05); }
+        #compare-tray-btn { background: var(--primary-gradient); color: white; }
+        #compare-tray-clear { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .compare-btn.active { background: rgba(168,85,247,0.3) !important; border-color: #a855f7 !important; color: #d8b4fe !important; }
+    </style>
+    <div id="compare-tray" class="compare-tray" style="display:none;">
+        <div class="compare-tray-content">
+            <span id="compare-tray-count">0</span> items selected
+            <button id="compare-tray-btn" onclick="openCompareOverlay()">Compare Now ⚖️</button>
+            <button id="compare-tray-clear" onclick="clearCompareList(); updateCompareTray(); renderShopProducts();">Clear</button>
+        </div>
+    </div>
+
+    <!-- Compare Modal Overlay -->
+    <div id="compare-modal-overlay" class="compare-modal-overlay">
+        <button class="compare-modal-close" onclick="closeCompareOverlay()">✕</button>
+        <div id="compare-modal-content" class="compare-modal-content"></div>
+    </div>
+    <script src="./compareService.js"></script>
+    <script>
+        // Compare functionality overrides mapped to the root app structure
+        function handleToggleCompare(productId, btn) {
+            if (isInCompareList(productId)) {
+                removeFromCompare(productId);
+                showToast('Removed from compare', '#f43f5e');
+            } else {
+                const result = addToCompare(productId);
+                if (!result.success) {
+                    showToast(result.message, '#f43f5e');
+                    return;
+                }
+                showToast('Added to compare', '#a855f7');
+            }
+            updateCompareTray();
+            renderShopProducts(); // re-renders to update button state across all clones if any
+        }
+        function updateCompareTray() {
+            const count = getCompareCount();
+            const tray = document.getElementById('compare-tray');
+            const countEl = document.getElementById('compare-tray-count');
+            if (count > 0) {
+                tray.style.display = 'flex';
+                countEl.textContent = count;
+            } else {
+                tray.style.display = 'none';
+            }
+        
+        function openCompareOverlay() {
+            const overlay = document.getElementById('compare-modal-overlay');
+            renderOverlayComparison();
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCompareOverlay() {
+            document.getElementById('compare-modal-overlay').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function renderOverlayComparison() {
+            const container = document.getElementById('compare-modal-content');
+            const compareIds = getCompareList();
+            
+            if (compareIds.length < 2) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:100px 20px; color:#aaa;">
+                        <div style="font-size:72px; margin-bottom:20px;">⚖️</div>
+                        <h2 style="color:white; margin-bottom:10px;">Nothing to Compare Yet</h2>
+                        <p>${compareIds.length === 0 ? 'Add at least 2 items to compare them side-by-side.' : 'Add one more item to start comparing.'}</p>
+                        <button onclick="closeCompareOverlay()" class="btn-primary" style="margin-top:20px;">Continue Shopping</button>
+                    </div>`;
+                return;
+            }
+
+            const productsToCompare = compareIds.map(id => allProducts.find(p => String(p.id) === String(id))).filter(Boolean);
+            const cols = productsToCompare.length;
+
+            container.innerHTML = `
+                <div class="compare-header">
+                    <h1>Compare Products (${cols})</h1>
+                    <button class="clear-all-btn" onclick="clearCompareList(); renderOverlayComparison(); updateCompareTray(); renderShopProducts();">Clear All</button>
+                </div>
+                <div class="compare-grid" style="--compare-cols: ${cols};">
+                    ${renderOverlayRow('image', productsToCompare)}
+                    ${renderOverlayRow('price', productsToCompare)}
+                    ${renderOverlayRow('specs', productsToCompare)}
+                    ${renderOverlayRow('rating', productsToCompare)}
+                    ${renderOverlayRow('action', productsToCompare)}
+                </div>
+            `;
+        }
+
+        function renderOverlayRow(type, products) {
+            return products.map(p => {
+                const imgUrl = (p.category === 'fashion' && p.gallery && p.gallery.length) ? p.gallery[0] : (p.image || p.imageUrl);
+                switch(type) {
+                case 'image':
+                    return `
+                    <div class="compare-cell">
+                        <button class="compare-remove-btn" onclick="removeFromCompare('${p.id}'); renderOverlayComparison(); updateCompareTray(); renderShopProducts();" title="Remove">✕</button>
+                        <div class="compare-product-image"><img src="${imgUrl}" alt="${p.name.replace(/"/g, '&quot;')}"></div>
+                        <div style="font-weight:600; font-size:16px;">${p.name}</div>
+                    </div>`;
+                case 'price':
+                    return `
+                    <div class="compare-cell">
+                        <div class="compare-price">₹${p.price}</div>
+                        ${p.originalPrice ? `<div style="text-decoration:line-through; color:#888; font-size:14px;">₹${p.originalPrice}</div>` : ''}
+                    </div>`;
+                case 'specs':
+                    return `
+                    <div class="compare-cell" style="align-items:flex-start; text-align:left;">
+                        <div style="font-size:12px; color:#aaa; margin-bottom:5px; text-transform:uppercase;">Specifications</div>
+                        <div class="compare-badge">${p.subcategory || p.category}</div>
+                        <div style="font-size:14px; margin-top:10px; color:#ccc;">${p.description || 'No description available.'}</div>
+                    </div>`;
+                case 'rating':
+                    return `
+                    <div class="compare-cell">
+                        <div style="color:#f59e0b; font-size:18px;">★ ${p.rating || 4.5}</div>
+                        <div style="font-size:12px; color:#aaa;">(${p.reviewCount || 120} reviews)</div>
+                    </div>`;
+                case 'action':
+                    return `
+                    <div class="compare-cell">
+                        <button class="btn-primary" style="width:100%; border-radius:8px; justify-content:center;" onclick="addToCartAPI('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${imgUrl}')">
+                        Add to Cart 🛒
+                        </button>
+                    </div>`;
+                default:
+                    return '<div></div>';
+                }
+            }).join('');
+        }
+        }
+        // Initialize tray on load
+        document.addEventListener('DOMContentLoaded', updateCompareTray);
+        document.addEventListener('compareListChanged', updateCompareTray);
     </script>
 </body>
 

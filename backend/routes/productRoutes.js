@@ -66,6 +66,51 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// Batch compare products (lightweight)
+router.get('/compare', async (req, res) => {
+  try {
+    const idsParam = req.query.ids;
+
+    // Validate: ids param must exist
+    if (!idsParam || typeof idsParam !== 'string' || idsParam.trim() === '') {
+      return res.status(400).json({ success: false, message: 'ids query parameter is required' });
+    }
+
+    const ids = idsParam.split(',').map(id => id.trim()).filter(Boolean);
+
+    // Validate: 1-4 IDs only
+    if (ids.length === 0 || ids.length > 4) {
+      return res.status(400).json({ success: false, message: 'Provide between 1 and 4 product IDs' });
+    }
+
+    // Validate each ID is a valid ObjectId format
+    const mongoose = require('mongoose');
+    const validIds = ids.filter(id => mongoose.Types.ObjectId.isValid(id));
+
+    // Fetch only the fields needed for comparison (lightweight)
+    const products = await Product.find(
+      { _id: { $in: validIds } },
+      'name image price originalPrice rating reviewCount inStock'
+    ).lean();
+
+    // Shape response
+    const data = products.map(p => ({
+      id: p._id.toString(),
+      name: p.name,
+      image: p.image,
+      price: p.price,
+      originalPrice: p.originalPrice || null,
+      rating: p.rating,
+      reviewCount: p.reviewCount,
+      inStock: p.inStock !== undefined ? p.inStock : true,
+    }));
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
 // Get product by ID
 router.get('/:id', async (req, res) => {
   try {
