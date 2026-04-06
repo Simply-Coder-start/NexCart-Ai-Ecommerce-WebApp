@@ -1,18 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  ChevronDown, SlidersHorizontal, LayoutGrid, Shirt, Monitor, Home as HomeIcon, 
-  Book, Trophy, Sparkles, Heart, Zap, ArrowLeftRight, Star, Search, ShoppingCart
+  LayoutGrid, Shirt, Monitor, Home as HomeIcon, 
+  Book, Trophy, Sparkles, Heart, Zap, ArrowLeftRight, Star, Search, ShoppingCart, Loader2
 } from 'lucide-react';
+import api from '../api/api';
 import SortAndFilter from '../components/SortAndFilter';
 import SidebarFilter from '../components/SidebarFilter';
 import { useCart } from '../context/CartContext';
 import { products as ALL_PRODUCTS } from '../data/products';
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-
 export default function Shop() {
   const { addToCart, toggleFavorite, favorites, compareList, addToCompare, removeFromCompare } = useCart();
+  
   // State for filtering
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [sortBy, setSortBy] = useState('Recommended');
@@ -52,7 +52,7 @@ export default function Shop() {
       // 4. Rating Filter
       const matchRating = !activeFilters.rating || parseFloat(product.rating) >= activeFilters.rating;
 
-      // 5. Size/Status (Mocked for now as data doesn't have them yet, but logic is ready)
+      // 5. Size/Status
       const matchSize = activeFilters.sizes.length === 0 || true; 
       const matchStatus = activeFilters.statuses.length === 0 || true;
 
@@ -81,6 +81,32 @@ export default function Shop() {
     });
   }, [activeCategory, activeFilters, sortBy]);
 
+  const [addingToCartId, setAddingToCartId] = useState(null);
+
+  const handleAddToCart = async (product) => {
+    setAddingToCartId(product.id);
+    try {
+      // 1. Update Frontend Context immediately for snappy UI
+      addToCart(product);
+
+      // 2. Sync with Backend
+      await api.post('/cart/add', {
+        productId: product.id,
+        quantity: 1,
+        color: product.colors?.[0] || 'default',
+        protectionPlan: false
+      });
+      
+      // Notify other components if needed
+      window.dispatchEvent(new Event('update-cart-count'));
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      // Optional: Revert local state if backend fail?
+    } finally {
+      setAddingToCartId(null);
+    }
+  };
+
   return (
     <main className="max-w-[1600px] mx-auto px-8 pt-10 pb-20 w-full flex flex-col flex-1">
       
@@ -101,7 +127,7 @@ export default function Shop() {
         />
       </div>
 
-      {/* Categories Pills (Now Interactive) */}
+      {/* Categories Pills */}
       <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar border-b border-gray-800/50 mb-8">
         {CATEGORY_PILLS.map((pill, idx) => {
           const Icon = pill.icon;
@@ -129,7 +155,6 @@ export default function Shop() {
       {/* Layout: Sidebar + Grid */}
       <div className="flex flex-col lg:flex-row gap-10">
         
-        {/* New Functional Sidebar */}
         <SidebarFilter onFilterChange={(newFilters) => setActiveFilters(newFilters)} />
 
         {/* Product Grid */}
@@ -158,11 +183,9 @@ export default function Shop() {
                       className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
                     />
                   </Link>
-                  {/* Bottom Gradient for Category text */}
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#131315] via-[#131315]/80 to-transparent flex items-end justify-center pb-4">
                     <span className="text-gray-400/90 font-black text-xl tracking-[0.2em]">{product.category}</span>
                   </div>
-                  {/* Favorite Button */}
                   <button 
                     onClick={() => toggleFavorite(product.id)}
                     className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#131315]/80 backdrop-blur border border-white/10 flex items-center justify-center hover:bg-[#a855f7] hover:border-[#a855f7] transition-all group/btn"
@@ -173,11 +196,9 @@ export default function Shop() {
 
                 {/* Details Area */}
                 <div className="p-3 md:p-4 flex flex-col gap-1.5 relative z-10 bg-[#131315]">
-                  
-                  {/* Swatches & Category subtitle */}
                   <div className="flex items-center gap-2 mb-1">
                      <div className="flex gap-1">
-                        {product.colors.map((color, idx) => (
+                        {product.colors && product.colors.map((color, idx) => (
                            <div key={idx} className={`w-3 h-3 rounded-full`} style={{ backgroundColor: color }} />
                         ))}
                      </div>
@@ -186,12 +207,10 @@ export default function Shop() {
                      </span>
                   </div>
 
-                  {/* Title */}
                   <Link to={`/product/${product.id}`}>
                     <h3 className="text-sm md:text-base font-bold text-white truncate hover:text-[#d946ef] transition-colors">{product.title}</h3>
                   </Link>
                   
-                  {/* Rating */}
                   <div className="flex items-center gap-1.5 mb-1">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
@@ -202,7 +221,6 @@ export default function Shop() {
                     <span className="text-[10px] text-gray-500 font-medium">({product.reviews})</span>
                   </div>
 
-                  {/* Price */}
                   <div className="text-base md:text-lg font-bold text-white mb-2.5">
                     ₹{product.price}
                   </div>
@@ -210,16 +228,17 @@ export default function Shop() {
                   {/* Action Buttons */}
                   <div className="grid grid-cols-[1fr_auto_auto] gap-1.5">
                     <button 
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product)}
                       className="h-9 md:h-10 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-[10px] md:text-xs text-white flex items-center justify-center gap-1 hover:opacity-90 transition-opacity"
                     >
                       <Zap className="w-3.5 h-3.5 fill-white" /> Buy Now
                     </button>
                     <button 
-                      onClick={() => addToCart(product)}
-                      className="h-9 md:h-10 px-2.5 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center hover:bg-gray-800 transition-colors"
+                      onClick={() => handleAddToCart(product)}
+                      disabled={addingToCartId === product.id}
+                      className="h-9 md:h-10 px-2.5 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center gap-1 hover:bg-gray-800 transition-colors text-xs font-semibold text-gray-300 disabled:opacity-50"
                     >
-                      <ShoppingCart className="w-3.5 h-3.5 text-gray-300" />
+                      {addingToCartId === product.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShoppingCart className="w-3.5 h-3.5" />}
                     </button>
                     <button 
                       onClick={() => {
@@ -238,7 +257,6 @@ export default function Shop() {
                       <ArrowLeftRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
-
                 </div>
               </div>
             ))
