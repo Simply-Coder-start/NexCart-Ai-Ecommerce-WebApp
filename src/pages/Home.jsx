@@ -80,6 +80,8 @@ export default function Home() {
           <img 
             src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000&auto=format&fit=crop" 
             alt="Red velvet dress on hanger" 
+            referrerPolicy="no-referrer"
+            onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/800x800/131315/d946ef/svg?text=Hero`; }}
             className="h-[90%] object-contain drop-shadow-2xl mix-blend-multiply"
           />
 
@@ -89,6 +91,8 @@ export default function Home() {
                  <img 
                     src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=100&auto=format&fit=crop" 
                     alt="Thumbnail" 
+                    referrerPolicy="no-referrer"
+                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/100x100/131315/d946ef/svg?text=T`; }}
                     className="h-full object-contain mix-blend-multiply"
                  />
               </div>

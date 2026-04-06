@@ -53,7 +53,13 @@ export default function ProductRecommendations({ currentProduct }) {
           <div className="flex items-center flex-wrap gap-4 xs:gap-6 flex-1">
             {/* Main Product Thumbnail */}
             <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-white p-2 border-2 transition-all ${checkedItems.main ? 'border-[#d946ef] shadow-[0_0_15px_rgba(217,70,239,0.3)]' : 'border-gray-700 opacity-50'}`}>
-               <img src={currentProduct?.image || MOCK_RECOMMENDATIONS[0].image} alt="Main Item" className="w-full h-full object-contain mix-blend-multiply" />
+               <img 
+                 src={currentProduct?.image || MOCK_RECOMMENDATIONS[0].image} 
+                 alt="Main Item" 
+                 referrerPolicy="no-referrer"
+                 onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/d946ef/svg?text=Item`; }}
+                 className="w-full h-full object-contain mix-blend-multiply" 
+               />
                {checkedItems.main && (
                  <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-[#d946ef] border-2 border-[#131315] flex items-center justify-center">
                    <Check className="w-3.5 h-3.5 text-white" />
@@ -65,7 +71,13 @@ export default function ProductRecommendations({ currentProduct }) {
 
             {/* Accessory Thumbnail */}
             <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-white p-2 border-2 transition-all ${checkedItems.accessory ? 'border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'border-gray-700 opacity-50'}`}>
-               <img src={MOCK_ACCESSORY.image} alt="Accessory" className="w-full h-full object-contain mix-blend-multiply" />
+               <img 
+                 src={MOCK_ACCESSORY.image} 
+                 alt="Accessory" 
+                 referrerPolicy="no-referrer"
+                 onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/3b82f6/svg?text=AddOn`; }}
+                 className="w-full h-full object-contain mix-blend-multiply" 
+               />
                {checkedItems.accessory && (
                  <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-blue-500 border-2 border-[#131315] flex items-center justify-center">
                    <Check className="w-3.5 h-3.5 text-white" />
@@ -139,25 +151,32 @@ export default function ProductRecommendations({ currentProduct }) {
               <div 
                 key={item.id} 
                 onClick={() => addToCart(item)}
-                className="w-[180px] sm:w-[220px] shrink-0 snap-start bg-[#131315] border border-gray-800 rounded-2xl p-4 shadow-lg hover:border-gray-600 transition-colors group flex flex-col h-full relative cursor-pointer"
+                className="w-[160px] sm:w-[200px] shrink-0 snap-start bg-[#131315] border border-gray-800 rounded-2xl p-3 shadow-lg hover:border-gray-600 transition-colors group flex flex-col h-full relative cursor-pointer"
               >
                 
                 {/* Limited Time Badge */}
                 {discount > 40 && (
-                  <div className="absolute top-0 left-0 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-tl-2xl rounded-br-lg z-10">
+                  <div className="absolute top-0 left-0 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-tl-2xl rounded-br-lg z-10">
                     Limited time deal
                   </div>
                 )}
 
                 {/* Display Image */}
-                <div className="relative aspect-square w-full bg-white rounded-xl mb-4 p-4 border border-gray-700 shadow-inner overflow-hidden">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+                <div className="relative aspect-square w-full bg-white rounded-xl mb-3 p-3 border border-gray-700 shadow-inner overflow-hidden">
+                  <img 
+                    src={item.image} 
+                    alt={item.title} 
+                    referrerPolicy="no-referrer"
+                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/d946ef/svg?text=Item`; }}
+                    className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" 
+                  />
                 </div>
 
                 {/* Info Text */}
-                <h3 className="text-[13px] sm:text-sm font-semibold text-blue-400 hover:text-[#d946ef] hover:underline transition-colors line-clamp-2 leading-snug mb-2 flex-grow">
+                <h3 className="text-[12px] sm:text-[13px] font-semibold text-blue-400 hover:text-[#d946ef] hover:underline transition-colors line-clamp-2 leading-snug mb-2 flex-grow">
                   {item.title}
                 </h3>
+
                 
                 {/* Ratings */}
                 <div className="flex items-center gap-1 mb-2 mt-auto text-xs">

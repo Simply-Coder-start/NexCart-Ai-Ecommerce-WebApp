@@ -133,7 +133,7 @@ export default function Shop() {
         <SidebarFilter onFilterChange={(newFilters) => setActiveFilters(newFilters)} />
 
         {/* Product Grid */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="flex-1 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-5">
           {filteredProducts.length === 0 ? (
              <div className="col-span-full py-20 flex flex-col items-center justify-center text-gray-500">
                <Search className="w-12 h-12 mb-4 opacity-50" />
@@ -150,6 +150,11 @@ export default function Shop() {
                     <img 
                       src={product.image} 
                       alt={product.title} 
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://placehold.co/600x800/131315/d946ef/svg?text=${encodeURIComponent(product.title.split(' ').slice(0,2).join(' '))}`;
+                      }}
                       className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
                     />
                   </Link>
@@ -167,7 +172,7 @@ export default function Shop() {
                 </div>
 
                 {/* Details Area */}
-                <div className="p-4 flex flex-col gap-2 relative z-10 bg-[#131315]">
+                <div className="p-3 md:p-4 flex flex-col gap-1.5 relative z-10 bg-[#131315]">
                   
                   {/* Swatches & Category subtitle */}
                   <div className="flex items-center gap-2 mb-1">
@@ -183,7 +188,7 @@ export default function Shop() {
 
                   {/* Title */}
                   <Link to={`/product/${product.id}`}>
-                    <h3 className="text-lg font-extrabold text-white truncate hover:text-[#d946ef] transition-colors">{product.title}</h3>
+                    <h3 className="text-sm md:text-base font-bold text-white truncate hover:text-[#d946ef] transition-colors">{product.title}</h3>
                   </Link>
                   
                   {/* Rating */}
@@ -198,23 +203,23 @@ export default function Shop() {
                   </div>
 
                   {/* Price */}
-                  <div className="text-xl font-bold text-white mb-3">
+                  <div className="text-base md:text-lg font-bold text-white mb-2.5">
                     ₹{product.price}
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid grid-cols-[1fr_auto_auto] gap-2">
+                  <div className="grid grid-cols-[1fr_auto_auto] gap-1.5">
                     <button 
                       onClick={() => addToCart(product)}
-                      className="h-10 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-xs text-white flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
+                      className="h-9 md:h-10 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-[10px] md:text-xs text-white flex items-center justify-center gap-1 hover:opacity-90 transition-opacity"
                     >
                       <Zap className="w-3.5 h-3.5 fill-white" /> Buy Now
                     </button>
                     <button 
                       onClick={() => addToCart(product)}
-                      className="h-10 px-3 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center gap-1 hover:bg-gray-800 transition-colors text-xs font-semibold text-gray-300"
+                      className="h-9 md:h-10 px-2.5 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center hover:bg-gray-800 transition-colors"
                     >
-                      <ShoppingCart className="w-3.5 h-3.5" />
+                      <ShoppingCart className="w-3.5 h-3.5 text-gray-300" />
                     </button>
                     <button 
                       onClick={() => {
@@ -224,7 +229,7 @@ export default function Shop() {
                           addToCompare(product);
                         }
                       }}
-                      className={`h-10 px-3 rounded-xl border flex items-center justify-center gap-1 transition-colors text-xs font-semibold ${
+                      className={`h-9 md:h-10 px-2.5 rounded-xl border flex items-center justify-center transition-colors ${
                         compareList.find(c => c.id === product.id)
                         ? 'bg-[#a855f7]/20 border-[#a855f7] text-[#d946ef]'
                         : 'bg-[#1a1a1c] border-gray-800 hover:bg-gray-800 text-gray-300'
