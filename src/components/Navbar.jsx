@@ -2,8 +2,11 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Hexagon, Home, ShoppingBag, Package, ShoppingCart, Search, LogIn } from 'lucide-react';
 
+import { useCart } from '../context/CartContext';
+
 export default function Navbar() {
   const location = useLocation();
+  const { cartCount } = useCart();
 
   // Helper component for navigation links
   const NavItem = ({ to, icon: Icon, label }) => {
@@ -55,12 +58,16 @@ export default function Navbar() {
         <Link to="/cart" className="w-11 h-11 rounded-full border border-gray-800 bg-[#131315] flex items-center justify-center hover:bg-gray-800 transition-colors text-white relative">
           <ShoppingCart className="w-4 h-4" />
           {/* Badge */}
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#d946ef] text-[10px] font-bold flex items-center justify-center rounded-full text-white">2</span>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#d946ef] text-[10px] font-bold flex items-center justify-center rounded-full text-white animate-in zoom-in duration-300">
+              {cartCount}
+            </span>
+          )}
         </Link>
 
-        <button className="h-11 px-6 rounded-full bg-gradient-to-r from-[#d946ef] to-[#db2777] font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-opacity text-white">
+        <Link to="/login" className="h-11 px-6 rounded-full bg-gradient-to-r from-[#d946ef] to-[#db2777] font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-opacity text-white">
           <LogIn className="w-4 h-4" /> Login
-        </button>
+        </Link>
       </div>
     </nav>
   );

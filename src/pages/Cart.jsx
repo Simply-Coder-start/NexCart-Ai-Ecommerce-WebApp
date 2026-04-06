@@ -1,54 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Trash2, Heart, Share2, Info, CheckCircle2, AlertTriangle, ShieldCheck,
   ChevronRight, Minus, Plus
 } from 'lucide-react';
-
-const CART_ITEMS = [
-  {
-    id: 1,
-    title: "Beardo Whisky Smoke Perfume for Men,50ml|Spicy,Woody-Oudh Scent Eau De Parfum|Long Lasting Mens Perfume|Best Date Night Fragrance Body Spray|Valentin...",
-    image: "https://images.unsplash.com/photo-1594035910387-fea47714263f?q=80&w=300&auto=format&fit=crop",
-    price: 251.00,
-    mrp: null,
-    pricePerUnit: "(₹5.02 / millilitre)",
-    inStock: true,
-    deliveryDate: "Thu, 9 Apr",
-    isFulfilled: true,
-    isGift: false,
-    size: "50 ml (Pack of 1)",
-    quantity: 1,
-    savings: "Save 5 % more with Subscribe & Save",
-    cashback: "Up to 5% back with NexCart Pay",
-    cardInfo: "ICICI card Terms"
-  },
-  {
-    id: 2,
-    title: "Wild Stone Edge Edp Premium Perfume For Men,100 Ml|Long-Lasting Eau De Parfum|Luxury Fragrances|Fragrance For Modern Lifestyle|Ideal Gift For Him|Premiu...",
-    image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?q=80&w=300&auto=format&fit=crop",
-    price: 293.00,
-    mrp: null,
-    pricePerUnit: "(₹2.93 / millilitre)",
-    inStock: true,
-    deliveryDate: "Thu, 9 Apr",
-    isFulfilled: true,
-    isGift: false,
-    size: "100 ml (Pack of 1)",
-    quantity: 1,
-    savings: null,
-    cashback: "Up to 5% back with NexCart Pay",
-    cardInfo: "ICICI card Terms"
-  }
-];
+import { useCart } from '../context/CartContext';
 
 export default function Cart() {
-  const [items, setItems] = useState(CART_ITEMS);
-  const [selectedItems, setSelectedItems] = useState([1, 2]); // IDs of checked items
+  const { cart, updateQuantity, removeFromCart, cartTotal, cartCount } = useCart();
+  const [selectedItems, setSelectedItems] = useState([]); // IDs of checked items
   const [isGiftChecked, setIsGiftChecked] = useState(false);
 
-  const subtotal = items
+  // Sync selected items with cart content
+  useEffect(() => {
+    setSelectedItems(cart.map(item => item.id));
+  }, [cart.length]);
+
+  const subtotal = cart
     .filter(item => selectedItems.includes(item.id))
-    .reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    .reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0);
   
   const selectedCount = selectedItems.length;
 
@@ -59,11 +28,6 @@ export default function Cart() {
   };
 
   const deselectAll = () => setSelectedItems([]);
-
-  const updateQuantity = (id, newQty) => {
-    if (newQty < 1) return;
-    setItems(items.map(item => item.id === id ? { ...item, quantity: newQty } : item));
-  };
 
   return (
     <main className="max-w-[1500px] w-full mx-auto px-4 md:px-8 pt-6 pb-20 flex flex-col gap-6">
@@ -86,10 +50,8 @@ export default function Cart() {
 
         <div className="flex flex-col items-end gap-3 w-full md:w-auto min-w-[300px]">
            <div className="flex flex-col items-end text-sm">
-              <span className="text-gray-300 font-medium">Subtotal (0 items):</span>
-              <span className="text-amber-500 flex items-center gap-1 mt-1 text-xs font-medium">
-                <AlertTriangle className="w-3.5 h-3.5" /> 2 items are unavailable. <a href="#" className="text-[#a855f7] hover:underline ml-1">Review</a>
-              </span>
+              <span className="text-gray-300 font-medium tracking-tight">Subtotal ({selectedCount} items):</span>
+              <span className="text-white text-lg font-bold">₹{subtotal.toFixed(2)}</span>
            </div>
            <button className="w-full py-2 rounded-xl bg-transparent border border-gray-600 hover:border-gray-400 text-sm font-semibold transition-colors">
              Go to Fresh Cart
@@ -125,8 +87,8 @@ export default function Cart() {
 
             {/* Items List */}
             <div className="flex flex-col">
-              {items.map((item, idx) => (
-                <div key={item.id} className={`p-6 flex gap-4 md:gap-6 relative ${idx !== items.length - 1 ? 'border-b border-gray-800' : ''}`}>
+              {cart.map((item, idx) => (
+                <div key={item.id} className={`p-6 flex gap-4 md:gap-6 relative ${idx !== cart.length - 1 ? 'border-b border-gray-800' : ''}`}>
                   
                   {/* Custom Checkbox */}
                   <div className="pt-2 flex-shrink-0">
@@ -196,7 +158,7 @@ export default function Cart() {
                        </div>
 
                        <div className="w-px h-4 bg-gray-700 hidden sm:block"></div>
-                       <button className="text-xs text-[#a855f7] hover:text-[#d946ef] font-medium transition-colors">Delete</button>
+                         <button onClick={() => removeFromCart(item.id)} className="text-xs text-[#a855f7] hover:text-[#d946ef] font-medium transition-colors">Delete</button>
                        <div className="w-px h-4 bg-gray-700 hidden sm:block"></div>
                        <button className="text-xs text-[#a855f7] hover:text-[#d946ef] font-medium transition-colors">Save for later</button>
                        <div className="w-px h-4 bg-gray-700 hidden sm:block"></div>

@@ -20,7 +20,10 @@ const MOCK_RECOMMENDATIONS = [
   { id: 108, title: "Nova Classic Leather Smartwatch for Business Android/iOS", price: 4100, originalPrice: 9500, rating: 4.3, reviews: 1105, image: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?q=80&w=800&auto=format&fit=crop" },
 ];
 
+import { useCart } from '../context/CartContext';
+
 export default function ProductRecommendations({ currentProduct }) {
+  const { addToCart } = useCart();
   // State to track which items are checked in "Frequently bought together"
   const [checkedItems, setCheckedItems] = useState({
     main: true,
@@ -76,7 +79,13 @@ export default function ProductRecommendations({ currentProduct }) {
             <h3 className="text-gray-400 font-bold uppercase tracking-wider text-xs">Total price:</h3>
             <div className="text-4xl font-extrabold text-white">₹{totalPrice.toLocaleString()}</div>
             
-            <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-white hover:opacity-90 transition-opacity shadow-lg shadow-pink-900/20 flex items-center justify-center gap-2 mt-2">
+            <button 
+              onClick={() => {
+                if (checkedItems.main) addToCart(currentProduct);
+                if (checkedItems.accessory) addToCart(MOCK_ACCESSORY);
+              }}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-white hover:opacity-90 transition-opacity shadow-lg shadow-pink-900/20 flex items-center justify-center gap-2 mt-2"
+            >
               <ShoppingCart className="w-5 h-5 fill-white" /> Add selected to Cart
             </button>
 
@@ -127,7 +136,11 @@ export default function ProductRecommendations({ currentProduct }) {
           {MOCK_RECOMMENDATIONS.map((item) => {
             const discount = Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100);
             return (
-              <div key={item.id} className="w-[180px] sm:w-[220px] shrink-0 snap-start bg-[#131315] border border-gray-800 rounded-2xl p-4 shadow-lg hover:border-gray-600 transition-colors group flex flex-col h-full relative cursor-pointer">
+              <div 
+                key={item.id} 
+                onClick={() => addToCart(item)}
+                className="w-[180px] sm:w-[220px] shrink-0 snap-start bg-[#131315] border border-gray-800 rounded-2xl p-4 shadow-lg hover:border-gray-600 transition-colors group flex flex-col h-full relative cursor-pointer"
+              >
                 
                 {/* Limited Time Badge */}
                 {discount > 40 && (

@@ -24,7 +24,7 @@ const STATUSES = [
 
 export default function SidebarFilter({ onFilterChange, availableFilterData }) {
   const [filters, setFilters] = useState({
-    price: [0, 1000],
+    price: [0, 100000],
     colors: [],
     sizes: [],
     rating: null,
@@ -74,13 +74,13 @@ export default function SidebarFilter({ onFilterChange, availableFilterData }) {
         </div>
         <div className="relative h-6 flex items-center">
           <input 
-            type="range" min="0" max="1000" value={filters.price[0]} 
+            type="range" min="0" max="100000" value={filters.price[0]} 
             onChange={(e) => handlePriceChange(0, e.target.value)}
             onMouseUp={handleApply}
             className="absolute w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#a855f7] z-10"
           />
           <input 
-            type="range" min="0" max="1000" value={filters.price[1]} 
+            type="range" min="0" max="100000" value={filters.price[1]} 
             onChange={(e) => handlePriceChange(1, e.target.value)}
             onMouseUp={handleApply}
             className="absolute w-full h-1 bg-transparent rounded-lg appearance-none cursor-pointer accent-[#a855f7] z-20 pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto"

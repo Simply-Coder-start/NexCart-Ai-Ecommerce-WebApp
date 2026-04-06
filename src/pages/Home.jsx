@@ -2,9 +2,14 @@ import React from 'react';
 import { ShoppingBag, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { useCart } from '../context/CartContext';
+import { products } from '../data/products';
+
 const BRANDS = ['CHANEL', 'UNIQLO', 'H&M', 'DIOR', 'HERMÈS', 'VERSACE', 'ROLEX', 'BURBERRY', 'ARMANI', 'GIVENCHY', 'TIFFANY & CO.', 'VOGUE', 'GUCCI', 'PRADA', 'ZARA'];
 
 export default function Home() {
+  const { addToCart } = useCart();
+  const heroProduct = products.find(p => p.id === 1) || products[0];
   return (
     <>
       <style>{`
@@ -94,7 +99,10 @@ export default function Home() {
               </div>
             </div>
 
-            <button className="h-9 px-5 rounded-lg bg-gradient-to-r from-[#d946ef] to-[#db2777] font-semibold text-xs text-white hover:opacity-90 transition-opacity">
+            <button 
+              onClick={() => addToCart(heroProduct)}
+              className="h-9 px-5 rounded-lg bg-gradient-to-r from-[#d946ef] to-[#db2777] font-semibold text-xs text-white hover:opacity-90 transition-opacity"
+            >
               Add
             </button>
           </div>

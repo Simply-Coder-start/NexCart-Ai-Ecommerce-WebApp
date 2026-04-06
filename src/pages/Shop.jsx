@@ -6,17 +6,18 @@ import {
 } from 'lucide-react';
 import SortAndFilter from '../components/SortAndFilter';
 import SidebarFilter from '../components/SidebarFilter';
-
+import { useCart } from '../context/CartContext';
 import { products as ALL_PRODUCTS } from '../data/products';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 export default function Shop() {
+  const { addToCart, toggleFavorite, favorites, compareList, addToCompare, removeFromCompare } = useCart();
   // State for filtering
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [sortBy, setSortBy] = useState('Recommended');
   const [activeFilters, setActiveFilters] = useState({
-    price: [0, 1000],
+    price: [0, 100000],
     colors: [],
     sizes: [],
     rating: null,
@@ -157,8 +158,11 @@ export default function Shop() {
                     <span className="text-gray-400/90 font-black text-xl tracking-[0.2em]">{product.category}</span>
                   </div>
                   {/* Favorite Button */}
-                  <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#131315]/80 backdrop-blur border border-white/10 flex items-center justify-center hover:bg-[#a855f7] hover:border-[#a855f7] transition-all group/btn">
-                    <Heart className="w-4 h-4 text-white group-hover/btn:fill-white" />
+                  <button 
+                    onClick={() => toggleFavorite(product.id)}
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#131315]/80 backdrop-blur border border-white/10 flex items-center justify-center hover:bg-[#a855f7] hover:border-[#a855f7] transition-all group/btn"
+                  >
+                    <Heart className={`w-4 h-4 text-white group-hover/btn:fill-white ${favorites.includes(product.id) ? 'fill-white' : ''}`} />
                   </button>
                 </div>
 
@@ -200,13 +204,32 @@ export default function Shop() {
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-[1fr_auto_auto] gap-2">
-                    <button className="h-10 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-xs text-white flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity">
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="h-10 rounded-xl bg-gradient-to-r from-[#d946ef] to-[#db2777] font-bold text-xs text-white flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
+                    >
                       <Zap className="w-3.5 h-3.5 fill-white" /> Buy Now
                     </button>
-                    <button className="h-10 px-3 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center gap-1 hover:bg-gray-800 transition-colors text-xs font-semibold text-gray-300">
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="h-10 px-3 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center gap-1 hover:bg-gray-800 transition-colors text-xs font-semibold text-gray-300"
+                    >
                       <ShoppingCart className="w-3.5 h-3.5" />
                     </button>
-                    <button className="h-10 px-3 rounded-xl bg-[#1a1a1c] border border-gray-800 flex items-center justify-center gap-1 hover:bg-gray-800 transition-colors text-xs font-semibold text-gray-300">
+                    <button 
+                      onClick={() => {
+                        if (compareList.find(c => c.id === product.id)) {
+                          removeFromCompare(product.id);
+                        } else {
+                          addToCompare(product);
+                        }
+                      }}
+                      className={`h-10 px-3 rounded-xl border flex items-center justify-center gap-1 transition-colors text-xs font-semibold ${
+                        compareList.find(c => c.id === product.id)
+                        ? 'bg-[#a855f7]/20 border-[#a855f7] text-[#d946ef]'
+                        : 'bg-[#1a1a1c] border-gray-800 hover:bg-gray-800 text-gray-300'
+                      }`}
+                    >
                       <ArrowLeftRight className="w-3.5 h-3.5" />
                     </button>
                   </div>

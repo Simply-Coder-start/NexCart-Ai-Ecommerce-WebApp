@@ -7,6 +7,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import axios from 'axios';
 import ProductRecommendations from '../components/ProductRecommendations';
+import { useCart } from '../context/CartContext';
 
 const MOCK_IMAGES = [
   "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800&auto=format&fit=crop", // Smartwatch main
@@ -30,6 +31,7 @@ const OFFERS = [
 export default function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart, toggleFavorite, favorites } = useCart();
   const product = products.find((p) => p.id === parseInt(id));
 
   const [activeImage, setActiveImage] = useState(0);
@@ -37,42 +39,23 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   const [protectionPlan, setProtectionPlan] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const userId = "USER_ID_FROM_AUTH_CONTEXT";
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = () => {
     setIsLoading(true);
-    try {
-      await axios.post('http://localhost:5000/api/cart/add', {
-        userId: userId,
-        productId: product.id,
-        quantity: Number(quantity),
-        color: (product.colors || [])[activeColor] || 'default',
-        protectionPlan: protectionPlan
-      });
-      alert('Successfully added to cart!');
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      alert('Failed to add to cart.');
-    } finally {
+    // Simulate slight delay for premium feel
+    setTimeout(() => {
+      addToCart(product, Number(quantity));
       setIsLoading(false);
-    }
+    }, 500);
   };
 
-  const handleBuyNow = async () => {
-    await handleAddToCart();
-    navigate('/checkout');
+  const handleBuyNow = () => {
+    addToCart(product, Number(quantity));
+    navigate('/cart');
   };
 
-  const handleWishlist = async () => {
-    try {
-      await axios.post('http://localhost:5000/api/wishlist/add', {
-        userId: userId,
-        productId: product.id
-      });
-      alert('Added to Wishlist 💜');
-    } catch (error) {
-      console.error("Error adding to wishlist:", error);
-    }
+  const handleWishlist = () => {
+    toggleFavorite(product.id);
   };
   
   if (!product) {

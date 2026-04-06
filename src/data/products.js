@@ -3,7 +3,7 @@ export const products = [
     id: 1,
     title: "Pro Faskien Polo Skirt",
     category: "FASHION",
-    price: "45.00",
+    price: "6804.00",
     rating: "4.1",
     reviews: 89,
     colors: ['#a855f7', '#111827'],
@@ -13,7 +13,7 @@ export const products = [
     id: 2,
     title: "Smart Fashion Flannel Shirt",
     category: "FASHION",
-    price: "85.00",
+    price: "10259.00",
     rating: "4.5",
     reviews: 210,
     colors: ['#ef4444', '#000000', '#ffffff'],
@@ -23,7 +23,7 @@ export const products = [
     id: 3,
     title: "Smart Fashion Denim Jeans",
     category: "FASHION",
-    price: "120.00",
+    price: "11197.00",
     rating: "4.8",
     reviews: 560,
     colors: ['#3b82f6', '#1e3a8a'],
@@ -33,7 +33,7 @@ export const products = [
     id: 4,
     title: "Elite Fashion Chrone Wetch",
     category: "FASHION",
-    price: "299.99",
+    price: "12031.00",
     rating: "4.9",
     reviews: 340,
     colors: ['#cbd5e1', '#000000'],
@@ -43,7 +43,7 @@ export const products = [
     id: 5,
     title: "Signature Fashion Leather Jacket",
     category: "FASHION",
-    price: "350.00",
+    price: "10225.00",
     rating: "4.6",
     reviews: 145,
     colors: ['#1f2937', '#78350f'],
@@ -53,7 +53,7 @@ export const products = [
     id: 6,
     title: "Pre Fashion Work Boots",
     category: "FASHION",
-    price: "185.00",
+    price: "8188.00",
     rating: "4.3",
     reviews: 88,
     colors: ['#b45309', '#000000'],
@@ -63,7 +63,7 @@ export const products = [
     id: 7,
     title: "Smart Fashion Wool Sweater",
     category: "FASHION",
-    price: "95.00",
+    price: "6318.00",
     rating: "4.7",
     reviews: 420,
     colors: ['#6b7280', '#e5e7eb', '#3b82f6'],
@@ -73,7 +73,7 @@ export const products = [
     id: 8,
     title: "Classic Fashion Men's Blazer",
     category: "FASHION",
-    price: "240.00",
+    price: "8091.00",
     rating: "4.6",
     reviews: 112,
     colors: ['#1e3a8a', '#111827'],
@@ -83,7 +83,7 @@ export const products = [
     id: 9,
     title: "Smart Fashion Men's Chinos",
     category: "FASHION",
-    price: "68.00",
+    price: "10741.00",
     rating: "4.4",
     reviews: 315,
     colors: ['#d97706', '#0284c7', '#4b5563'],
@@ -93,7 +93,7 @@ export const products = [
     id: 10,
     title: "Advanced Hydrating Serum",
     category: "BEAUTY",
-    price: "106.99",
+    price: "4520.00",
     rating: "4.9",
     reviews: 305,
     colors: [
@@ -106,7 +106,7 @@ export const products = [
     id: 11,
     title: "Matte Finish Foundation",
     category: "BEAUTY",
-    price: "107.00",
+    price: "3340.00",
     rating: "4.9",
     reviews: 847,
     colors: [
@@ -119,7 +119,7 @@ export const products = [
     id: 12,
     title: "Organic Face Wash",
     category: "BEAUTY",
-    price: "141.55",
+    price: "4675.00",
     rating: "4.5",
     reviews: 317,
     colors: [
@@ -132,7 +132,7 @@ export const products = [
     id: 13,
     title: "Pro Eyeshadow Palette",
     category: "BEAUTY",
-    price: "83.10",
+    price: "2721.00",
     rating: "4.7",
     reviews: 224,
     colors: [
@@ -145,7 +145,7 @@ export const products = [
     id: 14,
     title: "Volume Boost Mascara",
     category: "BEAUTY",
-    price: "43.39",
+    price: "3633.00",
     rating: "4.9",
     reviews: 55,
     colors: [
@@ -158,7 +158,7 @@ export const products = [
     id: 15,
     title: "Revitalizing Night Cream",
     category: "BEAUTY",
-    price: "45.03",
+    price: "2802.00",
     rating: "4.0",
     reviews: 421,
     colors: [
@@ -171,7 +171,7 @@ export const products = [
     id: 16,
     title: "Liquid Eyeliner Pen",
     category: "BEAUTY",
-    price: "43.66",
+    price: "5088.00",
     rating: "4.8",
     reviews: 744,
     colors: [
@@ -184,7 +184,7 @@ export const products = [
     id: 17,
     title: "Vitamin C Skin Toner",
     category: "BEAUTY",
-    price: "79.65",
+    price: "4391.00",
     rating: "4.0",
     reviews: 259,
     colors: [
@@ -197,7 +197,7 @@ export const products = [
     id: 18,
     title: "Velvet Lip Tint",
     category: "BEAUTY",
-    price: "93.29",
+    price: "4194.00",
     rating: "5.0",
     reviews: 75,
     colors: [
@@ -210,7 +210,7 @@ export const products = [
     id: 19,
     title: "Wireless Noise-Canceling Headphones",
     category: "ELECTRONICS",
-    price: "160.74",
+    price: "34399.00",
     rating: "4.1",
     reviews: 511,
     colors: [
@@ -223,7 +223,7 @@ export const products = [
     id: 20,
     title: "Smart Fitness Watch",
     category: "ELECTRONICS",
-    price: "75.29",
+    price: "39558.00",
     rating: "4.4",
     reviews: 196,
     colors: [
@@ -236,7 +236,7 @@ export const products = [
     id: 21,
     title: "Portable Bluetooth Speaker",
     category: "ELECTRONICS",
-    price: "25.51",
+    price: "65558.00",
     rating: "4.2",
     reviews: 231,
     colors: [
@@ -249,7 +249,7 @@ export const products = [
     id: 22,
     title: "Ultra HD 4K Monitor",
     category: "ELECTRONICS",
-    price: "123.45",
+    price: "15709.00",
     rating: "4.5",
     reviews: 695,
     colors: [
@@ -262,7 +262,7 @@ export const products = [
     id: 23,
     title: "Mechanical Gaming Keyboard",
     category: "ELECTRONICS",
-    price: "151.70",
+    price: "41135.00",
     rating: "4.3",
     reviews: 538,
     colors: [
@@ -275,7 +275,7 @@ export const products = [
     id: 24,
     title: "Ergonomic Wireless Mouse",
     category: "ELECTRONICS",
-    price: "54.51",
+    price: "78955.00",
     rating: "4.3",
     reviews: 681,
     colors: [
@@ -288,7 +288,7 @@ export const products = [
     id: 25,
     title: "Fast Charging Power Bank",
     category: "ELECTRONICS",
-    price: "71.60",
+    price: "36620.00",
     rating: "4.1",
     reviews: 663,
     colors: [
@@ -301,7 +301,7 @@ export const products = [
     id: 26,
     title: "Smart Home Hub Display",
     category: "ELECTRONICS",
-    price: "115.92",
+    price: "21987.00",
     rating: "4.4",
     reviews: 452,
     colors: [
@@ -314,7 +314,7 @@ export const products = [
     id: 27,
     title: "Pro Mirrorless Camera",
     category: "ELECTRONICS",
-    price: "164.34",
+    price: "54727.00",
     rating: "4.8",
     reviews: 207,
     colors: [
@@ -327,7 +327,7 @@ export const products = [
     id: 28,
     title: "Premium Espresso Maker",
     category: "HOME & KITCHEN",
-    price: "163.13",
+    price: "23887.00",
     rating: "4.6",
     reviews: 716,
     colors: [
@@ -340,7 +340,7 @@ export const products = [
     id: 29,
     title: "Non-Stick Ceramic Cookware",
     category: "HOME & KITCHEN",
-    price: "51.19",
+    price: "16410.00",
     rating: "4.5",
     reviews: 591,
     colors: [
@@ -353,7 +353,7 @@ export const products = [
     id: 30,
     title: "Modern Geometric Rug",
     category: "HOME & KITCHEN",
-    price: "205.67",
+    price: "19417.00",
     rating: "4.1",
     reviews: 268,
     colors: [
@@ -366,7 +366,7 @@ export const products = [
     id: 31,
     title: "Smart Temperature Mug",
     category: "HOME & KITCHEN",
-    price: "86.29",
+    price: "9200.00",
     rating: "4.6",
     reviews: 128,
     colors: [
@@ -379,7 +379,7 @@ export const products = [
     id: 32,
     title: "Stainless Steel Blender",
     category: "HOME & KITCHEN",
-    price: "67.61",
+    price: "17136.00",
     rating: "4.3",
     reviews: 435,
     colors: [
@@ -392,7 +392,7 @@ export const products = [
     id: 33,
     title: "Minimalist Floor Lamp",
     category: "HOME & KITCHEN",
-    price: "69.47",
+    price: "14053.00",
     rating: "4.6",
     reviews: 140,
     colors: [
@@ -405,7 +405,7 @@ export const products = [
     id: 34,
     title: "Automatic Robot Vacuum",
     category: "HOME & KITCHEN",
-    price: "81.38",
+    price: "9681.00",
     rating: "4.6",
     reviews: 368,
     colors: [
@@ -418,7 +418,7 @@ export const products = [
     id: 35,
     title: "Bamboo Cutting Board Set",
     category: "HOME & KITCHEN",
-    price: "90.04",
+    price: "16678.00",
     rating: "4.6",
     reviews: 129,
     colors: [
@@ -431,7 +431,7 @@ export const products = [
     id: 36,
     title: "Aromatherapy Oil Diffuser",
     category: "HOME & KITCHEN",
-    price: "102.29",
+    price: "8426.00",
     rating: "4.2",
     reviews: 132,
     colors: [
@@ -444,7 +444,7 @@ export const products = [
     id: 37,
     title: "The Art of Modern Design",
     category: "BOOKS",
-    price: "34.18",
+    price: "2960.00",
     rating: "4.9",
     reviews: 743,
     colors: [
@@ -457,7 +457,7 @@ export const products = [
     id: 38,
     title: "Biographies of the Greats",
     category: "BOOKS",
-    price: "50.92",
+    price: "1632.00",
     rating: "4.2",
     reviews: 495,
     colors: [
@@ -470,7 +470,7 @@ export const products = [
     id: 39,
     title: "Mastering Full-Stack Dev",
     category: "BOOKS",
-    price: "168.58",
+    price: "1922.00",
     rating: "4.0",
     reviews: 106,
     colors: [
@@ -483,7 +483,7 @@ export const products = [
     id: 40,
     title: "Financial Freedom Guide",
     category: "BOOKS",
-    price: "123.86",
+    price: "1325.00",
     rating: "4.9",
     reviews: 462,
     colors: [
@@ -496,7 +496,7 @@ export const products = [
     id: 41,
     title: "Mystery of the Lost City",
     category: "BOOKS",
-    price: "90.12",
+    price: "2833.00",
     rating: "4.2",
     reviews: 829,
     colors: [
@@ -509,7 +509,7 @@ export const products = [
     id: 42,
     title: "Healthy Cooking at Home",
     category: "BOOKS",
-    price: "176.01",
+    price: "1457.00",
     rating: "4.5",
     reviews: 104,
     colors: [
@@ -522,7 +522,7 @@ export const products = [
     id: 43,
     title: "Mindfulness and Peace",
     category: "BOOKS",
-    price: "169.88",
+    price: "2963.00",
     rating: "4.1",
     reviews: 516,
     colors: [
@@ -535,7 +535,7 @@ export const products = [
     id: 44,
     title: "Sci-Fi Universe Tales",
     category: "BOOKS",
-    price: "100.84",
+    price: "1336.00",
     rating: "4.4",
     reviews: 57,
     colors: [
@@ -548,7 +548,7 @@ export const products = [
     id: 45,
     title: "World History Encylopedia",
     category: "BOOKS",
-    price: "38.32",
+    price: "1063.00",
     rating: "4.1",
     reviews: 652,
     colors: [
@@ -561,7 +561,7 @@ export const products = [
     id: 46,
     title: "Non-Slip Yoga Mat",
     category: "SPORTS",
-    price: "134.59",
+    price: "9598.00",
     rating: "4.6",
     reviews: 490,
     colors: [
@@ -574,7 +574,7 @@ export const products = [
     id: 47,
     title: "Adjustable Dumbbell Set",
     category: "SPORTS",
-    price: "67.18",
+    price: "3020.00",
     rating: "4.1",
     reviews: 830,
     colors: [
@@ -587,7 +587,7 @@ export const products = [
     id: 48,
     title: "Breathable Running Shoes",
     category: "SPORTS",
-    price: "30.08",
+    price: "7361.00",
     rating: "5.0",
     reviews: 544,
     colors: [
@@ -600,7 +600,7 @@ export const products = [
     id: 49,
     title: "Resistance Band Pack",
     category: "SPORTS",
-    price: "181.10",
+    price: "7566.00",
     rating: "4.1",
     reviews: 245,
     colors: [
@@ -613,7 +613,7 @@ export const products = [
     id: 50,
     title: "Smart Water Bottle",
     category: "SPORTS",
-    price: "80.91",
+    price: "8309.00",
     rating: "4.8",
     reviews: 113,
     colors: [
@@ -626,7 +626,7 @@ export const products = [
     id: 51,
     title: "High-Speed Jump Rope",
     category: "SPORTS",
-    price: "141.88",
+    price: "6041.00",
     rating: "4.4",
     reviews: 660,
     colors: [
@@ -639,7 +639,7 @@ export const products = [
     id: 52,
     title: "Foam Roller for Recovery",
     category: "SPORTS",
-    price: "147.67",
+    price: "5869.00",
     rating: "4.6",
     reviews: 218,
     colors: [
@@ -652,7 +652,7 @@ export const products = [
     id: 53,
     title: "Boxing Training Gloves",
     category: "SPORTS",
-    price: "149.08",
+    price: "10649.00",
     rating: "4.5",
     reviews: 379,
     colors: [
@@ -665,7 +665,7 @@ export const products = [
     id: 54,
     title: "Reflective Running Gear",
     category: "SPORTS",
-    price: "61.13",
+    price: "4982.00",
     rating: "4.4",
     reviews: 133,
     colors: [
