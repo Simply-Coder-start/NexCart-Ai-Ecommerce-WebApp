@@ -30,10 +30,6 @@ export default function Home() {
         
         {/* Left Column - Content */}
         <div className="flex flex-col items-start pt-8">
-          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#d946ef]/30 bg-[#d946ef]/10 mb-8">
-            <div className="w-2 h-2 rounded-full bg-[#d946ef] animate-pulse"></div>
-            <span className="text-xs font-bold text-[#d946ef] tracking-wider uppercase">AI V2.0 Live Now</span>
-          </div>
 
           <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-2 text-white">
             Fashion Meets
@@ -50,9 +46,9 @@ export default function Home() {
             <Link to="/shop" className="h-12 px-8 rounded-full bg-gradient-to-r from-[#d946ef] to-[#db2777] font-semibold text-white flex items-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(217,70,239,0.3)]">
               <ShoppingBag className="w-5 h-5" /> Start Shopping
             </Link>
-            <button className="h-12 px-8 rounded-full border border-gray-700 bg-[#131315] font-semibold text-white flex items-center gap-2 hover:bg-gray-800 transition-colors">
-              <Sparkles className="w-5 h-5" /> Try Demo
-            </button>
+            <Link to="/compare" className="h-12 px-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 font-semibold text-white flex items-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+              <Sparkles className="w-5 h-5" /> Compare Products
+            </Link>
           </div>
 
           <div className="w-full h-px bg-gray-800/60 mb-8"></div>
