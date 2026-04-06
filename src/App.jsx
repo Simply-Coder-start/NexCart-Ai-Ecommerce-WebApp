@@ -13,6 +13,10 @@ import Login from './pages/Login';
 import Compare from './pages/Compare';
 import SellerDashboard from './pages/SellerDashboard';
 import SellerLogin from './pages/SellerLogin';
+import TrackOrder from './pages/TrackOrder';
+import ReturnItem from './pages/ReturnItem';
+import ReviewProduct from './pages/ReviewProduct';
+import Support from './pages/Support';
 import CompareDrawer from './components/CompareDrawer';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -65,6 +69,40 @@ export default function App() {
                     element={
                       <ProtectedRoute>
                         <Checkout />
+                      </ProtectedRoute>
+                    } 
+                  />
+
+                  {/* Order Action Pages */}
+                  <Route 
+                    path="/track-order/:id" 
+                    element={
+                      <ProtectedRoute>
+                        <TrackOrder />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/return-item/:orderId/:productId" 
+                    element={
+                      <ProtectedRoute>
+                        <ReturnItem />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/review-product/:id" 
+                    element={
+                      <ProtectedRoute>
+                        <ReviewProduct />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/support" 
+                    element={
+                      <ProtectedRoute>
+                        <Support />
                       </ProtectedRoute>
                     } 
                   />
