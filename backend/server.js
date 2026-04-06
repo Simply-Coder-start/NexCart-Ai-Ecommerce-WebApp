@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cartRoutes = require('./routes/cartRoutes');
 const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
@@ -21,6 +23,8 @@ mongoose.connect('mongodb://localhost:27017/nexcart', {
 // Routes
 app.use('/api/cart', cartRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Blueprint Wishlist route (placeholder)
 app.post('/api/wishlist/add', (req, res) => {
