@@ -11,13 +11,19 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import CompareDrawer from './components/CompareDrawer';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export default function App() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+
   return (
-    <Router>
-      <CartProvider>
-      {/* Global Wrapper handling the dark theme and flex layout */}
-      <div className="min-h-screen bg-[#07070a] text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col relative">
+    <GoogleOAuthProvider clientId={clientId}>
+      <AuthProvider>
+        <Router>
+          <CartProvider>
+          {/* Global Wrapper handling the dark theme and flex layout */}
+          <div className="min-h-screen bg-[#07070a] text-white font-sans selection:bg-pink-500 selection:text-white flex flex-col relative">
         <CommandPalette />
         <Navbar />
         <CompareDrawer />
@@ -37,5 +43,7 @@ export default function App() {
       </div>
     </CartProvider>
   </Router>
+  </AuthProvider>
+</GoogleOAuthProvider>
 );
 }

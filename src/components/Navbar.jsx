@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Hexagon, Home, ShoppingBag, Package, ShoppingCart, Search, LogIn } from 'lucide-react';
+import { Hexagon, Home, ShoppingBag, Package, ShoppingCart, Search, LogIn, LogOut } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const location = useLocation();
   const { cartCount } = useCart();
+  const { user, logout } = useAuth();
 
   // Helper component for navigation links
   const NavItem = ({ to, icon: Icon, label }) => {
@@ -65,9 +67,32 @@ export default function Navbar() {
           )}
         </Link>
 
-        <Link to="/login" className="h-11 px-6 rounded-full bg-gradient-to-r from-[#d946ef] to-[#db2777] font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-opacity text-white">
-          <LogIn className="w-4 h-4" /> Login
-        </Link>
+        {user ? (
+          <div className="flex items-center gap-3 bg-[#131315] border border-gray-800 rounded-full h-11 px-1 pr-4">
+            <img 
+              src={user.picture || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
+              alt="User Avatar" 
+              className="w-9 h-9 rounded-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://ui-avatars.com/api/?name=${user.name}&background=random`;
+              }}
+            />
+            <span className="text-sm font-semibold text-white max-w-[100px] truncate">{user.name}</span>
+            <button 
+              onClick={logout}
+              className="ml-2 text-gray-400 hover:text-red-400 transition-colors"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <Link to="/login" className="h-11 px-6 rounded-full bg-gradient-to-r from-[#d946ef] to-[#db2777] font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-opacity text-white">
+            <LogIn className="w-4 h-4" /> Login
+          </Link>
+        )}
       </div>
     </nav>
   );
