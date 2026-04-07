@@ -24,7 +24,15 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  images: [String],
+  image: {
+    type: String,
+    default: ''
+  },
+  images: {
+    type: [String],
+    default: []
+  },
+
   category: {
     type: String,
     required: [true, 'Product category is required']

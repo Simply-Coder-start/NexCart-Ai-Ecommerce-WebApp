@@ -1,6 +1,8 @@
 import React from 'react';
 import { X, CheckCircle2, ChevronRight, ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import ProductImage from './ProductImage';
+
 
 export default function CompareModal({ onClose }) {
   const { compareList, removeFromCompare, addToCart } = useCart();
@@ -80,8 +82,9 @@ export default function CompareModal({ onClose }) {
                   {/* Product Header (Image + Title + Price) */}
                   <div className="h-[220px] flex flex-col border border-gray-800 rounded-2xl bg-[#1a1a1c] p-4 text-center">
                     <div className="h-24 w-full bg-white rounded-lg mb-4 flex items-center justify-center mix-blend-multiply overflow-hidden">
-                      <img src={product.image} alt={product.title} className="h-full object-contain" />
+                      <ProductImage src={product.image} alt={product.title} className="h-full object-contain" />
                     </div>
+
                     <h3 className="text-sm font-bold text-white line-clamp-2 hover:text-[#d946ef] cursor-pointer" title={product.title}>
                       {product.title}
                     </h3>

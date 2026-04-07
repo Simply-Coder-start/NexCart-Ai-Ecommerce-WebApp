@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ArrowLeftRight, X, Star, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import ProductImage from '../components/ProductImage';
+
 
 export default function Compare() {
   const { compareList, removeFromCompare, clearCompare, addToCart } = useCart();
@@ -91,7 +93,8 @@ export default function Compare() {
                   {/* Product Header Card */}
                   <div className="h-[240px] flex flex-col border border-gray-800 rounded-2xl bg-[#1a1a20] p-5 shadow-inner">
                     <div className="h-32 w-full bg-white rounded-xl mb-4 flex items-center justify-center p-3 mix-blend-multiply overflow-hidden shadow-md">
-                      <img src={product.image} alt={product.title} className="h-full object-contain" />
+                      <ProductImage src={product.image} alt={product.title} className="h-full object-contain" />
+
                     </div>
                     <Link to={`/product/${product.id}`}>
                       <h3 className="text-sm md:text-base font-bold text-white line-clamp-2 hover:text-pink-500 transition-colors h-10 mb-1">

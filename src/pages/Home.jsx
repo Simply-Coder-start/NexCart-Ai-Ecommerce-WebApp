@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { useCart } from '../context/CartContext';
 import { products } from '../data/products';
+import ProductImage from '../components/ProductImage';
+
 
 const BRANDS = ['CHANEL', 'UNIQLO', 'H&M', 'DIOR', 'HERMÈS', 'VERSACE', 'ROLEX', 'BURBERRY', 'ARMANI', 'GIVENCHY', 'TIFFANY & CO.', 'VOGUE', 'GUCCI', 'PRADA', 'ZARA'];
 
@@ -73,24 +75,22 @@ export default function Home() {
 
         {/* Right Column - Visual */}
         <div className="relative w-full aspect-[4/3] lg:aspect-square bg-[#f4f4f5] rounded-[40px] flex items-center justify-center p-8 overflow-hidden shadow-2xl shadow-pink-900/10 border border-gray-800/30">
-          <img 
+          <ProductImage 
             src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000&auto=format&fit=crop" 
             alt="Red velvet dress on hanger" 
-            referrerPolicy="no-referrer"
-            onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/800x800/131315/d946ef/svg?text=Hero`; }}
             className="h-[90%] object-contain drop-shadow-2xl mix-blend-multiply"
           />
+
 
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-gradient-to-r from-[#1a1a1c]/90 to-[#222225]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl shadow-black/50">
             <div className="flex items-center gap-4">
               <div className="w-12 h-14 bg-white rounded-lg flex items-center justify-center overflow-hidden p-1 border border-gray-700">
-                 <img 
+                 <ProductImage 
                     src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=100&auto=format&fit=crop" 
                     alt="Thumbnail" 
-                    referrerPolicy="no-referrer"
-                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/100x100/131315/d946ef/svg?text=T`; }}
                     className="h-full object-contain mix-blend-multiply"
                  />
+
               </div>
               
               <div>

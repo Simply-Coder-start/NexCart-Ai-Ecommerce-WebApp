@@ -14,12 +14,13 @@ const parseProduct = (row) => {
 const UNSPLASH_IMAGES = {
     // ── Fashion: Local professional product images (no models) ──
     "fashion": {
-        "Dresses": ["/images/products/dress-1.jpg", "/images/products/dress-2.jpg", "/images/products/dress-3.jpg"],
-        "Tops": ["/images/products/top-1.jpg", "/images/products/top-2.jpg", "/images/products/top-3.jpg"],
-        "Suits": ["/images/products/suit-1.jpg", "/images/products/suit-2.jpg", "/images/products/suit-3.jpg"],
-        "Outerwear": ["/images/products/outerwear-1.jpg", "/images/products/outerwear-2.jpg", "/images/products/outerwear-3.jpg"],
-        "Accessories": ["/images/products/accessories-1.jpg", "/images/products/accessories-2.jpg"],
+        "Dresses": ["photo-1595777457583-95e059d581b8", "photo-1539008835279-434674508230", "photo-1515372039744-b8f02a3ae446"],
+        "Tops": ["photo-1551163943-3f6a855d1153", "photo-1434389677669-e08b4cac3105", "photo-1574271143515-5cddf8da19be"],
+        "Suits": ["photo-1594932293299-13136a574967", "photo-1507679799987-c7377ec48696", "photo-1493106819501-66d381c466f1"],
+        "Outerwear": ["photo-1591047139829-d91aecb6caea", "photo-1539533113208-f6df814166ad", "photo-1544022613-e87ef7517fbd"],
+        "Accessories": ["photo-1523275335684-37898b6baf30", "photo-1584917469274-96ce7471edac"],
     },
+
     "electronics": [
         "photo-1498049794561-7780e7231661", "photo-1505740420928-5e560c06d30e", "photo-1523206489230-c012c64b2b48", "photo-1546868871-af0de0ae72be",
         "photo-1583394838336-acd977736f90", "photo-1608043152269-423dbba4e7e1", "photo-1517404215738-15263e9f9178", "photo-1588508065123-287b28e0131b",
@@ -132,23 +133,19 @@ function generate_products() {
                 let image = "";
                 let gallery = [];
 
-                if (category === "fashion") {
-                    const subImgs = UNSPLASH_IMAGES.fashion[subcategory] || UNSPLASH_IMAGES.fashion["Dresses"];
-                    image = subImgs[product_id % subImgs.length];
-                    gallery = [
-                        subImgs[product_id % subImgs.length],
-                        subImgs[(product_id + 1) % subImgs.length],
-                        subImgs[(product_id + 2) % subImgs.length]
-                    ].filter(Boolean);
-                } else {
-                    const img_id = images[product_id % images.length];
-                    image = _unsplash_url(img_id);
-                    gallery = [
-                        _unsplash_url(images[product_id % images.length]), 
-                        _unsplash_url(images[(product_id + 1) % images.length]),
-                        _unsplash_url(images[(product_id + 2) % images.length])
-                    ];
-                }
+                const catImages = UNSPLASH_IMAGES[category] || ["photo-1544947950-fa07a98d237f"];
+                const subImgs = (category === "fashion") 
+                    ? (catImages[subcategory] || catImages["Dresses"])
+                    : catImages;
+
+                const img_id = subImgs[product_id % subImgs.length];
+                image = _unsplash_url(img_id);
+                gallery = [
+                    _unsplash_url(subImgs[product_id % subImgs.length]), 
+                    _unsplash_url(subImgs[(product_id + 1) % subImgs.length]),
+                    _unsplash_url(subImgs[(product_id + 2) % subImgs.length])
+                ].filter(Boolean);
+
 
                 // Pick 1-3 random colors
                 const colors = [];

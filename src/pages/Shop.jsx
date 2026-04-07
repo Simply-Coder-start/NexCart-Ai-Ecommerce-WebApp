@@ -9,6 +9,8 @@ import SortAndFilter from '../components/SortAndFilter';
 import SidebarFilter from '../components/SidebarFilter';
 import { useCart } from '../context/CartContext';
 import { products as ALL_PRODUCTS } from '../data/products';
+import ProductImage from '../components/ProductImage';
+
 
 export default function Shop() {
   const { addToCart, toggleFavorite, favorites, compareList, addToCompare, removeFromCompare } = useCart();
@@ -172,16 +174,12 @@ export default function Shop() {
                 {/* Image Area */}
                 <div className="relative aspect-[4/5] bg-gray-900 overflow-hidden">
                   <Link to={`/product/${product.id}`} className="absolute inset-0 z-0 block">
-                    <img 
+                    <ProductImage 
                       src={product.image} 
                       alt={product.title} 
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = `https://placehold.co/600x800/131315/d946ef/svg?text=${encodeURIComponent(product.title.split(' ').slice(0,2).join(' '))}`;
-                      }}
                       className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
                     />
+
                   </Link>
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#131315] via-[#131315]/80 to-transparent flex items-end justify-center pb-4">
                     <span className="text-gray-400/90 font-black text-xl tracking-[0.2em]">{product.category}</span>

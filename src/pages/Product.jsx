@@ -8,6 +8,8 @@ import { products } from '../data/products';
 import api from '../api/api';
 import ProductRecommendations from '../components/ProductRecommendations';
 import { useCart } from '../context/CartContext';
+import ProductImage from '../components/ProductImage';
+
 
 const MOCK_IMAGES = [
   "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800&auto=format&fit=crop", // Smartwatch main
@@ -109,11 +111,12 @@ export default function Product() {
           
           {/* Main Image Spotlight */}
           <div className="flex-1 bg-white rounded-2xl border border-gray-800 p-4 aspect-square flex items-center justify-center relative group overflow-hidden shadow-2xl shadow-black/40">
-            <img 
+            <ProductImage 
               src={displayImages[activeImage]} 
               alt="Product Main" 
               className="w-full h-full object-contain mix-blend-multiply scale-100 group-hover:scale-125 transition-transform duration-500 origin-center cursor-crosshair"
             />
+
             <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button className="w-10 h-10 rounded-full bg-[#131315]/80 backdrop-blur border border-white/10 flex items-center justify-center hover:bg-[#a855f7] hover:border-[#a855f7] transition-all text-white shadow-xl">
                 <Share2 className="w-4 h-4" />
@@ -140,7 +143,8 @@ export default function Product() {
                   : 'border-gray-800 hover:border-gray-500'
                 }`}
               >
-                <img src={img} alt="Thumbnail" className="w-full h-full object-contain mix-blend-multiply" />
+                <ProductImage src={img} alt="Thumbnail" className="w-full h-full object-contain mix-blend-multiply" />
+
               </button>
             ))}
           </div>

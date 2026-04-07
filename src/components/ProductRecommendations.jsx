@@ -21,6 +21,8 @@ const MOCK_RECOMMENDATIONS = [
 ];
 
 import { useCart } from '../context/CartContext';
+import ProductImage from './ProductImage';
+
 
 export default function ProductRecommendations({ currentProduct }) {
   const { addToCart } = useCart();
@@ -53,13 +55,12 @@ export default function ProductRecommendations({ currentProduct }) {
           <div className="flex items-center flex-wrap gap-4 xs:gap-6 flex-1">
             {/* Main Product Thumbnail */}
             <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-white p-2 border-2 transition-all ${checkedItems.main ? 'border-[#d946ef] shadow-[0_0_15px_rgba(217,70,239,0.3)]' : 'border-gray-700 opacity-50'}`}>
-               <img 
+               <ProductImage 
                  src={currentProduct?.image || MOCK_RECOMMENDATIONS[0].image} 
                  alt="Main Item" 
-                 referrerPolicy="no-referrer"
-                 onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/d946ef/svg?text=Item`; }}
                  className="w-full h-full object-contain mix-blend-multiply" 
                />
+
                {checkedItems.main && (
                  <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-[#d946ef] border-2 border-[#131315] flex items-center justify-center">
                    <Check className="w-3.5 h-3.5 text-white" />
@@ -71,13 +72,12 @@ export default function ProductRecommendations({ currentProduct }) {
 
             {/* Accessory Thumbnail */}
             <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-xl bg-white p-2 border-2 transition-all ${checkedItems.accessory ? 'border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'border-gray-700 opacity-50'}`}>
-               <img 
+               <ProductImage 
                  src={MOCK_ACCESSORY.image} 
                  alt="Accessory" 
-                 referrerPolicy="no-referrer"
-                 onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/3b82f6/svg?text=AddOn`; }}
                  className="w-full h-full object-contain mix-blend-multiply" 
                />
+
                {checkedItems.accessory && (
                  <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-blue-500 border-2 border-[#131315] flex items-center justify-center">
                    <Check className="w-3.5 h-3.5 text-white" />
@@ -163,11 +163,9 @@ export default function ProductRecommendations({ currentProduct }) {
 
                 {/* Display Image */}
                 <div className="relative aspect-square w-full bg-white rounded-xl mb-3 p-3 border border-gray-700 shadow-inner overflow-hidden">
-                  <img 
+                  <ProductImage 
                     src={item.image} 
                     alt={item.title} 
-                    referrerPolicy="no-referrer"
-                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x400/131315/d946ef/svg?text=Item`; }}
                     className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" 
                   />
                 </div>

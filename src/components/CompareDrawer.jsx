@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ArrowLeftRight, X, ChevronUp, ChevronDown } from 'lucide-react';
 import CompareModal from './CompareModal';
+import ProductImage from './ProductImage';
+
 
 export default function CompareDrawer() {
   const { compareList, removeFromCompare, clearCompare } = useCart();
@@ -48,8 +50,9 @@ export default function CompareDrawer() {
                           <X className="w-3 h-3" />
                         </button>
                         <div className="h-2/3 bg-white rounded-t-lg flex items-center justify-center p-1 mix-blend-multiply overflow-hidden">
-                          <img src={item.image} alt={item.title} className="h-full object-contain" />
+                          <ProductImage src={item.image} alt={item.title} className="h-full object-contain" />
                         </div>
+
                         <div className="flex-1 p-1 flex items-center justify-center text-[10px] font-bold text-gray-300 text-center leading-tight truncate px-2">
                            ₹{item.price}
                         </div>
